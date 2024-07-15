@@ -7,7 +7,7 @@ function Login() {
   const [userType, setUserType] = useState("employee");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleUserTypeChange = (type) => {
+  const handleUserTypeChange = (type:string) => {
     setUserType(type);
   };
 
