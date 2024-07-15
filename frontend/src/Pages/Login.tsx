@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import bg from "../images/bg-login.jpg";
+import bg from "@/images/bg-login.jpg";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
+import useTogglePasswordVisibility from "@/hooks/useTogglePasswordVisibility";
 
 function Login() {
   const [userType, setUserType] = useState("employee");
-  const [showPassword, setShowPassword] = useState(false);
+  const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
 
   const handleUserTypeChange = (type: string) => {
     setUserType(type);
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   return (
@@ -23,7 +20,7 @@ function Login() {
     >
       <div className="bg-white w-[25%] py-10 rounded-xl shadow-xl font-poppins">
         <p className="text-2xl font-bold text-center">
-          {userType === "employee" ? "Employee Login" : "Admin Login"}
+          Employee Login
         </p>
         <div className="pt-10">
           <div className="flex flex-col items-center">
@@ -38,7 +35,7 @@ function Login() {
             </p>
             <div className="relative w-[80%]">
               <Input
-                type={showPassword ? "text" : "password"} 
+                type={isPasswordVisible ? "text" : "password"} 
                 name="password"
                 id="password"
                 placeholder="Enter your password"
@@ -48,7 +45,7 @@ function Login() {
                 onClick={togglePasswordVisibility}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-700"
               >
-                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                {isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
               </span>
             </div>
           </div>
