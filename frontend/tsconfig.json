@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "CommonJS",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
@@ -12,7 +12,15 @@
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+     // ...
+     "baseUrl": ".",
+     "paths": {
+       "@/*": [
+         "./src/*"
+       ]
+     }
+     // ...
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
