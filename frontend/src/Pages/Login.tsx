@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import bg from "../images/bg-login.jpg"
 import { Button } from "@/Components/ui/button";
