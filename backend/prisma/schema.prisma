@@ -11,6 +11,7 @@ model Employee {
   id Int @id @default(autoincrement())
   first_name String
   last_name String
+  password String
   employee_no String
   department  Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
   department_id Int
