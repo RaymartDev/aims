@@ -33,7 +33,6 @@ const formSchema = z.object({
 
 function Login() {
   const [userType, setUserType] = useState<UserType>(UserType.Admin);
-  const [isFocused, setIsFocused] = useState(false)
   const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
   const form = useForm({ 
     resolver: zodResolver(formSchema), 
@@ -58,7 +57,7 @@ function Login() {
       className="h-screen flex justify-center items-center bg-cover bg-center bg-gradient-to-t from-purple-600 to-pink-300"
     >
       
-      <div className="bg-white w-[800px] h-[80%] py-10 rounded-xl shadow-xl font-poppins flex justify-center items-center">
+      <div className="bg-white w-[1000px] h-[80%] py-10 rounded-xl shadow-xl font-poppins flex justify-center items-center">
         <div className=""><img src={loginImage} alt="" /></div>
         <div className="w-[50%]">
         <p className="text-2xl font-bold text-center">Employee Login</p>
@@ -95,7 +94,6 @@ function Login() {
                         autoComplete="current-password"
                         type={isPasswordVisible ? "text" : "password"}
                         placeholder="Password"
-                        onFocus={() =>  setIsFocused(true)}
                         {...field}
                       />
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700"><FaLock  /></span>
@@ -103,7 +101,7 @@ function Login() {
                         onClick={togglePasswordVisibility}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-700"
                       >
-                        {isFocused && ( isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />)}
+                        {isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                         
                       </span>
                     </div>
