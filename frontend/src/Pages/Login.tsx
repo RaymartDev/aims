@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import bg from "@/images/bg-login.jpg";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -32,7 +31,7 @@ const formSchema = z.object({
 });
 
 function Login() {
-  const [userType, setUserType] = useState<UserType>(UserType.Employee);
+  const [userType, setUserType] = useState<UserType>(UserType.Admin);
   const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
   const form = useForm({ resolver: zodResolver(formSchema) });
 
@@ -50,8 +49,7 @@ function Login() {
 
   return (
     <div
-      className="h-screen flex justify-center items-center bg-cover bg-center"
-      style={{ backgroundImage: `url(${bg})` }}
+      className="h-screen flex justify-center items-center bg-cover bg-center bg-gradient-to-t from-purple-600 to-pink-300"
     >
       <div className="bg-white w-[25%] py-10 rounded-xl shadow-xl font-poppins">
         <p className="text-2xl font-bold text-center">Employee Login</p>
