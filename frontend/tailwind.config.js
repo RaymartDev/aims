@@ -19,8 +19,13 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
+        montserrat: ['Montserrat']
       },
       colors: {
+        fontHeading: '#1B1212',
+        subHeading: '#343434',
+        fontGray: '#9E9E9E',
+        hoverCream: '#FFF1E2',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
