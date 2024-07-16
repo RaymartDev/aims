@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -12,13 +13,13 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormMessage,
+  FormMessage,  
 } from "@/Components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useTogglePasswordVisibility from "@/hooks/useTogglePasswordVisibility";
+import loginImage from "../images/login-left.webp"
 
 enum UserType {
   Admin = "admin",
@@ -32,6 +33,7 @@ const formSchema = z.object({
 
 function Login() {
   const [userType, setUserType] = useState<UserType>(UserType.Admin);
+  const [isFocused, setIsFocused] = useState(false)
   const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
   const form = useForm({ 
     resolver: zodResolver(formSchema), 
@@ -55,7 +57,10 @@ function Login() {
     <div
       className="h-screen flex justify-center items-center bg-cover bg-center bg-gradient-to-t from-purple-600 to-pink-300"
     >
-      <div className="bg-white w-[25%] py-10 rounded-xl shadow-xl font-poppins">
+      
+      <div className="bg-white w-[800px] h-[80%] py-10 rounded-xl shadow-xl font-poppins flex justify-center items-center">
+        <div className=""><img src={loginImage} alt="" /></div>
+        <div className="w-[50%]">
         <p className="text-2xl font-bold text-center">Employee Login</p>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-[80%] mx-auto pt-8">
@@ -64,12 +69,15 @@ function Login() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
                   <FormControl>
+                    <div className="relative">
                     <Input 
+                      className="pl-8"
                       autoComplete="username"
-                      placeholder="Enter your username" 
+                      placeholder="Username" 
                       {...field} />
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700"><MdEmail size={18} /></span>
+                      </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -80,20 +88,23 @@ function Login() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
+                        className="pl-8"
                         autoComplete="current-password"
                         type={isPasswordVisible ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder="Password"
+                        onFocus={() =>  setIsFocused(true)}
                         {...field}
                       />
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700"><FaLock  /></span>
                       <span
                         onClick={togglePasswordVisibility}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-700"
                       >
-                        {isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                        {isFocused && ( isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />)}
+                        
                       </span>
                     </div>
                   </FormControl>
@@ -127,12 +138,13 @@ function Login() {
               ))}
             </RadioGroup>
             <div className="flex justify-center items-center">
-              <Button type="submit" className="text-xl">
+              <Button type="submit" className="text-xl w-full rounded-full font-bold tracking-wider ">
                 Login
               </Button>
             </div>
           </form>
         </Form>
+        </div>
       </div>
     </div>
   );
