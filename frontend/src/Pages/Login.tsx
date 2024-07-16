@@ -33,7 +33,12 @@ const formSchema = z.object({
 function Login() {
   const [userType, setUserType] = useState<UserType>(UserType.Admin);
   const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
-  const form = useForm({ resolver: zodResolver(formSchema) });
+  const form = useForm({ 
+    resolver: zodResolver(formSchema), 
+    defaultValues: {
+      username: "", password: ""
+    }
+  });
 
   const onSubmit = async (data: unknown) => {
     try {
@@ -62,6 +67,7 @@ function Login() {
                   <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input 
+                      autoComplete="username"
                       placeholder="Enter your username" 
                       {...field} />
                   </FormControl>
@@ -78,6 +84,7 @@ function Login() {
                   <FormControl>
                     <div className="relative">
                       <Input
+                        autoComplete="current-password"
                         type={isPasswordVisible ? "text" : "password"}
                         placeholder="Enter your password"
                         {...field}
