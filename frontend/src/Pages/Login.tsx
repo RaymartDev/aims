@@ -15,7 +15,7 @@ function Login() {
 
   return (
     <div
-      className="h-screen flex justify-center items-center"
+      className="h-screen flex justify-center items-center bg-cover bg-center"
       style={{ backgroundImage: `url(${bg})` }}
     >
       <div className="bg-white w-[25%] py-10 rounded-xl shadow-xl font-poppins">
