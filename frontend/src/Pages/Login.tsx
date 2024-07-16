@@ -40,7 +40,6 @@ function Login() {
       await form.trigger();
       if (form.formState.isValid) {
         console.log("Form submitted", data);
-        alert("User logged in successfully!");
       }
     } catch (error) {
       console.error("Form submission error:", error);
@@ -62,7 +61,9 @@ function Login() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input 
+                      placeholder="Enter your username" 
+                      {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
