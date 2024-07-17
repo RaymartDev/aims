@@ -1,11 +1,14 @@
+import Layout from "@/Components/appLayout/Layout";
 
 function Dashboard() {
     return(
-        <div>
-            <div>
-                <h1 className="text-2xl font-bold">Dashboard</h1>
-            </div>
-        </div>
+        <>
+            <Layout>
+                <div>
+                    <h1 className="text-2xl font-bold">Dashboard</h1>
+                </div> 
+            </Layout> 
+        </>
     );
 }
 
