@@ -19,23 +19,26 @@ model Employee {
   company     Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
   company_id   Int
   date_hired DateTime
-  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id  Int?       // Foreign key to Employee.id
   modified_by     Employee?  @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id])
   modified_employees Employee[] @relation("EmployeeModifiedBy")
   modified_departments Department[] @relation("DepartmentModifiedBy")
   modified_companies Company[] @relation("CompanyModifiedBy")
+  modified_suppliers Supplier[] @relation("SupplierModifiedBy")
+  modified_suppliers_contact Supplier_Contact_Details[] @relation("SupplierContactModifiedBy")
+  modified_suppliers_status Supplier_Status[] @relation("SupplierStatusModifiedBy")
 }
 
 model Department {
   id         Int       @id @default(autoincrement())
   name       String
   employees  Employee[]
-  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
-  modified_by    Employee? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by Employee? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Company {
@@ -43,7 +46,7 @@ model Company {
   name       String
   employees  Employee[]
   suppliers Supplier[]
-  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by    Employee? @relation("CompanyModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
@@ -59,8 +62,12 @@ model Supplier {
   tin_number      String
   status_id     Int
   status          Supplier_Status  @relation(fields: [status_id], references: [id], onDelete: Cascade)
-  contact_details_id Int
-  contact_details Supplier_Contact_Details @relation(fields: [contact_details_id], references: [id], onDelete: Cascade)
+  contact_id Int
+  contact_details Supplier_Contact_Details @relation(fields: [contact_id], references: [id], onDelete: Cascade)
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by Employee? @relation("SupplierModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Supplier_Contact_Details {
@@ -75,10 +82,18 @@ model Supplier_Contact_Details {
   province String
   remarks String
   suppliers Supplier[] @relation
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by Employee? @relation("SupplierContactModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Supplier_Status {
   id              Int             @id @default(autoincrement())
   description     String
   suppliers       Supplier[]      @relation
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by Employee? @relation("SupplierStatusModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
