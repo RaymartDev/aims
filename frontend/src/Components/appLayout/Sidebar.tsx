@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { BarChart, ClipboardList, UsersRound, Settings } from 'lucide-react';
+import { BarChart, ClipboardList, UsersRound } from 'lucide-react';
 import { Button } from '../ui/button';
 import { LogOut } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 function Sidebar() {
 
@@ -23,34 +24,64 @@ function Sidebar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/deliveries" className={({ isActive }) =>
-                `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-16 rounded transition duration-200 font-extrabold space-x-2  ${
-                  isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                }`
-              }>
-              <ClipboardList />
-              <h1 className="sm:hidden xl:inline">Inventory</h1>  
-            </NavLink>
+          <Accordion type="single" collapsible>
+              <AccordionItem value="item-2" >
+                <AccordionTrigger className='mx-5'>
+                  <div className='flex space-x-2 font-extrabold'>
+                    <ClipboardList />
+                    <span className="sm:hidden xl:inline">Inventory</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="my-0 py-0 border-b">
+                    <NavLink to="/deliveries" className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-14 ${
+                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                      }`
+                    }>
+                    <h1 className="mx-14 font-bold">Deliveries</h1>
+                  </NavLink>
+                </AccordionContent>
+                <AccordionContent className="my-0 py-0">
+                    <NavLink to="/materials" className={({ isActive }) =>
+                        `flex items-center transition duration-200 h-14 ${
+                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        }`
+                      }>
+                      <h1 className="mx-14 font-bold">Materials</h1>
+                    </NavLink>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </li>
           <li>
-            <NavLink to="/materials" className={({ isActive }) =>
-                `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-16 rounded transition duration-200 font-extrabold space-x-2  ${
-                  isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                }`
-              }>
-              <Settings />
-              <h1 className="sm:hidden xl:inline">Settings</h1>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/users" className={({ isActive }) =>
-                `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-16 rounded transition duration-200 font-extrabold space-x-2  ${
-                  isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                }`
-              }>
-              <UsersRound />
-              <h1 className="sm:hidden xl:inline">Users</h1>
-            </NavLink>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-2" >
+                <AccordionTrigger className='mx-5'>
+                  <div className='flex space-x-2 font-extrabold'>
+                    <UsersRound />
+                    <span className="sm:hidden xl:inline">Users</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="my-0 py-0 border-b">
+                    <NavLink to="/employee" className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-14 ${
+                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                      }`
+                    }>
+                    <h1 className="mx-14 font-bold">Employee</h1>
+                  </NavLink>
+                </AccordionContent>
+                <AccordionContent className="my-0 py-0">
+                    <NavLink to="/supplier" className={({ isActive }) =>
+                        `flex items-center transition duration-200 h-14 ${
+                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        }`
+                      }>
+                      <h1 className="mx-14 font-bold">Supplier</h1>
+                    </NavLink>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </li>
         </ul>
       </nav> 

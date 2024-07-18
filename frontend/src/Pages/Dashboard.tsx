@@ -5,9 +5,9 @@ function Dashboard() {
         <>
             <Layout>
                 <div>
-                    <h1 className="text-2xl font-bold">Dashboard</h1>
-                </div> 
-            </Layout> 
+                    <h1 className="text-2xl font-bold">Overview</h1>
+                </div>
+            </Layout>
         </>
     );
 }
