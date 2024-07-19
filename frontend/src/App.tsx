@@ -5,6 +5,7 @@ import Deliveries from './pages/Deliveries'
 import Materials from './pages/Materials'
 import Employee from './pages/Employee'
 import Supplier from './pages/Supplier'
+import AddEmployee from './modals/AddEmployee'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/materials" element={<Materials />} />
           <Route path="/employee" element={<Employee />} />
           <Route path="/supplier" element={<Supplier />} />
+          <Route path="/modal" element={<AddEmployee />} />
       </ Routes>
     </ BrowserRouter>
   )
