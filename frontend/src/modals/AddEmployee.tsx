@@ -1,14 +1,17 @@
 import { IoMdClose } from "react-icons/io";
 import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 
 function AddEmployee() {
   return (
     <div className="w-screen h-screen bg-black bg-opacity-75 flex justify-center items-center">
       <div className="bg-white w-[30%] flex flex-col">
-        <div className="flex flex-col py-4">
+        <div className="flex flex-col py-2">
+          <div className="flex justify-end ">
+            <IoMdClose size={30} />
+          </div>
           <div className="flex w-full justify-between px-3 py-1">
             <p className="text-xl font-poppins font-semibold">Add Employeee</p>
-            <IoMdClose size={25} />
           </div>
           <hr className="border-1 border-black w-[95%] mx-auto" />
         </div>
@@ -47,7 +50,7 @@ function AddEmployee() {
           </div>
           <div className="w-[95%] mx-auto">
             <p className="text-[#697386] text-sm">Company</p>
-            <Input type="companyName" className="rounded-lg border-black" />
+            <Input type="text" className="rounded-lg border-black" />
           </div>
           <div className="flex justify-around">
             <span className="flex flex-col w-[45%]">
@@ -67,14 +70,18 @@ function AddEmployee() {
           </div>
           <div className="w-[45%] pl-4">
             <span>
-                <p className="text-sm text-[#697386]">Date Entry</p>
-            <Input type="date" className="border-black rounded-lg"/>
+              <p className="text-sm text-[#697386]">Date Entry</p>
+              <Input type="date" className="border-black rounded-lg" />
             </span>
           </div>
         </div>
         <div className="flex justify-end gap-4 pt-4 pb-4 px-4">
-            <button className="border-black border px-4 font-semibold py-1 bg-[#FCE3C5] rounded-lg">Cancel</button>
-            <button className="border-black border px-4 font-semibold py-1 bg-[#FCE3C5] rounded-lg">Save</button>
+          <Button className="bg-hoverCream font-semibold text-fontHeading">
+            Cancel
+          </Button>
+          <Button className="bg-hoverCream font-semibold text-fontHeading">
+            Save
+          </Button>
         </div>
       </div>
     </div>

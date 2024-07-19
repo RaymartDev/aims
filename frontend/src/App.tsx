@@ -6,7 +6,7 @@ import Materials from './pages/Materials'
 import Employee from './pages/Employee'
 import Store from './pages/Store'
 import Supplier from './pages/Supplier'
-import AddStore from './modals/AddStore'
+import AddStore from './modals/AddEmployee'
 
 function App() {
 
