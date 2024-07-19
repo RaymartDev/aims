@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { BarChart, ClipboardList, UsersRound } from 'lucide-react';
+import { BarChart, ClipboardList, UsersRound, Settings } from 'lucide-react';
 import { Button } from '../ui/button';
 import { LogOut } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 function Sidebar() {
+  const [openItem, setOpenItem] =  useState<string | undefined>(undefined);
 
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
@@ -23,9 +25,11 @@ function Sidebar() {
               <h1 className="sm:hidden xl:inline">Overview</h1>
             </NavLink>
           </li>
+
+          {/* Inventory */}
           <li>
-          <Accordion type="single" collapsible>
-              <AccordionItem value="item-2" >
+          <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+              <AccordionItem value="inventory">
                 <AccordionTrigger className='mx-5'>
                   <div className='flex space-x-2 font-extrabold'>
                     <ClipboardList />
@@ -53,9 +57,11 @@ function Sidebar() {
               </AccordionItem>
             </Accordion>
           </li>
+
+          {/* Users */}
           <li>
-            <Accordion type="single" collapsible>
-              <AccordionItem value="item-2" >
+            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+              <AccordionItem value="users">
                 <AccordionTrigger className='mx-5'>
                   <div className='flex space-x-2 font-extrabold'>
                     <UsersRound />
@@ -71,6 +77,15 @@ function Sidebar() {
                     <h1 className="mx-14 font-bold">Employee</h1>
                   </NavLink>
                 </AccordionContent>
+                <AccordionContent className="my-0 py-0 border-b">
+                    <NavLink to="/store" className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-14 ${
+                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                      }`
+                    }>
+                    <h1 className="mx-14 font-bold">Store</h1>
+                  </NavLink>
+                </AccordionContent>
                 <AccordionContent className="my-0 py-0">
                     <NavLink to="/supplier" className={({ isActive }) =>
                         `flex items-center transition duration-200 h-14 ${
@@ -83,9 +98,42 @@ function Sidebar() {
               </AccordionItem>
             </Accordion>
           </li>
+
+          {/* Settings */}
+          <li>
+            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+                <AccordionItem value="settings">
+                  <AccordionTrigger className='mx-5'>
+                    <div className='flex space-x-2 font-extrabold'>
+                      <Settings />
+                      <span className="sm:hidden xl:inline">Settings</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="my-0 py-0 border-b">
+                      <NavLink to="/employee" className={({ isActive }) =>
+                        `flex items-center transition duration-200 h-14 ${
+                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        }`
+                      }>
+                      <h1 className="mx-14 font-bold">Edit Profile</h1>
+                    </NavLink>
+                  </AccordionContent>
+                  <AccordionContent className="my-0 py-0 border-b">
+                      <NavLink to="/store" className={({ isActive }) =>
+                        `flex items-center transition duration-200 h-14 ${
+                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        }`
+                      }>
+                      <h1 className="mx-14 font-bold">Change Password</h1>
+                    </NavLink>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+          </li>
         </ul>
       </nav> 
-      <Button className="absolute flex justify-start bottom-0 w-full rounded-none bg-white text-[#1A1C20] hover:text-white font-bold space-x-2 "><LogOut /><span>Logout</span>
+      <Button className="absolute flex justify-start bottom-5 w-full rounded-none bg-white text-[#1A1C20] hover:text-white font-bold space-x-2 ">
+        <LogOut /><span className="sm:hidden xl:inline">Logout</span>
       </Button>    
     </div>
   );
