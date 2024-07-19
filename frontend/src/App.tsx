@@ -7,6 +7,7 @@ import Employee from './pages/Employee'
 import Store from './pages/Store'
 import Supplier from './pages/Supplier'
 import AddEmployee from './modals/AddEmployee'
+import SelectMaterial from './modals/SelectMaterial'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         {/* Inventory */}
           <Route path="/deliveries" element={<Deliveries />} />
           <Route path="/materials" element={<Materials />} />
+          <Route path="/materials/modal" element={<SelectMaterial />} />
         {/* User */}
           <Route path="/employee" element={<Employee />} />
           <Route path="/store" element={<Store />} />
