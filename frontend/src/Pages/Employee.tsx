@@ -19,6 +19,9 @@ const employees = [
     { id: 9, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
     { id: 10, number: "100230458", name: "kMAOTE", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
     { id: 11, number: "100230458", name: "SABAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 12, number: "100230458", name: "SABzzxcAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 13, number: "100230458", name: "SABqwewqeAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 14, number: "100230458", name: "asdasd", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
 ];
 
 function Employee() {
@@ -79,7 +82,7 @@ function Employee() {
                     <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
                             <TableHeader className="sticky top-0 bg-white">
-                                <TableRow>
+                                <TableRow className="h-0">
                                     <TableHead>Employee ID</TableHead>
                                     <TableHead>Employee Number</TableHead>
                                     <TableHead>Employee Name</TableHead>
