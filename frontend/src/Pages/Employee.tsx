@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Layout from "@/Components/appLayout/Layout";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
@@ -5,7 +6,6 @@ import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
-import { useEffect, useState } from "react";
 
 const employees = [
     { id: 1, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
@@ -55,7 +55,7 @@ function Employee() {
     return(
         <Layout>
             <div className="flex flex-col h-full">
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full relative">
                     <div className="flex flex-col">
                         <h1 className="text-2xl font-bold">Employee</h1>
                         <p className="text-sm font-semibold text-[#9E9E9E]">Users / Employee</p>
@@ -121,7 +121,7 @@ function Employee() {
                         </Table>
                     </div>
                 </div>
-                <div className="flex justify-center mt-5">
+                <div className="mt-5 absolute bottom-5 left-1/2">
                     <Pagination>
                         <PaginationContent>
                             {currentPage > 1 && (
