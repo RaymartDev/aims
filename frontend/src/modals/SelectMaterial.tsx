@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 
-const employees = [
+const materials = [
     { materialCode: 100231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "06/17/24" },
     { materialCode: 200231, description: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "07/01/23" },
     { materialCode: 300231, description: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
@@ -48,11 +48,11 @@ const SelectMaterial = () => {
         setCurrentPage(page);
     };
 
-    const indexOfLastEmployee = currentPage * itemsPerPage;
-    const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-    const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    const indexOfLastMaterials = currentPage * itemsPerPage;
+    const indexOfFirstMaterials = indexOfLastMaterials - itemsPerPage;
+    const currentMaterials = materials.slice(indexOfFirstMaterials, indexOfLastMaterials);
 
-    const totalPages = Math.ceil(employees.length / itemsPerPage);
+    const totalPages = Math.ceil(materials.length / itemsPerPage);
 
     return (
         <div className="flex flex-col h-full w-[75%] mx-auto border-2 rounded-lg p-10">
@@ -88,15 +88,15 @@ const SelectMaterial = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {currentEmployees.map(employee => (
-                                    <TableRow key={employee.materialCode}>
-                                        <TableCell>{employee.materialCode}</TableCell>
-                                        <TableCell>{employee.description}</TableCell>
-                                        <TableCell>{employee.itemCode}</TableCell>
-                                        <TableCell>{employee.unit}</TableCell>
-                                        <TableCell>{employee.materialType}</TableCell>
-                                        <TableCell>{employee.cost}</TableCell>
-                                        <TableCell>{employee.dateHired}</TableCell>
+                                {currentMaterials.map(materials => (
+                                    <TableRow key={materials.materialCode}>
+                                        <TableCell>{materials.materialCode}</TableCell>
+                                        <TableCell>{materials.description}</TableCell>
+                                        <TableCell>{materials.itemCode}</TableCell>
+                                        <TableCell>{materials.unit}</TableCell>
+                                        <TableCell>{materials.materialType}</TableCell>
+                                        <TableCell>{materials.cost}</TableCell>
+                                        <TableCell>{materials.dateHired}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
