@@ -68,7 +68,7 @@ function Store() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2"/>
+                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border">
@@ -79,7 +79,7 @@ function Store() {
                     </div>
                     <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
-                            <TableHeader className="sticky top-0 bg-white">
+                            <TableHeader>
                                 <TableRow>
                                     <TableHead>Company</TableHead>
                                     <TableHead>Cost Center Code</TableHead>
