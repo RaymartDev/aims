@@ -1,8 +1,7 @@
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { MoreHorizontal, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 
@@ -97,19 +96,6 @@ const SelectMaterial = () => {
                                         <TableCell>{materials.materialType}</TableCell>
                                         <TableCell>{materials.cost}</TableCell>
                                         <TableCell>{materials.dateHired}</TableCell>
-                                        <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger>
-                                                    <Button className="bg-transparent text-fontHeading hover:text-white">
-                                                        <MoreHorizontal/>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

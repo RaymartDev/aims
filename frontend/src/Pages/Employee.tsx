@@ -81,8 +81,8 @@ function Employee() {
                     </div>
                     <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
-                            <TableHeader className="sticky top-0 bg-white">
-                                <TableRow className="h-0">
+                            <TableHeader>
+                                <TableRow>
                                     <TableHead>Employee ID</TableHead>
                                     <TableHead>Employee Number</TableHead>
                                     <TableHead>Employee Name</TableHead>
@@ -121,7 +121,7 @@ function Employee() {
                                     </TableRow>
                                 ))}
                             </TableBody>
-                        </Table>
+                        </Table>   
                     </div>
                 </div>
                 <div className="mt-5 absolute bottom-5 left-1/2">

@@ -79,7 +79,7 @@ function Materials() {
                     </div>
                     <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
-                            <TableHeader className="sticky top-0 bg-white">
+                            <TableHeader>
                                 <TableRow>
                                     <TableHead>Material Code</TableHead>
                                     <TableHead>Description</TableHead>

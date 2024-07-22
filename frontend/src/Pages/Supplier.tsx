@@ -78,7 +78,7 @@ function Supplier() {
                     </div>
                     <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
-                            <TableHeader className="sticky top-0 bg-white">
+                            <TableHeader>
                                 <TableRow>
                                     <TableHead>Supplier Code</TableHead>
                                     <TableHead>Company Name</TableHead>
