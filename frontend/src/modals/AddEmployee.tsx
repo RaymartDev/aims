@@ -5,13 +5,11 @@ import { Button } from "@/Components/ui/button";
 function AddEmployee() {
   return (
     <div className="w-screen h-screen bg-black bg-opacity-75 flex justify-center items-center">
-      <div className="bg-white w-[30%] flex flex-col">
-        <div className="flex flex-col py-2">
-          <div className="flex justify-end ">
-            <IoMdClose size={30} />
-          </div>
-          <div className="flex w-full justify-between px-3 py-1">
+      <div className="bg-white w-[30%] flex flex-col px-2 shadow-lg">
+        <div className="flex flex-col">
+          <div className="flex w-full justify-between px-3 py-2">
             <p className="text-xl font-poppins font-semibold">Add Employeee</p>
+            <IoMdClose size={30} />
           </div>
           <hr className="border-1 border-black w-[95%] mx-auto" />
         </div>
