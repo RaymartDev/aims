@@ -7,7 +7,6 @@ import Employee from './pages/Employee'
 import Store from './pages/Store'
 import Supplier from './pages/Supplier'
 import AddSupplier from './modals/AddSupplier2'
-import SelectMaterials from './modals/SelectMaterial'
 
 function App() {
 
@@ -24,7 +23,6 @@ function App() {
           <Route path="/store" element={<Store />} />
           <Route path="/supplier" element={<Supplier />} />
           <Route path='/modal' element={<AddSupplier/>}/>
-          <Route path='/modal' element={<SelectMaterials/>}/>
       </ Routes>
     </ BrowserRouter>
   )
