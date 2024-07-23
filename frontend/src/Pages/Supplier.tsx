@@ -6,6 +6,7 @@ import { Input } from "@/Components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import ModalSupplier from "@/modals/AddSupplier";
 
 const suppliers = [
     { id: 1, supplierNumber: "100230456", companyName: "Leansel Nico", contactPerson: "IT Department", businessNumber: "503604218", mobileNumber: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
@@ -22,6 +23,12 @@ const suppliers = [
 ];
 
 function Supplier() {
+
+    //Supplier Modal
+    const[showModalSupplier, setShowModalSupplier] = useState(false);
+    const handleShowSupplier = () => setShowModalSupplier(true);
+    const handleCloseSupplier = () => setShowModalSupplier(false);
+
     const headerHeight = 72;
 
     const getItemsPerPage = (height: number): number => {
@@ -70,9 +77,10 @@ function Supplier() {
                                     <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border">
+                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowSupplier}>
                                     <Plus size={20}/><span className="text-sm">Add Supplier</span>
                                 </Button>
+                                <ModalSupplier show={showModalSupplier} handleClose={handleCloseSupplier}/>
                             </div>    
                         </div>
                     </div>

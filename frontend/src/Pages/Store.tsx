@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import ModalStore from "@/modals/AddStore";
 
 const stores = [
     { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
@@ -22,6 +23,12 @@ const stores = [
 ];
 
 function Store() {
+
+    //Store Modal
+    const[showModalStore, setShowModalStore] = useState(false);
+    const handleShowModalStore = () => setShowModalStore(true);
+    const handleCloseShowModalStore = () => setShowModalStore(false);
+
     const headerHeight = 72;
 
     const getItemsPerPage = (height: number): number => {
@@ -71,9 +78,10 @@ function Store() {
                                     <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border">
+                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowModalStore}>
                                     <Plus size={20}/><span className="text-sm">Add Store</span>
                                 </Button>
+                                <ModalStore show={showModalStore} handleClose={handleCloseShowModalStore} />
                             </div>    
                         </div>
                     </div>
