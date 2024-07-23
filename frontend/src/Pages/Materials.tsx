@@ -19,14 +19,37 @@ const materials = [
     { id: 9, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 10, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 11, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 1, materialCode: "Leansel Nico", desc: "IT Department", itemCode: "503604218", unit: "IT Asset", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 2, materialCode: "100230457", desc: "Jane Doe", itemCode: "Finance", unit: "503604219", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 3, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 4, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 5, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 6, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 7, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24"  },
+    { id: 8, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 9, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 10, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 11, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 1, materialCode: "Leansel Nico", desc: "IT Department", itemCode: "503604218", unit: "IT Asset", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 2, materialCode: "100230457", desc: "Jane Doe", itemCode: "Finance", unit: "503604219", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 3, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 4, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 5, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 6, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 7, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24"  },
+    { id: 8, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 9, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 10, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 11, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
 ];
 function Materials() {
     const headerHeight = 72;
+    const itemHeight = 50;
 
     const getItemsPerPage = (height: number): number => {
         const availableHeight = height - headerHeight;
-        if (availableHeight < 500) return 10;
-        return 10;
+        if (availableHeight < 0) return 0;
+        return Math.floor(availableHeight / itemHeight);
     };
 
     const [currentPage, setCurrentPage] = useState(1);
