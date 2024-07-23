@@ -11,7 +11,7 @@ function Layout({ children }: { children: ReactNode }) {
                         <h1 className="text-lg font-bold">Leansel Nico</h1>
                     </div>
                 </header>
-                <main className="flex-1 overflow-y-auto">
+                <main className="flex-1">
                     <div className="w-full mx-auto py-6 sm:px-6 lg:px-8">
                         {children}
                     </div>

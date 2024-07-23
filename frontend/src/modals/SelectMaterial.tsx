@@ -74,8 +74,8 @@ const SelectMaterial = () => {
                     </div>
                     <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
-                            <TableHeader className="sticky top-0 bg-white">
-                                <TableRow className="h-0">
+                            <TableHeader>
+                                <TableRow>
                                     <TableHead>Material Code</TableHead>
                                     <TableHead>Description</TableHead>
                                     <TableHead>Item Code</TableHead>
