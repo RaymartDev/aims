@@ -80,7 +80,7 @@ function Deliveries() {
                         <h1 className="text-2xl font-bold">Deliveries</h1>
                         <p className="text-sm font-semibold text-[#9E9E9E]">Inventory / Deliveries</p>
                     </div>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold" onClick={() => setOpenModal(true)}>
+                    <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={() => setOpenModal(true)}>
                         <Plus size={20}/><span className="text-sm">Add Delivery</span>
                     </Button>
                 </div>
@@ -188,8 +188,8 @@ function Deliveries() {
                         </div>
                     </div>
                     <div className="flex justify-end space-x-5 mt-4">
-                        <Button className="bg-hoverCream text-fontHeading font-semibold w-32">Cancel</Button>
-                        <Button className="bg-hoverCream text-fontHeading font-semibold w-32">Save</Button>
+                        <Button className="bg-hoverCream text-fontHeading font-semibold w-32 hover:text-white">Cancel</Button>
+                        <Button className="bg-hoverCream text-fontHeading font-semibold w-32 hover:text-white">Save</Button>
                     </div>
                     <div className="mt-4 space-y-2">
                         <div className="border-2 rounded-lg flex p-2 items-center space-x-3 ">

@@ -6,6 +6,8 @@ import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import AddMaterialModal from "@/modals/AddMaterialModal";
+import AddMaterialModal2 from "@/modals/AddMaterialModal2";
 
 const materials = [
     { id: 1, materialCode: "Leansel Nico", desc: "IT Department", itemCode: "503604218", unit: "IT Asset", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
@@ -19,30 +21,21 @@ const materials = [
     { id: 9, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 10, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 11, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 1, materialCode: "Leansel Nico", desc: "IT Department", itemCode: "503604218", unit: "IT Asset", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 2, materialCode: "100230457", desc: "Jane Doe", itemCode: "Finance", unit: "503604219", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 3, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 4, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 5, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 6, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 7, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24"  },
-    { id: 8, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 9, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 10, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 11, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 1, materialCode: "Leansel Nico", desc: "IT Department", itemCode: "503604218", unit: "IT Asset", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 2, materialCode: "100230457", desc: "Jane Doe", itemCode: "Finance", unit: "503604219", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 3, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 4, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 5, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 6, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 7, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24"  },
-    { id: 8, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 9, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 10, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 11, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 12, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 13, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 14, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 15, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 16, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 17, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },{ id: 13, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 18, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 19, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 20, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 21, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
 ];
 function Materials() {
+    const [openModal, setOpenModal] = useState(false);
+    const [openNextModal, setOpenNextModal] = useState(false);
+
     const headerHeight = 72;
     const itemHeight = 50;
 
@@ -74,7 +67,15 @@ function Materials() {
 
     const totalPages = Math.ceil(materials.length / itemsPerPage);
 
+    const handleNextModal = () => {
+        setOpenModal(false);
+        setOpenNextModal(true);
+    };
 
+    const handleBack = () => {
+        setOpenNextModal(false);
+        setOpenModal(true);
+    };
 
     return(
         <Layout>
@@ -94,7 +95,7 @@ function Materials() {
                                     <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border">
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Materials</span>
                                 </Button>
                             </div>    
@@ -171,6 +172,8 @@ function Materials() {
                     </Pagination>
                 </div>
             </div>
+            <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
+            <AddMaterialModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
         </Layout>
     );
 }
