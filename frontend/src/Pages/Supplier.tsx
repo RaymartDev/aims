@@ -6,8 +6,31 @@ import { Input } from "@/Components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import ModalSupplier from "@/modals/AddSupplier";
 
 const suppliers = [
+    { id: 1, supplierNumber: "100230456", companyName: "Leansel Nico", contactPerson: "IT Department", businessNumber: "503604218", mobileNumber: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
+    { id: 2, supplierNumber: "100230457", companyName: "Jane Doe", contactPerson: "Finance", businessNumber: "503604219", mobileNumber: "Accounting", company: "ABC Corp", dateHired: "07/01/23" },
+    { id: 3, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 4, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 5, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 6, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 7, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 8, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 9, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 10, supplierNumber: "100230458", companyName: "kMAOTE", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 11, supplierNumber: "100230458", companyName: "SABAW", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 1, supplierNumber: "100230456", companyName: "Leansel Nico", contactPerson: "IT Department", businessNumber: "503604218", mobileNumber: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
+    { id: 2, supplierNumber: "100230457", companyName: "Jane Doe", contactPerson: "Finance", businessNumber: "503604219", mobileNumber: "Accounting", company: "ABC Corp", dateHired: "07/01/23" },
+    { id: 3, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 4, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 5, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 6, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 7, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 8, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 9, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 10, supplierNumber: "100230458", companyName: "kMAOTE", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
+    { id: 11, supplierNumber: "100230458", companyName: "SABAW", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
     { id: 1, supplierNumber: "100230456", companyName: "Leansel Nico", contactPerson: "IT Department", businessNumber: "503604218", mobileNumber: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
     { id: 2, supplierNumber: "100230457", companyName: "Jane Doe", contactPerson: "Finance", businessNumber: "503604219", mobileNumber: "Accounting", company: "ABC Corp", dateHired: "07/01/23" },
     { id: 3, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", company: "XYZ Inc", dateHired: "05/21/22" },
@@ -22,12 +45,19 @@ const suppliers = [
 ];
 
 function Supplier() {
+
+    //Supplier Modal
+    const[showModalSupplier, setShowModalSupplier] = useState(false);
+    const handleShowSupplier = () => setShowModalSupplier(true);
+    const handleCloseSupplier = () => setShowModalSupplier(false);
+
     const headerHeight = 72;
+    const itemHeight = 50;
 
     const getItemsPerPage = (height: number): number => {
         const availableHeight = height - headerHeight;
-        if (availableHeight < 500) return 10;
-        return 10;
+        if (availableHeight < 0) return 0;
+        return Math.floor(availableHeight / itemHeight);
     };
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -70,9 +100,10 @@ function Supplier() {
                                     <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border">
+                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowSupplier}>
                                     <Plus size={20}/><span className="text-sm">Add Supplier</span>
                                 </Button>
+                                <ModalSupplier show={showModalSupplier} handleClose={handleCloseSupplier}/>
                             </div>    
                         </div>
                     </div>

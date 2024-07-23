@@ -2,14 +2,26 @@ import { IoMdClose } from "react-icons/io";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 
-function AddStore() {
+interface ModalProps {
+  show: boolean;
+  handleClose: () => void;
+  children?: React.ReactNode;
+}
+
+const ModalStore: React.FC<ModalProps> = ({ show, handleClose, children }) => {
+  if (!show) {
+    return null;
+  }
+
   return (
-    <div className="bg-black bg-opacity-75 w-screen h-screen flex justify-center items-center">
+    <div className="bg-black bg-opacity-75 fixed inset-0 z-50 flex justify-center items-center">
       <div className="bg-white w-[30%] flex flex-col px-2 rounded-lg shadow-lg">
         <div className="flex flex-col">
           <div className="flex w-full justify-between px-3 py-2">
             <p className="text-xl font-poppins font-semibold">Add Store</p>
+            <button onClick={handleClose}>
             <IoMdClose size={30} />
+            </button>
           </div>
           <hr className="border-1 border-black w-[95%] mx-auto" />
         </div>
@@ -31,7 +43,7 @@ function AddStore() {
             <Input type="text" className="rounded-lg border-black" />
           </div>
           <div className="flex justify-end gap-4 pt-4 pb-4 px-4">
-            <Button className="bg-hoverCream font-semibold text-fontHeading">
+            <Button className="bg-hoverCream font-semibold text-fontHeading" onClick={handleClose}>
               Cancel
             </Button>
             <Button className="bg-hoverCream font-semibold text-fontHeading">
@@ -44,4 +56,4 @@ function AddStore() {
   );
 }
 
-export default AddStore;
+export default ModalStore;

@@ -7,8 +7,31 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddStoreModal from "@/modals/AddStoreModal";
+import ModalStore from "@/modals/AddStore";
 
 const stores = [
+    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
+    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
+    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
+    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
+    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
+    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
+    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
+    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
+    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
+    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
+    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
     { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
     { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
     { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
@@ -25,12 +48,18 @@ const stores = [
 function Store() {
 
     const [openModal, setOpenModal] = useState(false);
+    //Store Modal
+    const[showModalStore, setShowModalStore] = useState(false);
+    const handleShowModalStore = () => setShowModalStore(true);
+    const handleCloseShowModalStore = () => setShowModalStore(false);
+
     const headerHeight = 72;
+    const itemHeight = 50;
 
     const getItemsPerPage = (height: number): number => {
         const availableHeight = height - headerHeight;
-        if (availableHeight < 500) return 10;
-        return 10;
+        if (availableHeight < 0) return 0;
+        return Math.floor(availableHeight / itemHeight);
     };
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -78,6 +107,10 @@ function Store() {
                                     <Plus size={20}/><span className="text-sm">Add Store</span>
                                 </Button>
                                 
+                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowModalStore}>
+                                    <Plus size={20}/><span className="text-sm">Add Store</span>
+                                </Button>
+                                <ModalStore show={showModalStore} handleClose={handleCloseShowModalStore} />
                             </div>    
                         </div>
                     </div>
