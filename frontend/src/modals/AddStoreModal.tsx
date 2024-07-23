@@ -8,7 +8,6 @@ interface AddStoreModalProps {
 }
 
 function AddStoreModal({ open, onClose }: AddStoreModalProps) {
-
     if (!open) return null;
 
     return (

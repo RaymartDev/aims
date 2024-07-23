@@ -6,6 +6,7 @@ import { Plus, Search } from "lucide-react";
 import { Label } from "@/Components/ui/label"
 import { Textarea } from "@/Components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import SelectMaterialModal from "@/modals/SelectMaterialModal";
 
 const deliveries = [
     { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
@@ -44,6 +45,8 @@ const deliveries = [
 ];
 
 function Deliveries() {
+    const [openModal, setOpenModal] = useState(false);
+
     const headerHeight = 72;
     const itemHeight = 50;
 
@@ -77,7 +80,9 @@ function Deliveries() {
                         <h1 className="text-2xl font-bold">Deliveries</h1>
                         <p className="text-sm font-semibold text-[#9E9E9E]">Inventory / Deliveries</p>
                     </div>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold"><Plus size={20}/><span className="text-sm">Add Employee</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold" onClick={() => setOpenModal(true)}>
+                        <Plus size={20}/><span className="text-sm">Add Delivery</span>
+                    </Button>
                 </div>
                 <div className="mt-6 flex-grow overflow-y-auto pl-2">
                     <div className="flex space-x-5">
@@ -224,8 +229,8 @@ function Deliveries() {
                         </div>
                     </div>
                 </div>
-                
             </div>
+            <SelectMaterialModal open={openModal} onClose={() => setOpenModal(false)}/>
         </Layout>
     );
 }

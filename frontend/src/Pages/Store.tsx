@@ -7,51 +7,48 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddStoreModal from "@/modals/AddStoreModal";
-import ModalStore from "@/modals/AddStore";
+import UserRegistration from "@/modals/UserRegistration";
 
 const stores = [
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
+    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
+    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
+    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"  },
+    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
+    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 12, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
+    { id: 13, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
+    { id: 14, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 15, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 16, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 17, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 18, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
+    { id: 19, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 20, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
+    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
+    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
+    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220", status: "Registered" },
 ];
 
 function Store() {
 
     const [openModal, setOpenModal] = useState(false);
-    //Store Modal
-    const[showModalStore, setShowModalStore] = useState(false);
-    const handleShowModalStore = () => setShowModalStore(true);
-    const handleCloseShowModalStore = () => setShowModalStore(false);
+    const [openUserRegModal, setOpenUserRegModal] = useState(false);
 
     const headerHeight = 72;
     const itemHeight = 50;
@@ -106,11 +103,6 @@ function Store() {
                                 <Button className="bg-hoverCream text-fontHeading border" onClick={() => setOpenModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Store</span>
                                 </Button>
-                                
-                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowModalStore}>
-                                    <Plus size={20}/><span className="text-sm">Add Store</span>
-                                </Button>
-                                <ModalStore show={showModalStore} handleClose={handleCloseShowModalStore} />
                             </div>    
                         </div>
                     </div>
@@ -122,6 +114,7 @@ function Store() {
                                     <TableHead>Cost Center Code</TableHead>
                                     <TableHead>Store Name</TableHead>
                                     <TableHead>Address</TableHead>
+                                    <TableHead>Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -132,6 +125,7 @@ function Store() {
                                         <TableCell>{stores.costCenter}</TableCell>
                                         <TableCell>{stores.storeName}</TableCell>
                                         <TableCell>{stores.address}</TableCell>
+                                        <TableCell>{stores.status}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
@@ -142,6 +136,7 @@ function Store() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenUserRegModal(true)}>Register</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -180,6 +175,7 @@ function Store() {
                 </div>
             </div>
             <AddStoreModal open={openModal} onClose={() => setOpenModal(false)}/>
+            <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
         </Layout>
     );
 }

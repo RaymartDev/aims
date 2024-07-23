@@ -6,7 +6,8 @@ import { Input } from "@/Components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
-import ModalSupplier from "@/modals/AddSupplier";
+import AddSupplierModal from "@/modals/AddSupplierModal";
+import AddSupplierModal2 from "@/modals/AddSupplierModal2";
 
 const suppliers = [
     { id: 1, supplierNumber: "100230456", companyName: "Leansel Nico", contactPerson: "IT Department", businessNumber: "503604218", mobileNumber: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
@@ -46,10 +47,8 @@ const suppliers = [
 
 function Supplier() {
 
-    //Supplier Modal
-    const[showModalSupplier, setShowModalSupplier] = useState(false);
-    const handleShowSupplier = () => setShowModalSupplier(true);
-    const handleCloseSupplier = () => setShowModalSupplier(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [openNextModal, setOpenNextModal] = useState(false);
 
     const headerHeight = 72;
     const itemHeight = 50;
@@ -82,6 +81,17 @@ function Supplier() {
 
     const totalPages = Math.ceil(suppliers.length / itemsPerPage);
 
+    const handleNextModal = () => {
+        setOpenModal(false);
+        setOpenNextModal(true);
+    };
+
+    const handleBack = () => {
+        setOpenNextModal(false);
+        setOpenModal(true);
+    };
+
+
     return(
         <Layout>
             <div className="flex flex-col h-full">
@@ -100,10 +110,9 @@ function Supplier() {
                                     <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowSupplier}>
+                                <Button className="bg-hoverCream text-fontHeading border" onClick={() => setOpenModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Supplier</span>
                                 </Button>
-                                <ModalSupplier show={showModalSupplier} handleClose={handleCloseSupplier}/>
                             </div>    
                         </div>
                     </div>
@@ -178,7 +187,8 @@ function Supplier() {
                     </Pagination>
                 </div>
             </div>
-            
+            <AddSupplierModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
+            <AddSupplierModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
         </Layout>
     );
 }
