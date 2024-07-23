@@ -1,15 +1,28 @@
+import React from "react";
 import { IoMdClose } from "react-icons/io";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 
-function AddEmployee() {
+interface ModalProps {
+  show: boolean;
+  handleClose: () => void;
+  children?: React.ReactNode;
+}
+
+const ModalEmployee: React.FC<ModalProps> = ({ show, handleClose, children }) => {
+  if (!show) {
+    return null;
+  }
+
   return (
-    <div className="w-screen h-screen bg-black bg-opacity-75 flex justify-center items-center">
-      <div className="bg-white w-[30%] flex flex-col px-2 shadow-lg">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex justify-center items-center">
+      <div className="bg-white w-[30%] flex flex-col px-2 shadow-lg rounded-lg">
         <div className="flex flex-col">
           <div className="flex w-full justify-between px-3 py-2">
-            <p className="text-xl font-poppins font-semibold">Add Employeee</p>
-            <IoMdClose size={30} />
+            <p className="text-xl font-poppins font-semibold">Add Employee</p>
+            <button onClick={handleClose}>
+              <IoMdClose size={30} />
+            </button>
           </div>
           <hr className="border-1 border-black w-[95%] mx-auto" />
         </div>
@@ -17,33 +30,21 @@ function AddEmployee() {
           <div className="flex justify-around">
             <span className="flex flex-col w-[45%]">
               <p className="text-sm text-[#697386]">First Name</p>
-              <Input
-                type="text"
-                className=" w-full border border-black rounded-xl"
-              />
+              <Input type="text" className="w-full border border-black rounded-xl" />
             </span>
             <span className="w-[45%]">
               <p className="text-sm text-[#697386]">Last Name</p>
-              <Input
-                type="text"
-                className=" w-full border border-black rounded-xl"
-              />
+              <Input type="text" className="w-full border border-black rounded-xl" />
             </span>
           </div>
           <div className="flex justify-around">
             <span className="flex flex-col w-[45%]">
               <p className="text-sm text-[#697386]">Employee Number</p>
-              <Input
-                type="text"
-                className=" w-full border border-black rounded-xl"
-              />
+              <Input type="text" className="w-full border border-black rounded-xl" />
             </span>
             <span className="w-[45%]">
               <p className="text-sm text-[#697386]">Cost Center Code</p>
-              <Input
-                type="text"
-                className=" w-full border border-black rounded-xl"
-              />
+              <Input type="text" className="w-full border border-black rounded-xl" />
             </span>
           </div>
           <div className="w-[95%] mx-auto">
@@ -53,17 +54,11 @@ function AddEmployee() {
           <div className="flex justify-around">
             <span className="flex flex-col w-[45%]">
               <p className="text-sm text-[#697386]">Department</p>
-              <Input
-                type="text"
-                className=" w-full border border-black rounded-xl"
-              />
+              <Input type="text" className="w-full border border-black rounded-xl" />
             </span>
             <span className="w-[45%]">
               <p className="text-sm text-[#697386]">Division</p>
-              <Input
-                type="text"
-                className=" w-full border border-black rounded-xl"
-              />
+              <Input type="text" className="w-full border border-black rounded-xl" />
             </span>
           </div>
           <div className="w-[45%] pl-4">
@@ -74,7 +69,7 @@ function AddEmployee() {
           </div>
         </div>
         <div className="flex justify-end gap-4 pt-4 pb-4 px-4">
-          <Button className="bg-hoverCream font-semibold text-fontHeading">
+          <Button className="bg-hoverCream font-semibold text-fontHeading" onClick={handleClose}>
             Cancel
           </Button>
           <Button className="bg-hoverCream font-semibold text-fontHeading">
@@ -84,6 +79,6 @@ function AddEmployee() {
       </div>
     </div>
   );
-}
+};
 
-export default AddEmployee;
+export default ModalEmployee;

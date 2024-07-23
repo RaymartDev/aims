@@ -6,6 +6,7 @@ import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import ModalEmployee from "@/modals/AddEmployee";
 
 const employees = [
     { id: 1, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24" },
@@ -25,6 +26,12 @@ const employees = [
 ];
 
 function Employee() {
+
+    //Employee Modal
+    const [showModalEmployee, setShowModalEmployee] = useState(false);
+    const handleShowEmployee = () => setShowModalEmployee(true);
+    const handleCloseEmployee = () => setShowModalEmployee(false);
+
     const headerHeight = 72;
 
     const getItemsPerPage = (height: number): number => {
@@ -73,9 +80,10 @@ function Employee() {
                                     <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border">
+                                <Button className="bg-hoverCream text-fontHeading border" onClick={handleShowEmployee}>
                                     <Plus size={20}/><span className="text-sm">Add Employee</span>
                                 </Button>
+                                <ModalEmployee show={showModalEmployee} handleClose={handleCloseEmployee} />
                             </div>    
                         </div>
                     </div>
