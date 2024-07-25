@@ -27,7 +27,7 @@ function AddSupplierModal ({ open, onClose, onNext  }: AddSupplierModalProps) {
                             <Input className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-1/3">
-                            <p className="text-sm text-[#697386]">Supplier Code</p>
+                            <p className="text-sm text-[#697386]">Status Code</p>
                             <Select>
                                 <SelectTrigger className="border-black focus:border-none">
                                     <SelectValue placeholder="Select Status"/>
@@ -61,8 +61,8 @@ function AddSupplierModal ({ open, onClose, onNext  }: AddSupplierModalProps) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={onNext}><span>Next</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}><span>Next</span></Button>
                 </div>
             </div>
         </div>

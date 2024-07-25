@@ -9,43 +9,31 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import SelectMaterialModal from "@/modals/SelectMaterialModal";
 
 const deliveries = [
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220",  },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220" },
+    { id: 1, drNumber: "Leansel Nico", desc: "IT Department", serialNumber: "503604218", assetNumber: "IT Asset", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 2, drNumber: "100230457", desc: "Jane Doe", serialNumber: "Finance", assetNumber: "503604219", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 3, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN"  },
+    { id: 4, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 5, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 6, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 7, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 8, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 9, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 10, drNumber: "100230458", desc: "kMAOTE", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 11, drNumber: "100230458", desc: "SABAW", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 12, drNumber: "Leansel Nico", desc: "IT Department", serialNumber: "503604218", assetNumber: "IT Asset", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 13, drNumber: "100230457", desc: "Jane Doe", serialNumber: "Finance", assetNumber: "503604219", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 14, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 15, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 16, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 17, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 18, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 19, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
+    { id: 20, drNumber: "100230458", desc: "John Smith", serialNumber: "Marketing", assetNumber: "503604220", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
 ];
 
 function Deliveries() {
     const [openModal, setOpenModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
     const itemHeight = 50;
@@ -68,9 +56,13 @@ function Deliveries() {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    const filteredDeliveries = deliveries.filter(deliveries =>
+        deliveries.desc.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const indexOfLastDeliveries = currentPage * itemsPerPage;
     const indexOfFirstDeliveries = indexOfLastDeliveries - itemsPerPage;
-    const currentDeliveries= deliveries.slice(indexOfFirstDeliveries, indexOfLastDeliveries);
+    const currentDeliveries= filteredDeliveries.slice(indexOfFirstDeliveries, indexOfLastDeliveries);
 
     return(
         <Layout>
@@ -172,11 +164,11 @@ function Deliveries() {
                                 </div>
                                 <div>
                                     <Label htmlFor="storeNo">Store Number</Label>
-                                    <Input id="storeNo" type="Number" placeholder="Store Number" className="w-80 focus:border-none"/>
+                                    <Input id="storeNo"  placeholder="Store Number" className="w-80 focus:border-none"/>
                                 </div>
                                 <div>
                                     <Label htmlFor="costCenter">Cost Center</Label>
-                                    <Input id="costCenter" type="Number" placeholder="Cost Center" className="w-80 focus:border-none"/>
+                                    <Input id="costCenter" placeholder="Cost Center" className="w-80 focus:border-none"/>
                                 </div>
                             </div>
                             <div className="flex space-x-5 mt-5">
@@ -195,7 +187,9 @@ function Deliveries() {
                         <div className="border-2 rounded-lg flex p-2 items-center space-x-3 ">
                             <h1 className="text-sm">Description</h1>
                             <div className="relative w-1/3">
-                                <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
+                                <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}/>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             </div>   
                         </div>
@@ -215,13 +209,13 @@ function Deliveries() {
                                 <TableBody>
                                     {currentDeliveries.map(deliveries => (
                                         <TableRow key={deliveries.id}>
-                                            <TableCell>{deliveries.companyName}</TableCell>
-                                            <TableCell>{deliveries.costCenter}</TableCell>
-                                            <TableCell>{deliveries.storeName}</TableCell>
-                                            <TableCell>{deliveries.address}</TableCell>
-                                            <TableCell>{deliveries.address}</TableCell>
-                                            <TableCell>{deliveries.address}</TableCell>
-                                            <TableCell>{deliveries.address}</TableCell>
+                                            <TableCell>{deliveries.drNumber}</TableCell>
+                                            <TableCell>{deliveries.desc}</TableCell>
+                                            <TableCell>{deliveries.serialNumber}</TableCell>
+                                            <TableCell>{deliveries.assetNumber}</TableCell>
+                                            <TableCell>{deliveries. quantity}</TableCell>
+                                            <TableCell>{deliveries.unit}</TableCell>
+                                            <TableCell>{deliveries.remarks}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

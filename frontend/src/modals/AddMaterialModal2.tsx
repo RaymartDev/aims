@@ -50,8 +50,8 @@ function AddMaterialModal2 ({ open, onClose, onBack }: AddMaterialModal2Props) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={onBack}><span>Back</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white"><span>Save</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onBack}><span>Back</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
         </div>

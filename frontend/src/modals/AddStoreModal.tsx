@@ -36,8 +36,8 @@ function AddStoreModal({ open, onClose }: AddStoreModalProps) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white"><span>Save</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
         </div>

@@ -11,24 +11,24 @@ interface SelectMaterialModalProps {
 }
 
 const materials = [
-    { materialCode: 100231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "06/17/24" },
-    { materialCode: 200231, description: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "07/01/23" },
-    { materialCode: 300231, description: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 400231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 500231, description: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 600231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 700231, description: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 800231, description: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 900231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 1000231, description: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 1100231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 1200231, description: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 1300231, description: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateHired: "05/21/22" },
-    { materialCode: 1400231, description: "10023Predator 16GB RAM / 512GB SSD i9-145000458", name: "asdasd", department: "Marketing", costCode: "OU", cost: "45,000", dateHired: "05/21/22" },
+    {id:1, materialCode: 100231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "06/17/24" },
+    {id:2, materialCode: 200231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "07/01/23" },
+    {id:3, materialCode: 300231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:4, materialCode: 400231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:5, materialCode: 500231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:6, materialCode: 600231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:7, materialCode: 700231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:8, materialCode: 800231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:9, materialCode: 900231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:10, materialCode: 1000231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:11, materialCode: 1100231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:12, materialCode: 1200231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:13, materialCode: 1300231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
+    {id:14, materialCode: 1300231, desc: "AOC 16GB RAM / 512GB SSD", itemCode: "MONI-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
 ];
 
 function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
-
+    const [searchQuery, setSearchQuery] = useState("");
     const headerHeight = 72;
 
     const getItemsPerPage = (height: number): number => {
@@ -39,6 +39,7 @@ function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
+    const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -53,11 +54,19 @@ function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
         setCurrentPage(page);
     };
 
+    const filteredMaterial = materials.filter(materials =>
+        materials.desc.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const indexOfLastMaterials = currentPage * itemsPerPage;
     const indexOfFirstMaterials = indexOfLastMaterials - itemsPerPage;
-    const currentMaterials = materials.slice(indexOfFirstMaterials, indexOfLastMaterials);
+    const currentMaterials = filteredMaterial.slice(indexOfFirstMaterials, indexOfLastMaterials);
 
-    const totalPages = Math.ceil(materials.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredMaterial.length / itemsPerPage);
+
+    const handleRowClick = (id: number) => {
+        setSelectedMaterial(id);
+    };
 
     if (!open) return null;
 
@@ -71,7 +80,9 @@ function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
                 <div className="flex flex-row items-center space-x-5 mt-5 w-1/2">
                     <h1 className="w-1/6">Materials</h1>
                     <div className="relative w-5/6 ">
-                        <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
+                        <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}/>
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </div>   
                 </div>
@@ -91,14 +102,16 @@ function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
                         </TableHeader>
                         <TableBody>
                             {currentMaterials.map(materials => (
-                                <TableRow key={materials.materialCode}>
+                                <TableRow key={materials.id}
+                                    onClick={() => handleRowClick(materials.id)}
+                                    className={selectedMaterial === materials.id ? "bg-hoverCream" : "cursor-pointer"}>
                                     <TableCell>{materials.materialCode}</TableCell>
-                                    <TableCell>{materials.description}</TableCell>
+                                    <TableCell>{materials.desc}</TableCell>
                                     <TableCell>{materials.itemCode}</TableCell>
                                     <TableCell>{materials.unit}</TableCell>
                                     <TableCell>{materials.materialType}</TableCell>
                                     <TableCell>{materials.cost}</TableCell>
-                                    <TableCell>{materials.dateHired}</TableCell>
+                                    <TableCell>{materials.dateEntry}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -132,8 +145,8 @@ function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
                     </Pagination>
                 </div>
                 <div className="flex justify-end space-x-5">
-                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold" onClick={onClose}>Cancel</Button>
-                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold">Select</Button>
+                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}>Cancel</Button>
+                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white">Select</Button>
                 </div>
             </div>
         </div>

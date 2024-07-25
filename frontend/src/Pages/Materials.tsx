@@ -26,7 +26,7 @@ const materials = [
     { id: 14, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 15, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 16, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 17, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },{ id: 13, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 17, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 18, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 19, materialCode: "100230458", desc: "kMAOTE", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 20, materialCode: "100230458", desc: "SABAW", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
@@ -35,6 +35,7 @@ const materials = [
 function Materials() {
     const [openModal, setOpenModal] = useState(false);
     const [openNextModal, setOpenNextModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
     const itemHeight = 50;
@@ -61,11 +62,15 @@ function Materials() {
         setCurrentPage(page);
     };
 
+    const filteredMaterial = materials.filter(materials =>
+        materials.desc.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const indexOfLastMaterials = currentPage * itemsPerPage;
     const indexOfFirstMaterials = indexOfLastMaterials - itemsPerPage;
-    const currentMaterials = materials.slice(indexOfFirstMaterials, indexOfLastMaterials);
+    const currentMaterials = filteredMaterial.slice(indexOfFirstMaterials, indexOfLastMaterials);
 
-    const totalPages = Math.ceil(materials.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredMaterial.length / itemsPerPage);
 
     const handleNextModal = () => {
         setOpenModal(false);
@@ -92,7 +97,9 @@ function Materials() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12 ">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
+                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenModal(true)}>

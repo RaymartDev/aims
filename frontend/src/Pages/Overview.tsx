@@ -1,6 +1,6 @@
 import Layout from "@/Components/appLayout/Layout";
 
-function Dashboard() {
+function Overview() {
     return(
         <>
             <Layout>
@@ -12,4 +12,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard
+export default Overview

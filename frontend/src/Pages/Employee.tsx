@@ -30,19 +30,12 @@ const employees = [
     { id: 18, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
     { id: 19, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
     { id: 20, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 7, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 8, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 9, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 10, number: "100230458", name: "kMAOTE", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 11, number: "100230458", name: "SABAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 12, number: "100230458", name: "SABzzxcAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 13, number: "100230458", name: "SABqwewqeAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 14, number: "100230458", name: "asdasd", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
 ];
 
 function Employee() {
     const [openModal, setOpenModal] = useState(false);
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 70;
     const itemHeight = 50;
@@ -69,11 +62,15 @@ function Employee() {
         setCurrentPage(page);
     };
 
+    const filteredEmployees = employees.filter(employee =>
+        employee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const indexOfLastEmployee = currentPage * itemsPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-    const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
-    const totalPages = Math.ceil(employees.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredEmployees.length  / itemsPerPage);
 
     return(
         <Layout>
@@ -90,7 +87,9 @@ function Employee() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12 ">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
+                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none" 
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenModal(true)}>

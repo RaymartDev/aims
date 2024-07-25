@@ -77,7 +77,7 @@ function Login() {
                   <FormControl>
                     <div className="relative">
                     <Input 
-                      className="pl-10"
+                      className="pl-10 focus:border-none"
                       autoComplete="username"
                       placeholder="Username" 
                       {...field} />
@@ -96,7 +96,7 @@ function Login() {
                   <FormControl>
                     <div className="relative">
                       <Input
-                        className="px-10 "
+                        className="px-10 focus:border-none"
                         autoComplete="current-password"
                         type={isPasswordVisible ? "text" : "password"}
                         placeholder="Password"
