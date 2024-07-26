@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Layout from "@/Components/appLayout/Layout";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
@@ -73,7 +72,7 @@ function Employee() {
     const totalPages = Math.ceil(filteredEmployees.length  / itemsPerPage);
 
     return(
-        <Layout>
+        <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-full relative">
                     <div className="flex flex-col">
@@ -176,7 +175,7 @@ function Employee() {
             </div>
             <AddEmployeeModal open={openModal} onClose={() => setOpenModal(false)}/>
             <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
-        </Layout>
+        </>
     );
 }
 

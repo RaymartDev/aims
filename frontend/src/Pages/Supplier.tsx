@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Layout from "@/Components/appLayout/Layout";
 import { Button } from "@/Components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
 import { Input } from "@/Components/ui/input";
@@ -84,7 +83,7 @@ function Supplier() {
 
 
     return(
-        <Layout>
+        <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-full relative">
                     <div className="flex flex-col">
@@ -180,7 +179,7 @@ function Supplier() {
             </div>
             <AddSupplierModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
             <AddSupplierModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
-        </Layout>
+        </>
     );
 }
 

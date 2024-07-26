@@ -65,7 +65,7 @@ function Deliveries() {
     const currentDeliveries= filteredDeliveries.slice(indexOfFirstDeliveries, indexOfLastDeliveries);
 
     return(
-        <Layout>
+        <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-row justify-between w-full">
                     <div>
@@ -225,7 +225,7 @@ function Deliveries() {
                 </div>
             </div>
             <SelectMaterialModal open={openModal} onClose={() => setOpenModal(false)}/>
-        </Layout>
+        </>
     );
 }
 

@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
+
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
-function Layout({ children }: { children: ReactNode }) {
+function Layout() {
     return (
         <div className="flex h-screen">
             <Sidebar />
@@ -13,7 +14,7 @@ function Layout({ children }: { children: ReactNode }) {
                 </header>
                 <main className="flex-1 overflow-y-auto">
                     <div className="w-full mx-auto py-6 sm:px-6 lg:px-8">
-                        {children}
+                        <Outlet />
                     </div>
                 </main>
             </div>
