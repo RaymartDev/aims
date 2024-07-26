@@ -28,7 +28,7 @@ function ChangePassword() {
   }, [newPassword, confirmPassword]);
 
   return (
-    <Layout>
+    <>
       <div className="flex flex-col h-full">
         <div>
           <p className="text-2xl font-bold">Change Password</p>
@@ -129,7 +129,7 @@ function ChangePassword() {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }
 

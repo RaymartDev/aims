@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Layout from "@/Components/appLayout/Layout";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
@@ -83,7 +82,7 @@ function Materials() {
     };
 
     return(
-        <Layout>
+        <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-full relative">
                     <div>
@@ -181,7 +180,7 @@ function Materials() {
             </div>
             <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
             <AddMaterialModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
-        </Layout>
+        </>
     );
 }
 

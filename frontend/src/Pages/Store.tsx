@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Layout from "@/Components/appLayout/Layout";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
@@ -74,7 +73,7 @@ function Store() {
 
 
     return(
-        <Layout>
+        <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-full relative">
                     <div className="flex flex-col">
@@ -169,7 +168,7 @@ function Store() {
             </div>
             <AddStoreModal open={openModal} onClose={() => setOpenModal(false)}/>
             <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
-        </Layout>
+        </>
     );
 }
 
