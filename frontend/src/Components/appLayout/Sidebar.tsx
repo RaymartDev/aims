@@ -120,7 +120,7 @@ function Sidebar() {
                     </NavLink>
                   </AccordionContent>
                   <AccordionContent className="my-0 py-0 border-b">
-                      <NavLink to="/store" className={({ isActive }) =>
+                      <NavLink to="/changepassword" className={({ isActive }) =>
                         `flex items-center transition duration-200 h-14 ${
                           isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                         }`

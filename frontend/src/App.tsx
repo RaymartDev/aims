@@ -6,6 +6,8 @@ import Materials from './pages/Materials'
 import Employee from './pages/Employee'
 import Store from './pages/Store'
 import Supplier from './pages/Supplier'
+import ChangePassword from './pages/ChangePassword'
+
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
           <Route path="/employee" element={<Employee />} />
           <Route path="/store" element={<Store />} />
           <Route path="/supplier" element={<Supplier />} />
+          {/*Settings */}
+          <Route path='/changepassword' element={<ChangePassword/>}/>
       </ Routes>
     </ BrowserRouter>
   )

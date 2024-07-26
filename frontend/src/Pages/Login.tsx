@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { Label } from "@radix-ui/react-label";
-import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import {
   Form,
   FormControl,
@@ -38,7 +35,6 @@ const formSchema = z.object({
 });
 
 function Login() {
-  const [userType, setUserType] = useState<UserType>(UserType.Admin);
   const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
   const form = useForm({ 
     resolver: zodResolver(formSchema), 
@@ -116,31 +112,6 @@ function Login() {
                 </FormItem>
               )}
             />
-            <RadioGroup
-              defaultValue={userType}
-              onValueChange={(value: UserType) => setUserType(value)}
-              className="flex gap-5 w-[40%] mx-auto justify-center"
-            >
-              {Object.values(UserType).map((type) => (
-                <div key={type} className="flex items-center gap-2">
-                  <RadioGroupItem
-                    value={type}
-                    id={type}
-                    checked={userType === type}
-                    className={`form-radio rounded-full h-4 w-4 border-black transition-colors duration-300 ease-in-out ${
-                      userType === type ? "bg-orange-500" : "bg-[#D9D9D9]"
-                    }`}
-                  >
-                    {/* <span
-                      className={`rounded-full h-4 w-4 transition-colors duration-300 ease-in-out ${
-                        userType === type ? "bg-violet-600" : "bg-[#D9D9D9]"
-                      }`}
-                    ></span> */}
-                  </RadioGroupItem>
-                  <Label htmlFor={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</Label>
-                </div>
-              ))}
-            </RadioGroup>
             <div className="flex justify-center items-center">
               <Button type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6">
                 Login
