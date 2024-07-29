@@ -22,11 +22,6 @@ import {
   EyeOff
 } from 'lucide-react'
 
-enum UserType {
-  Admin = "admin",
-  Employee = "employee",
-}
-
 const formSchema = z.object({
   username: z.string()
     .min(4, { message: "Username must be at least 4 characters." })
