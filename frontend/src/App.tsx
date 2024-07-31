@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from '@/pages/Login'
-import Dashboard from './pages/Overview'
+import Dashboard from './pages/Dashboard'
 import InventoryOverview from './pages/InventoryOverview'
 import Deliveries from './pages/Deliveries'
 import Materials from './pages/Materials'
@@ -12,6 +12,8 @@ import ChangePassword from './pages/ChangePassword'
 import Company from './pages/Company'
 import Department from './pages/Department'
 
+import Modal from './modals/AssetEntryModal'
+
 function App() {
 
   return (
@@ -19,7 +21,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Login />} />
           <Route element={<Layout />} >
-            <Route path="/overview" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           {/* Inventory */}
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
@@ -33,6 +35,7 @@ function App() {
             <Route path="/department" element={<Department />} />
           {/*Settings */}
           <Route path='/changepassword' element={<ChangePassword/>}/>
+          <Route path='/modals' element={<Modal/>}/>
           </Route>
       </ Routes>
     </ BrowserRouter>
