@@ -34,19 +34,19 @@ const Receipt = [
   { id: 6, company: "KFC", costCenterCode: "10000234-22", storeName: "MD Taguig", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 7, company: "KFC", costCenterCode: "10000234-33", storeName: "MD Caruncho", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 8, company: "KFC", costCenterCode: "10000234-33", storeName: "MD malabon", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
-  { id: 9, company: "KFC", costCenterCode: "10000234-11", storeName: "MD malabon", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
+  { id: 9, company: "Mang Inasal", costCenterCode: "10000234-11", storeName: "MD malabon", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 10, company: "KFC", costCenterCode: "10055234-11", storeName: "MD Roces", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
-  { id: 11, company: "KFC", costCenterCode: "10055234-11", storeName: "MD Roces", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
+  { id: 11, company: "031603031603", costCenterCode: "10055234-11", storeName: "MD Roces", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 12, company: "KFC", costCenterCode: "10000234-11", storeName: "San Roque Supermarket", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 13, company: "KFC", costCenterCode: "10000234-11", storeName: "San Roque Supermarket", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
-  { id: 14, company: "KFC", costCenterCode: "10000234-11", storeName: "MD Caruncho", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
+  { id: 14, company: "Tokyo Tokyo", costCenterCode: "10000234-11", storeName: "MD Caruncho", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 15, company: "KFC", costCenterCode: "10000234-11", storeName: "Tindahan ni aling nena", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 16, company: "KFC", costCenterCode: "10000234-11", storeName: "Tindahan ni aling nena", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 17, company: "KFC", costCenterCode: "10000234-11", storeName: "MD Caruncho", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 18, company: "KFC", costCenterCode: "10000234-11", storeName: "Alisson Store", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 19, company: "KFC", costCenterCode: "10000234-11", storeName: "Alisson Store", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
   { id: 20, company: "KFC", costCenterCode: "10000234-11", storeName: "MD Caruncho", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
-  { id: 21, company: "KFC", costCenterCode: "10000234-11", storeName: "Janloyd", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" }
+  { id: 21, company: "KFC", costCenterCode: "00000", storeName: "Janloyd", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" }
 ];
 
 function DeliveryReceipt() {
@@ -75,9 +75,20 @@ function DeliveryReceipt() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const filteredReceipt = Receipt.filter((Receipt) =>
-    Receipt.storeName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredReceipt = Receipt.filter((receipt) => {
+    const searchQueryLower = searchQuery.toLowerCase();
+
+    const idAsString = receipt.id.toString();
+    const costAsString = receipt.costCenterCode.toString();
+
+    return(
+      receipt.storeName.toLowerCase().includes(searchQueryLower) ||
+      idAsString.toLowerCase().includes(searchQueryLower) ||
+      costAsString.toLowerCase().includes(searchQueryLower) ||
+      receipt.company.toLowerCase().includes(searchQueryLower) ||
+      receipt.adrress.toLowerCase().includes(searchQueryLower)
+    );
+  });
 
   const indexOfLastReceipt = currentPage * itemsPerPage;
   const indexOfFirstReceipt = indexOfLastReceipt - itemsPerPage;
