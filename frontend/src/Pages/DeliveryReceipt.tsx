@@ -75,6 +75,10 @@ function DeliveryReceipt() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  },[searchQuery]);
+
   const filteredReceipt = Receipt.filter((receipt) => {
     const searchQueryLower = searchQuery.toLowerCase();
 

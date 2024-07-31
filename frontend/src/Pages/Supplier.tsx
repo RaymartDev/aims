@@ -61,6 +61,10 @@ function Supplier() {
         setCurrentPage(page);
     };
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
     const filteredSupplier = suppliers.filter(suppliers =>
         suppliers.companyName.toLowerCase().includes(searchQuery.toLowerCase())
     );

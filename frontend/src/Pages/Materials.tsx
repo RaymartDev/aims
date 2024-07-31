@@ -10,7 +10,7 @@ import AddMaterialModal2 from "@/modals/AddMaterialModal2";
 
 const materials = [
     { id: 1, materialCode: "Leansel Nico", desc: "IT Department", itemCode: "503604218", unit: "IT Asset", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
-    { id: 2, materialCode: "100230457", desc: "Jane Doe", itemCode: "Finance", unit: "503604219", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
+    { id: 2, materialCode: "100230457", desc: "Michael Jordan", itemCode: "Finance", unit: "503604219", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 3, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 4, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
     { id: 5, materialCode: "100230458", desc: "John Smith", itemCode: "Marketing", unit: "503604220", materialType: "OU", cost: "40000", dateEntry: "06/17/24" },
@@ -60,6 +60,10 @@ function Materials() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     const filteredMaterial = materials.filter(materials =>
         materials.desc.toLowerCase().includes(searchQuery.toLowerCase())
