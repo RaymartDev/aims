@@ -11,6 +11,7 @@ import Layout from './Components/appLayout/Layout'
 import ChangePassword from './pages/ChangePassword'
 import Company from './pages/Company'
 import Department from './pages/Department'
+import DeliveryReceipt from './pages/DeliveryReceipt'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/materials" element={<Materials />} />
+            <Route path="/deliveryreceipt" element={<DeliveryReceipt/>}/>
           {/* User */}
             <Route path="/employee" element={<Employee />} />
             <Route path="/store" element={<Store />} />
