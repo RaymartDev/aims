@@ -57,6 +57,10 @@ function Department() {
         setCurrentPage(page);
     };
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
     const filteredDepartment = department.filter(department =>
         department.name.toLowerCase().includes(searchQuery.toLowerCase())
     );

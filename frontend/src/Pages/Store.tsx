@@ -11,7 +11,7 @@ import UserRegistration from "@/modals/UserRegistration";
 const stores = [
     { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
     { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"  },
+    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Tindahan ni Aling Nena", address: "503604220", status: "Registered"  },
     { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
     { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
     { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
@@ -60,6 +60,10 @@ function Store() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     const filteredStores = stores.filter(stores =>
         stores.storeName.toLowerCase().includes(searchQuery.toLowerCase())

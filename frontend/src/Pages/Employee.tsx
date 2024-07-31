@@ -61,6 +61,10 @@ function Employee() {
         setCurrentPage(page);
     };
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
     const filteredEmployees = employees.filter(employee =>
         employee.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
