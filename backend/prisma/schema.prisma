@@ -35,6 +35,8 @@ model Employee {
   modified_user_roles UserRole[] @relation("UserRoleModifiedBy")
 }
 
+// TODO store, user
+
 model UserRole {
   id          Int       @id @default(autoincrement())
   name        String
