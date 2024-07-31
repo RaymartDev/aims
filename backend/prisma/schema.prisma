@@ -9,30 +9,67 @@ datasource db {
 
 model Employee {
   id Int @id @default(autoincrement())
-  username String @unique
-  role_id Int
-  role UserRole @relation(fields: [role_id], references: [id], onDelete: Cascade)
   first_name String @default("")
   last_name String @default("")
-  password String
+  division String @default("")
   employee_no String @default("")
   department  Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
   department_id Int @default(1)
-  cost_code String @default("")
+  cost_center_code String @default("")
   company     Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
   company_id   Int @default(1)
   date_hired DateTime @default(now())
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
+  date_entry DateTime @default(now())
+  modified_by_id Int? 
+  modified_by User? @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  users User[]
+}
+
+model Store {
+  id Int @id @default(autoincrement())
+  company     Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company_id   Int @default(1)
+  name String
+  cost_center_code String
+  address String
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int? 
+  modified_by User? @relation("StoreModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  users User[]
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  employee_id Int?     // nullable foreign key to Employee
+  store_id    Int?     // nullable foreign key to Store
+  Employee   Employee? @relation(fields: [employee_id], references: [id])
+  Store      Store?   @relation(fields: [store_id], references: [id])
+  role_id Int
+  role UserRole @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  name String
+  username String @unique
+  password String
+  department  Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
+  department_id Int @default(1)
+  cost_center_code String
+  employee_no String
+  designation String
+  effective_on DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
   modified_by_id  Int? @default(1)       // Foreign key to Employee.id
-  modified_by     Employee?  @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id])
+  modified_by     User?  @relation("UserModifiedBy", fields: [modified_by_id], references: [id])
+  modified_users User[] @relation("UserModifiedBy")
   modified_employees Employee[] @relation("EmployeeModifiedBy")
+  modified_stores Store[] @relation("StoreModifiedBy")
+  modified_user_roles UserRole[] @relation("UserRoleModifiedBy")
   modified_departments Department[] @relation("DepartmentModifiedBy")
   modified_companies Company[] @relation("CompanyModifiedBy")
   modified_suppliers Supplier[] @relation("SupplierModifiedBy")
-  modified_suppliers_contact Supplier_Contact_Details[] @relation("SupplierContactModifiedBy")
-  modified_suppliers_status Supplier_Status[] @relation("SupplierStatusModifiedBy")
-  modified_user_roles UserRole[] @relation("UserRoleModifiedBy")
+  modified_supplier_contacts Supplier_Contact_Details[] @relation("SupplierContactModifiedBy")
+  modified_supplier_status Supplier_Status[] @relation("SupplierStatusModifiedBy")
 }
 
 // TODO store, user
@@ -40,21 +77,22 @@ model Employee {
 model UserRole {
   id          Int       @id @default(autoincrement())
   name        String
-  employees  Employee[]
+  users User[]
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int? 
-  modified_by Employee? @relation("UserRoleModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by User? @relation("UserRoleModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Department {
   id         Int       @id @default(autoincrement())
   name       String
+  users User[]
   employees  Employee[]
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int?  @default(1)
-  modified_by Employee? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by User? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Company {
@@ -62,10 +100,11 @@ model Company {
   name       String
   employees  Employee[]
   suppliers Supplier[]
+  stores Store[]
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int? @default(1)
-  modified_by    Employee? @relation("CompanyModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by    User? @relation("CompanyModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Supplier {
@@ -83,7 +122,7 @@ model Supplier {
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
-  modified_by Employee? @relation("SupplierModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by User? @relation("SupplierModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Supplier_Contact_Details {
@@ -101,7 +140,7 @@ model Supplier_Contact_Details {
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
-  modified_by Employee? @relation("SupplierContactModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by User? @relation("SupplierContactModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
 model Supplier_Status {
@@ -111,5 +150,5 @@ model Supplier_Status {
   effective_on DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
-  modified_by Employee? @relation("SupplierStatusModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  modified_by User? @relation("SupplierStatusModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
