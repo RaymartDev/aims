@@ -116,7 +116,7 @@ function DeliveryReceipt() {
               Manage your deliveries
             </p>
           </div>
-          <div className="flex w-full justify-around pt-10">
+          <div className="flex w-full justify-start pl-10 gap-20 pt-10">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col">
                 <p className="text-sm text-[#9E9E9E]">Refference Number</p>
