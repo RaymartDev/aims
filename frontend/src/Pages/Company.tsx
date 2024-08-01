@@ -57,6 +57,10 @@ function Company() {
         setCurrentPage(page);
     };
 
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
+
     const filteredCompany = company.filter(company =>
         company.name.toLowerCase().includes(searchQuery.toLowerCase())
     );

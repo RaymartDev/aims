@@ -11,6 +11,9 @@ import Layout from './Components/appLayout/Layout'
 import ChangePassword from './pages/ChangePassword'
 import Company from './pages/Company'
 import Department from './pages/Department'
+import DeliveryReceipt from './pages/DeliveryReceipt'
+
+import Modal from './modals/AssetEntryModal'
 
 function App() {
 
@@ -24,6 +27,7 @@ function App() {
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/materials" element={<Materials />} />
+            <Route path="/deliveryreceipt" element={<DeliveryReceipt/>}/>
           {/* User */}
             <Route path="/employee" element={<Employee />} />
             <Route path="/store" element={<Store />} />
@@ -33,6 +37,7 @@ function App() {
             <Route path="/department" element={<Department />} />
           {/*Settings */}
           <Route path='/changepassword' element={<ChangePassword/>}/>
+          <Route path='/modals' element={<Modal/>}/>
           </Route>
       </ Routes>
     </ BrowserRouter>
