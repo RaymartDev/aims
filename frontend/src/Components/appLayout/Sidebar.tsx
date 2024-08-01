@@ -11,13 +11,13 @@ function Sidebar() {
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
       <div className="flex p-6 space-x-2">
-        <img src={KFC} className="h-12 block lg:hidden" />
-        <h1 className="text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden lg:block">Asset Inventory</h1>
+        <img src={KFC} className="h-12 block xl:hidden" />
+        <h1 className="text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden xl:block">Asset Inventory</h1>
       </div>
       <nav className="mt-10">
         <ul>
           <li>
-            <NavLink to="/dashboard" className={({ isActive }) =>
+            <NavLink to="/overview" className={({ isActive }) =>
                 `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-12 transition duration-200 font-extrabold space-x-2  ${
                   isActive ? 'bg-hoverCream': 'hover:bg-hoverCream' 
                 }`

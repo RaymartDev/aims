@@ -76,7 +76,8 @@ function Deliveries() {
                     </Button>
                 </div>
                 <div className="mt-6 flex-grow overflow-y-auto pl-2">
-                    <div className="flex space-x-5">
+                    <div className="flex flex-col gap-0 lg:gap-4 xl:flex-row">
+                    <div className="flex gap-4">
                         <div>
                             <Label htmlFor="supplier">Supplier Name</Label>
                             <Input id="supplier" type="Text" placeholder="Supplier Name" className="w-80 focus:border-none"/>
@@ -89,45 +90,46 @@ function Deliveries() {
                             <Label htmlFor="PO">Product Order No.</Label>
                             <Input id="PO" type="Number" placeholder="Product Order No." className="w-80 focus:border-none"/>
                         </div>
-                        
                     </div>
-                    <div className="flex space-x-5 mt-5">
+                    <div className="flex gap-4">
                         <div>
                             <Label htmlFor="PR">PR No.</Label>
                             <Input id="PR" type="Number" placeholder="PR No." className="w-80 focus:border-none"/>
                         </div>
                         <div>
+                            <Label htmlFor="unit">Unit</Label>
+                            <Input id="unit" type="Number" placeholder="Unit" className="w-40 focus:border-none"/>
+                        </div>
+                     </div>
+                    </div>
+                    <div className="flex flex-col gap-0 xl:flex-row lg:gap-4 mt-5">
+                        <div className="flex gap-4">
+                        <div>
                             <Label htmlFor="Capex">Capex     No.</Label>
                             <Input id="Capex" type="Number" placeholder="Capex No." className="w-80 focus:border-none"/>
                         </div>
                         <div>
-                            <Label htmlFor="date">Date Entry</Label>
-                            <Input id="date" type="Date" placeholder="Date" className="w-80 focus:border-none"/>
-                        </div>
-                    </div>
-                    <div className="flex space-x-5 mt-5">
-                        <div>
                             <Label htmlFor="desc">Description</Label>
-                            <Textarea id="desc" placeholder="Description" className="w-80 focus:border-none"/>
+                            <Textarea id="desc" placeholder="Description" className="w-80  focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="itemCode">Item Code</Label>
                             <Input id="itemCode" type="Number" placeholder="Item Code" className="w-80 focus:border-none"/>
                         </div>
+                        </div>
+                    <div className="flex gap-4">
                         <div>
                             <Label htmlFor="Mats">Material Code</Label>
                             <Input id="Mats" type="Number" placeholder="Material Code" className="w-80 focus:border-none"/>
-                        </div>
-                    </div>
-                    <div className="flex space-x-5 mt-5">
-                        <div>
-                            <Label htmlFor="unit">Unit</Label>
-                            <Input id="unit" type="Number" placeholder="Unit" className="w-40 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="matType">Material Type</Label>
                             <Input id="matType" type="Text" placeholder="Material Type" className="w-60 focus:border-none"/>
                         </div>
+                    </div>
+                    </div>
+                    <div className="flex flex-col gap-0 xl:flex-row lg:gap-4 mt-5">
+                        <div className="flex gap-4">
                         <div>
                             <Label htmlFor="remarks">Remarks</Label>
                             <Input id="remarks" type="Text" placeholder="Remarks" className="w-72 focus:border-none"/>
@@ -136,25 +138,31 @@ function Deliveries() {
                             <Label htmlFor="quantity">Quantity</Label>
                             <Input id="quantity" type="Text" placeholder="Quantity" className="w-64 focus:border-none"/>
                         </div>
-                    </div>
-                    <div className="flex space-x-5 mt-5">
                         <div>
                             <Label htmlFor="request">Requestor</Label>
                             <Input id="request" type="Text" placeholder="Requestor" className="w-96 focus:border-none"/>
                         </div>
+                        </div>
+                        <div className="flex gap-4">
                         <div>
                             <Label htmlFor="user">User</Label>
                             <Input id="user" type="Text" placeholder="User" className="w-96 focus:border-none"/>
+                        </div>
+                        </div>
+                    </div>
+                    <div className="flex space-x-5 mt-5">
+                    <div>
+                            <Label htmlFor="date">Date Entry</Label>
+                            <Input id="date" type="Date" placeholder="Date" className="w-80 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="warranty">End Warranty</Label>
                             <Input id="warranty" type="Date" className="w-48 focus:border-none"/>
                         </div>
                     </div>
-
-                    <div className="mt-8 border border-gray-700 rounded-lg p-4">
+                    <div className="flex flex-col xl:flex-row w-full gap-10">
+                    <div className="mt-8 border border-gray-700 rounded-lg p-4 w-fit">
                         <p>Destination/Transfer to</p>
-
                         <div>
                             <div className="flex space-x-5 mt-5">
                                 <div>
@@ -178,9 +186,10 @@ function Deliveries() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-end space-x-5 mt-4">
+                    <div className="flex justify-start lg:justify-end space-x-5 mt-4 items-end">
                         <Button className="bg-hoverCream text-fontHeading font-semibold w-32 hover:text-white">Cancel</Button>
                         <Button className="bg-hoverCream text-fontHeading font-semibold w-32 hover:text-white">Save</Button>
+                    </div>
                     </div>
                     <div className="mt-4 space-y-2">
                         <div className="border-2 rounded-lg flex p-2 items-center space-x-3 ">
