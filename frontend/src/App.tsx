@@ -13,7 +13,7 @@ import Company from './pages/Company'
 import Department from './pages/Department'
 import DeliveryReceipt from './pages/DeliveryReceipt'
 
-import Modal from './modals/AssetEntryModal'
+import Modal from './modals/POSModal'
 
 function App() {
 
@@ -27,7 +27,7 @@ function App() {
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/materials" element={<Materials />} />
-            <Route path="/deliveryreceipt" element={<DeliveryReceipt/>}/>
+            <Route path="/delivery-receipt" element={<DeliveryReceipt/>}/>
           {/* User */}
             <Route path="/employee" element={<Employee />} />
             <Route path="/store" element={<Store />} />
