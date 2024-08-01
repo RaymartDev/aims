@@ -1,14 +1,14 @@
 
-function Overview() {
+function Dashboard() {
     return(
         <>
             
                 <div>
-                    <h1 className="text-2xl font-bold">Overview</h1>
+                    <h1 className="text-2xl font-bold">Dashboard</h1>
                 </div>
             
         </>
     );
 }
 
-export default Overview
+export default Dashboard

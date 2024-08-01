@@ -17,13 +17,13 @@ function Sidebar() {
       <nav className="mt-10">
         <ul>
           <li>
-            <NavLink to="/overview" className={({ isActive }) =>
+            <NavLink to="/dashboard" className={({ isActive }) =>
                 `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-12 transition duration-200 font-extrabold space-x-2  ${
                   isActive ? 'bg-hoverCream': 'hover:bg-hoverCream' 
                 }`
               }>
               <BarChart />
-              <h1 className="sm:hidden xl:inline">Overview</h1>
+              <h1 className="sm:hidden xl:inline">Dashboard</h1>
             </NavLink>
           </li>
 

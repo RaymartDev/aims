@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from '@/pages/Login'
-import Dashboard from './pages/Overview'
+import Dashboard from './pages/Dashboard'
 import InventoryOverview from './pages/InventoryOverview'
 import Deliveries from './pages/Deliveries'
 import Materials from './pages/Materials'
@@ -19,7 +19,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Login />} />
           <Route element={<Layout />} >
-            <Route path="/overview" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           {/* Inventory */}
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
