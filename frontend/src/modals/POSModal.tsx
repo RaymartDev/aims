@@ -1,34 +1,42 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { Plus, X } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import AssetEntryModal from "./AssetEntryModal";
 
-const stores = [
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"  },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 12, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
-    { id: 13, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 14, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 15, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 16, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 17, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 18, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
-    { id: 19, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 20, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+interface POSModalProps {
+    open: boolean;
+    onClose: () => void;
+}
+
+const item = [
+    { id: 1, itemNumber: "Leansel Nico", itemDesc: "IT Department", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
+    { id: 2, itemNumber: "100230457", itemDesc: "Jane Doe", quantity: "Finance", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
+    { id: 3, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"  },
+    { id: 4, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 5, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 6, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 7, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
+    { id: 8, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 9, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 10, itemNumber: "100230458", itemDesc: "kMAOTE", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 11, itemNumber: "100230458", itemDesc: "SABAW", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 12, itemNumber: "Leansel Nico", itemDesc: "IT Department", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
+    { id: 13, itemNumber: "100230457", itemDesc: "Jane Doe", quantity: "Finance", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
+    { id: 14, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 15, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 16, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 17, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 18, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
+    { id: 19, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 20, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
 ];
 
 
-function POSModal() {
+function POSModal({ open, onClose }: POSModalProps) {
+    const [openAssetModal, setOpenAssetModal] = useState(false);
+
     const headerHeight = 72;
 
     const getItemsPerPage = (height: number): number => {
@@ -49,109 +57,141 @@ function POSModal() {
     }, []);
 
 
-    const indexOfLastStore = currentPage * itemsPerPage;
-    const indexOfFirstStore = indexOfLastStore - itemsPerPage;
-    const currentStore= stores.slice(indexOfFirstStore, indexOfLastStore);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItem= item.slice(indexOfFirstItem, indexOfLastItem);
+
+    if (!open) return null;
 
     return(
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
-            <div className="flex flex-col w-3/4 bg-slate-50 rounded-2xl p-6">
-                <div className="flex items-center justify-between w-full border-b-2 border-black">
-                    <h1 className="font-extrabold text-xl">Supplier Company Details</h1>
-                    <Button className="text-black bg-transparent hover:bg-transparent p-0"><X size={30}/></Button>
-                </div>
-                <div className="flex flex-col justify-start mt-5 space-y-2">
-                    <div className="flex flex-row w-full space-x-2 justify-between">
-                        <div className="space-y-1 w-1/4">
-                            <p className="text-sm text-[#697386]">Invoice Number</p>
-                            <Input className="focus:border-none border-black"></Input>
-                        </div>
-                        <div className="space-x-2 flex items-center w-2/3">
-                            <p className="text-xl text-fontHeading font-bold">Amount</p>
-                            <Input className="focus:border-none border-black h-12" disabled></Input>
-                        </div>
+        <>
+            <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
+                <div className="flex flex-col w-3/4 bg-slate-50 rounded-2xl p-6">
+                    <div className="flex items-center justify-between w-full border-b-2 border-black">
+                        <h1 className="font-extrabold text-xl">Point Of Sales</h1>
+                        <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
                     </div>
-                    <div className="flex flex-row w-full space-x-2">
-                        <div className="space-y-1 w-1/3">
-                            <p className="text-sm text-[#697386]">ProductCD / Barcode</p>
-                            <Input className="focus:border-none border-black"></Input>
-                        </div>
-                        <div className="space-y-1 w-2/3 ">
-                            <p className="text-sm text-[#697386]">Description</p>
-                            <Input className="focus:border-none border-black"></Input>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm text-[#697386]">Unit Price</p>
-                            <Input className="focus:border-none border-black" ></Input>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm text-[#697386]">Quantity</p>
-                            <Input className="focus:border-none border-black"></Input>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-sm text-[#697386]">Sub-total</p>
-                            <Input className="focus:border-none border-black"></Input>
-                        </div>
-                        <div className="space-y-1 w-1/3">
-                            <p className="text-sm text-[#697386]">Material Type</p>
-                            <Input className="focus:border-none border-black"></Input>
-                        </div>
-                    </div>
-                </div>
-                <div className="w-full flex justify-end mt-5">
-                    <Button className="bg-hoverCream text-fontHeading border hover:text-white">
-                        <Plus size={20}/><span className="text-sm">Add Item</span>
-                    </Button>
-                </div>
-                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Item Number</TableHead>
-                                <TableHead>Item Description</TableHead>
-                                <TableHead>Quantity</TableHead>
-                                <TableHead>Unit</TableHead>
-                                <TableHead>Serial Number</TableHead>
-                                <TableHead>Remarks</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {currentStore.map(stores => (
-                                <TableRow key={stores.id}>
-                                    <TableCell>{stores.companyName}</TableCell>
-                                    <TableCell>{stores.storeName}</TableCell>
-                                    <TableCell>{stores.costCenter}</TableCell>
-                                    <TableCell>{stores.address}</TableCell>
-                                    <TableCell>{stores.status}</TableCell>
-                                    <TableCell>{stores.status}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>      
-                <div className="w-full mt-5 flex justify-between">
-                    <div className="space-x-2 flex items-end">
-                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Asset</Button>
-                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Print</Button>
-                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Cancel</Button>
-                    </div>
-                    <div className="w-1/4">
-                        <div className="border p-2 border-black">
-                            <div className="flex flex-row items-center space-x-1">
-                                <h1 className="text-sm">Total Amount:</h1>
-                                <h1>40000 PHP</h1>
+                    <div className="flex flex-col justify-start mt-5 space-y-2">
+                        <div className="flex flex-row w-full space-x-2 justify-between">
+                            <div className="space-y-1 w-1/4">
+                                <p className="text-sm text-[#697386]">Invoice Number</p>
+                                <Input className="focus:border-none border-black"></Input>
                             </div>
-                            <div className="flex flex-row items-center space-x-1">
-                                <h1 className="text-sm">Cash Tentered:</h1>
+                            <div className="space-x-2 flex items-center w-2/3">
+                                <p className="text-xl text-fontHeading font-bold">Amount</p>
+                                <Input className="focus:border-none border-black h-12" disabled></Input>
                             </div>
-                            <div className="flex flex-row items-center space-x-1">
-                                <h1 className="text-sm">Change:</h1>
+                        </div>
+                        <div className="flex flex-row w-full space-x-2">
+                            <div className="space-y-1 w-1/3">
+                                <p className="text-sm text-[#697386]">ProductCD / Barcode</p>
+                                <Input className="focus:border-none border-black"></Input>
+                            </div>
+                            <div className="space-y-1 w-2/3 ">
+                                <p className="text-sm text-[#697386]">Description</p>
+                                <Input className="focus:border-none border-black"></Input>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-sm text-[#697386]">Unit Price</p>
+                                <Input className="focus:border-none border-black" ></Input>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-sm text-[#697386]">Quantity</p>
+                                <Input className="focus:border-none border-black"></Input>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-sm text-[#697386]">Sub-total</p>
+                                <Input className="focus:border-none border-black"></Input>
+                            </div>
+                            <div className="space-y-1 w-1/3">
+                                <p className="text-sm text-[#697386]">Material Type</p>
+                                <Input className="focus:border-none border-black"></Input>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full flex justify-end mt-5">
+                        <Button className="bg-hoverCream text-fontHeading border hover:text-white">
+                            <Plus size={20}/><span className="text-sm">Add Item</span>
+                        </Button>
+                    </div>
+                    <div className="flex flex-row w-full mt-5">
+                        <div className="overflow-y-auto w-3/4" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Item Number</TableHead>
+                                        <TableHead>Item Description</TableHead>
+                                        <TableHead>Quantity</TableHead>
+                                        <TableHead>Unit</TableHead>
+                                        <TableHead>Serial Number</TableHead>
+                                        <TableHead>Remarks</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {currentItem.map(item => (
+                                        <TableRow key={item.id}>
+                                            <TableCell>{item.itemNumber}</TableCell>
+                                            <TableCell>{item.quantity}</TableCell>
+                                            <TableCell>{item.itemDesc}</TableCell>
+                                            <TableCell>{item.unit}</TableCell>
+                                            <TableCell>{item.serialNumber}</TableCell>
+                                            <TableCell>{item.remarks}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                        <div className="w-1/4 border-2">
+                            <div className="p-2">
+                                <div className="relative w-full">
+                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"/>
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                </div>
+                                <div>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Item</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {currentItem.map(item => (
+                                                <TableRow key={item.id}>
+                                                    <TableCell>{item.itemDesc}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody> 
+                                    </Table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div className="w-full mt-5 flex justify-between">
+                        <div className="space-x-2 flex items-end">
+                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => setOpenAssetModal(true)}>Asset</Button>
+                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Print</Button>
+                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}>Cancel</Button>
+                        </div>
+                        <div className="w-1/4">
+                            <div className="border p-2 border-black">
+                                <div className="flex flex-row items-center space-x-1">
+                                    <h1 className="text-sm">Total Amount:</h1>
+                                    <h1>40000 PHP</h1>
+                                </div>
+                                <div className="flex flex-row items-center space-x-1">
+                                    <h1 className="text-sm">Cash Tentered:</h1>
+                                </div>
+                                <div className="flex flex-row items-center space-x-1">
+                                    <h1 className="text-sm">Change:</h1>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <AssetEntryModal open={openAssetModal} onClose={() => setOpenAssetModal(false)}/>
+        </>
     );
 }
 
