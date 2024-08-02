@@ -24,6 +24,7 @@ import {
   PaginationPrevious,
 } from "@/Components/ui/pagination";
 import { useState, useEffect } from "react";
+import POSModal from "@/modals/POSModal";
 
 const Receipt = [
   { id: 1, company: "KFC", costCenterCode: "10000234-11", storeName: "MD Manila", adrress: "Suite 297 37515 Keeling Dam, Goodwintown, OK 19091-6837" },
@@ -50,6 +51,7 @@ const Receipt = [
 ];
 
 function DeliveryReceipt() {
+  const [openPOSModal, setOpenPOSModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const headerHeight = 72;
@@ -111,55 +113,53 @@ function DeliveryReceipt() {
       <div className="flex flex-col h-full">
         <div className="flex flex-col h-full  ">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold">Deliver Receipt</h1>
+            <h1 className="text-2xl font-bold">Delivery Receipt</h1>
             <p className="text-sm font-semibold text-[#9E9E9E]">
-              Manage your deliveries
+              Delivery / Delivery Receipt
             </p>
           </div>
           <div className="flex w-full justify-start pl-10 gap-20 pt-10">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Refference Number</p>
+                <p className="text-sm">Reference Number</p>
                 <Input className="focus:outline-none w-80" />
               </div>
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Requestor Name</p>
+                <p className="text-sm">Requestor Name</p>
                 <Input className="focus:border-none" />
               </div>
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Cost Center Code</p>
+                <p className="text-sm">Cost Center Code</p>
                 <Input className="focus:border-none" />
               </div>
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Customer ID</p>
+                <p className="text-sm">Customer ID</p>
                 <Input className="focus:border-none w-80" />
               </div>
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Prepared by:</p>
-                <Input className="focus:border-none" type="number" />
+                <p className="text-sm">Prepared by:</p>
+                <Input className="focus:border-none" />
               </div>
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Shipped by:</p>
-                <Input className="focus:border-none" type="number" />
+                <p className="text-sm">Shipped by:</p>
+                <Input className="focus:border-none" />
               </div>
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Received by:</p>
+                <p className="text-sm">Received by:</p>
                 <Input className="focus:border-none w-80" />
               </div>
-              <div className="flex flex-col">
-                <p className="text-sm text-[#9E9E9E]">Authorized by:</p>
-                <Input className="focus:border-none" type="number" />
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm">Authorized by:</p>
+                <Input className="focus:border-none" />
               </div>
             </div>
           </div>
-          <div className="flex justify-end gap-4 pt-10 pr-10">
-            <Button> + Add item</Button>
-            <Button> + Add New</Button>
-            <Button> Manual</Button>
+          <div className="flex justify-end gap-4 pt-10">
+            <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenPOSModal(true)}> + Add Item</Button>
           </div>
         </div>
         <div className="flex flex-col h-full">
@@ -251,6 +251,7 @@ function DeliveryReceipt() {
           </Pagination>
         </div>
       </div>
+      <POSModal open={openPOSModal} onClose={() => setOpenPOSModal(false)}/>
     </>
   );
 }

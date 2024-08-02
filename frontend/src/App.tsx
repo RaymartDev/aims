@@ -11,9 +11,11 @@ import Layout from './Components/appLayout/Layout'
 import ChangePassword from './pages/ChangePassword'
 import Company from './pages/Company'
 import Department from './pages/Department'
+import DeliveryOverview from './pages/DeliveryOverview'
 import DeliveryReceipt from './pages/DeliveryReceipt'
 
-import Modal from './modals/AssetEntryModal'
+
+import Modal from './modals/POSModal'
 
 function App() {
 
@@ -27,11 +29,14 @@ function App() {
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/materials" element={<Materials />} />
-            <Route path="/deliveryreceipt" element={<DeliveryReceipt/>}/>
+           
           {/* User */}
             <Route path="/employee" element={<Employee />} />
             <Route path="/store" element={<Store />} />
             <Route path="/supplier" element={<Supplier />} />
+          {/* Delivery */}
+            <Route path="/delivery/overview" element={<DeliveryOverview />} />
+            <Route path="/delivery-receipt" element={<DeliveryReceipt/>}/>
           {/* Misc */}
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />
