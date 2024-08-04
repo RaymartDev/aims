@@ -14,9 +14,6 @@ import Department from './pages/Department'
 import DeliveryOverview from './pages/DeliveryOverview'
 import DeliveryReceipt from './pages/DeliveryReceipt'
 
-
-import Modal from './modals/POSModal'
-
 function App() {
 
   return (
@@ -42,7 +39,6 @@ function App() {
             <Route path="/department" element={<Department />} />
           {/*Settings */}
           <Route path='/changepassword' element={<ChangePassword/>}/>
-          <Route path='/modals' element={<Modal/>}/>
           </Route>
       </ Routes>
     </ BrowserRouter>
