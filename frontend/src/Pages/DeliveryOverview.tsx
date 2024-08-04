@@ -7,6 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import ShippedModal from "@/modals/ShippedModal";
 import ReceivedModal from "@/modals/ReceivedModal";
+import CancelModal from "@/modals/CancelModal";
+import ViewDetailsModal from "@/modals/ViewDetailsModal";
 
 const delivery = [
     { id: 1, companyName: "100230457", costCenter: "Jane Doe", storeName: "HP Probook 8GB RAM / 512GB SSD", address: "01/02/24", status: "Received" },
@@ -32,8 +34,11 @@ const delivery = [
 ];
 
 function DeliveryOverview() {
+    const [openViewDetailsModal, setOpenViewDetailsModal] = useState(false);
     const [openShippedModal, setOpenShippedModal] = useState(false);
     const [openReceivedModal, setOpenReceivedModal] = useState(false);
+    const [openCancelModal, setOpenCancelModal] = useState(false);
+
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -129,9 +134,10 @@ function DeliveryOverview() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => setOpenViewDetailsModal(true)}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setOpenShippedModal(true)}>Shipped</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setOpenReceivedModal(true)}>Received</DropdownMenuItem>
-                                                    <DropdownMenuItem>DR Cancel</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenCancelModal(true)}>DR Cancel</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -169,8 +175,10 @@ function DeliveryOverview() {
                     </Pagination>
                 </div>
             </div>
+            <ViewDetailsModal open={openViewDetailsModal} onClose={() => setOpenViewDetailsModal(false)}/>
             <ShippedModal open={openShippedModal} onClose={() => setOpenShippedModal(false)}/>
             <ReceivedModal open={openReceivedModal} onClose={() => setOpenReceivedModal(false)}/>
+            <CancelModal open={openCancelModal} onClose={() => setOpenCancelModal(false)}/>
         </>
     );
 }
