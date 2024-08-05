@@ -11,26 +11,26 @@ interface POSModalProps {
 }
 
 const item = [
-    { id: 1, itemNumber: "Leansel Nico", itemDesc: "IT Department", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
-    { id: 2, itemNumber: "100230457", itemDesc: "Jane Doe", quantity: "Finance", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
-    { id: 3, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"  },
-    { id: 4, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 5, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 6, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 7, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
-    { id: 8, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 9, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 10, itemNumber: "100230458", itemDesc: "kMAOTE", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 11, itemNumber: "100230458", itemDesc: "SABAW", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 12, itemNumber: "Leansel Nico", itemDesc: "IT Department", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
-    { id: 13, itemNumber: "100230457", itemDesc: "Jane Doe", quantity: "Finance", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
-    { id: 14, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 15, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 16, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 17, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 18, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
-    { id: 19, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 20, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 1, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+    { id: 2, itemNumber: "215424", itemDesc: "2", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+    { id: 3, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A"  },
+    { id: 4, itemNumber: "215424", itemDesc: "1", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+    { id: 5, itemNumber: "215424", itemDesc: "1", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2132", remarks: "N/A" },
+    { id: 6, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4321", remarks: "N/A" },
+    { id: 7, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2412", remarks: "N/A"   },
+    { id: 8, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
+    { id: 9, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A" },
+    { id: 10, itemNumber: "123456", itemDesc: "3", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A" },
+    { id: 11, itemNumber: "123456", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2341", remarks: "N/A" },
+    { id: 12, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "5432", remarks: "N/A" },
+    { id: 13, itemNumber: "754211", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4213", remarks: "N/A" },
+    { id: 14, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4467", remarks: "N/A" },
+    { id: 15, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6743", remarks: "N/A" },
+    { id: 16, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "0971", remarks: "N/A" },
+    { id: 17, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6839", remarks: "N/A" },
+    { id: 18, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "43345", remarks: "N/A"   },
+    { id: 19, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "324234", remarks: "N/A" },
+    { id: 20, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
 ];
 
 
@@ -157,7 +157,7 @@ function POSModal({ open, onClose }: POSModalProps) {
                                         <TableBody>
                                             {currentItem.map(item => (
                                                 <TableRow key={item.id}>
-                                                    <TableCell>{item.itemDesc}</TableCell>
+                                                    <TableCell>{item.quantity}</TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody> 

@@ -7,33 +7,38 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import ShippedModal from "@/modals/ShippedModal";
 import ReceivedModal from "@/modals/ReceivedModal";
+import CancelModal from "@/modals/CancelModal";
+import ViewDetailsModal from "@/modals/ViewDetailsModal";
 
 const delivery = [
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Tindahan ni Aling Nena", address: "503604220", status: "Registered"  },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 12, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
-    { id: 13, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 14, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 15, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 16, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 17, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 18, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
-    { id: 19, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 20, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 1, companyName: "100230457", costCenter: "Jane Doe", storeName: "HP Probook 8GB RAM / 512GB SSD", address: "01/02/24", status: "Received" },
+    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "HP Probook 8GB RAM / 512GB SSD", address: "01/02/24", status: "Shipped" },
+    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received"  },
+    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Cancelled" },
+    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received"   },
+    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 12, companyName: "100230457", costCenter: "Jane Doe", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 13, companyName: "100230457", costCenter: "Jane Doe", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 14, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 15, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 16, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 17, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 18, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped"   },
+    { id: 19, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
+    { id: 20, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
 ];
 
 function DeliveryOverview() {
+    const [openViewDetailsModal, setOpenViewDetailsModal] = useState(false);
     const [openShippedModal, setOpenShippedModal] = useState(false);
     const [openReceivedModal, setOpenReceivedModal] = useState(false);
+    const [openCancelModal, setOpenCancelModal] = useState(false);
+
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -129,9 +134,10 @@ function DeliveryOverview() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem onClick={() => setOpenViewDetailsModal(true)}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setOpenShippedModal(true)}>Shipped</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setOpenReceivedModal(true)}>Received</DropdownMenuItem>
-                                                    <DropdownMenuItem>DR Cancel</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenCancelModal(true)}>DR Cancel</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -169,8 +175,10 @@ function DeliveryOverview() {
                     </Pagination>
                 </div>
             </div>
+            <ViewDetailsModal open={openViewDetailsModal} onClose={() => setOpenViewDetailsModal(false)}/>
             <ShippedModal open={openShippedModal} onClose={() => setOpenShippedModal(false)}/>
             <ReceivedModal open={openReceivedModal} onClose={() => setOpenReceivedModal(false)}/>
+            <CancelModal open={openCancelModal} onClose={() => setOpenCancelModal(false)}/>
         </>
     );
 }
