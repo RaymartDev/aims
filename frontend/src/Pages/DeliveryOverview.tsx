@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { MoreHorizontal, Search } from "lucide-react";
+import { Download, MoreHorizontal, Search } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
@@ -98,7 +98,10 @@ function DeliveryOverview() {
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                </div>   
+                                </div> 
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1">
+                                    <Download size={20}/><span className="text-sm">Export</span>
+                                </Button>  
                             </div>    
                         </div>
                     </div>

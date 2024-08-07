@@ -53,7 +53,7 @@ function ViewDetailsModal({ open, onClose }: ViewDetailsModalProps) {
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
-            <div className="flex flex-col w-3/6 bg-slate-50 rounded-2xl p-6">
+            <div className="flex flex-col w-4/6 2xl:w-3/6 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full border-b-2 border-black">
                     <h1 className="font-extrabold text-xl">View Details</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>

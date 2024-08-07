@@ -91,7 +91,7 @@ function Store() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none" 
+                                    <Input type="search" placeholder="Search Store Name" className="pl-12 border-2 focus:border-none" 
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

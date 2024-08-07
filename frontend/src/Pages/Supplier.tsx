@@ -28,7 +28,7 @@ const suppliers = [
     { id: 17, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", dateHired: "05/21/22" },
     { id: 18, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", dateHired: "05/21/22" },
     { id: 19, supplierNumber: "100230458", companyName: "John Smith", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", dateHired: "05/21/22" },
-    { id: 20, supplierNumber: "100230458", companyName: "kMAOTE", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", dateHired: "05/21/22" },
+    { id: 20, supplierNumber: "100230459", companyName: "kMAOTE", contactPerson: "Marketing", businessNumber: "503604220", mobileNumber: "Sales", dateHired: "05/21/22" },
 ];
 
 function Supplier() {
@@ -66,7 +66,7 @@ function Supplier() {
     }, [searchQuery]);
 
     const filteredSupplier = suppliers.filter(suppliers =>
-        suppliers.companyName.toLowerCase().includes(searchQuery.toLowerCase())
+        suppliers.supplierNumber.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastSupplier = currentPage * itemsPerPage;
@@ -101,7 +101,7 @@ function Supplier() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"
+                                    <Input type="search" placeholder="Search Supplier Code" className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

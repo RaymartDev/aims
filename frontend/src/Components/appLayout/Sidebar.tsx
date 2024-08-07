@@ -184,15 +184,6 @@ function Sidebar() {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="my-0 py-0 border-b">
-                      <NavLink to="/employee" className={({ isActive }) =>
-                        `flex items-center transition duration-200 h-14 ${
-                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                        }`
-                      }>
-                      <h1 className="mx-14 font-bold">Edit Profile</h1>
-                    </NavLink>
-                  </AccordionContent>
-                  <AccordionContent className="my-0 py-0 border-b">
                       <NavLink to="/changepassword" className={({ isActive }) =>
                         `flex items-center transition duration-200 h-14 ${
                           isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'

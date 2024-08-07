@@ -28,7 +28,7 @@ const employees = [
     { id: 17, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
     { id: 18, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
     { id: 19, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 20, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
+    { id: 20, number: "100230459", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
 ];
 
 function Employee() {
@@ -66,7 +66,7 @@ function Employee() {
     }, [searchQuery]);
 
     const filteredEmployees = employees.filter(employee =>
-        employee.name.toLowerCase().includes(searchQuery.toLowerCase())
+        employee.number.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastEmployee = currentPage * itemsPerPage;
@@ -90,7 +90,7 @@ function Employee() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12 ">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none" 
+                                    <Input type="search" placeholder="Search Employee Number" className="pl-12 border-2 focus:border-none" 
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

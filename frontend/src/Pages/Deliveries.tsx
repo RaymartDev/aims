@@ -83,8 +83,8 @@ function Deliveries() {
                             <Input id="supplier" type="Text" placeholder="Supplier Name" className="w-80 focus:border-none"/>
                         </div>
                         <div>
-                            <Label htmlFor="DR">Delivery Reciept No.</Label>
-                            <Input id="DR" type="Number" placeholder="Delivery Reciept No." className="w-80 focus:border-none"/>
+                            <Label htmlFor="DR">Delivery Receipt No.</Label>
+                            <Input id="DR" placeholder="Delivery Reciept No." className="w-80 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="PO">Product Order No.</Label>

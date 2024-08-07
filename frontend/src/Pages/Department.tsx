@@ -6,27 +6,27 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 
-const department = [
-    { id: 1, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
-    { id: 2, number: "100230457", name: "Jane Doe", department: "Finance", costCode: "503604219", division: "Accounting", company: "ABC Corp", dateHired: "07/01/23", status: "Not Registered" },
-    { id: 3, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 4, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 5, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 6, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 7, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 8, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 9, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 10, number: "100230458", name: "kMAOTE", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 11, number: "100230458", name: "SABAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 12, number: "100230458", name: "SABzzxcAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 13, number: "100230458", name: "SABqwewqeAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 14, number: "100230458", name: "asdasd", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 15, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
-    { id: 16, number: "100230457", name: "Jane Doe", department: "Finance", costCode: "503604219", division: "Accounting", company: "ABC Corp", dateHired: "07/01/23", status: "Registered" },
-    { id: 17, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 18, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 19, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 20, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
+const data = [
+    { id: 1,  department: "IT Department", status: "Active" },
+    { id: 2,  department: "Human Resources", status: "Inactive" },
+    { id: 3,  department: "Marketing", status: "Active" },
+    { id: 4,  department: "Sales", status: "Inactive" },
+    { id: 5,  department: "Finance", status: "Active" },
+    { id: 6,  department: "Research and Development", status: "Inactive" },
+    { id: 7,  department: "Customer Support", status: "Active" },
+    { id: 8,  department: "Legal", status: "Inactive" },
+    { id: 9,  department: "Operations", status: "Active" },
+    { id: 10, department: "Engineering", status: "Inactive" },
+    { id: 11, department: "Product Management", status: "Active" },
+    { id: 12, department: "Quality Assurance", status: "Inactive" },
+    { id: 13, department: "Administration", status: "Active" },
+    { id: 14, department: "Purchasing", status: "Inactive" },
+    { id: 15, department: "Logistics", status: "Active" },
+    { id: 16, department: "Public Relations", status: "Inactive" },
+    { id: 17, department: "Corporate Strategy", status: "Active" },
+    { id: 18, department: "Training and Development", status: "Inactive" },
+    { id: 19, department: "Business Development", status: "Active" },
+    { id: 20, department: "Health and Safety", status: "Inactive" }
 ];
 
 function Department() {
@@ -61,8 +61,8 @@ function Department() {
         setCurrentPage(1);
     }, [searchQuery]);
 
-    const filteredDepartment = department.filter(department =>
-        department.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredDepartment = data.filter(data =>
+        data.department.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastDepartment = currentPage * itemsPerPage;
@@ -85,7 +85,7 @@ function Department() {
                         </div>
                         <div className="flex flex-row w-6/12 space-x-2">
                             <div className="relative w-10/12 ">
-                                <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none" 
+                                <Input type="search" placeholder="Search Department" className="pl-12 border-2 focus:border-none" 
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}/>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -100,30 +100,16 @@ function Department() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Employee ID</TableHead>
-                                <TableHead>Employee Number</TableHead>
-                                <TableHead>Employee Name</TableHead>
                                 <TableHead>Department</TableHead>
-                                <TableHead>Cost Code</TableHead>
-                                <TableHead>Division</TableHead>
-                                <TableHead>Company</TableHead>
-                                <TableHead>Date Hired</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {currentDepartment.map(department => (
-                                <TableRow key={department.id}>
-                                    <TableCell>{department.id}</TableCell>
-                                    <TableCell>{department.number}</TableCell>
-                                    <TableCell>{department.name}</TableCell>
-                                    <TableCell>{department.department}</TableCell>
-                                    <TableCell>{department.costCode}</TableCell>
-                                    <TableCell>{department.division}</TableCell>
-                                    <TableCell>{department.company}</TableCell>
-                                    <TableCell>{department.dateHired}</TableCell>
-                                    <TableCell>{department.status}</TableCell>
+                            {currentDepartment.map(data => (
+                                <TableRow key={data.id}>
+                                    <TableCell>{data.department}</TableCell>
+                                    <TableCell>{data.status}</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
