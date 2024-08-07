@@ -76,7 +76,7 @@ function Deliveries() {
                     </Button>
                 </div>
                 <div className="mt-6 flex-grow overflow-y-auto pl-2">
-                    <div className="flex flex-col gap-0 lg:gap-4 xl:flex-row">
+                    <div className="flex flex-col gap-0 lg:gap-4 2xl:flex-row">
                     <div className="flex gap-4">
                         <div>
                             <Label htmlFor="supplier">Supplier Name</Label>
@@ -102,7 +102,7 @@ function Deliveries() {
                         </div>
                      </div>
                     </div>
-                    <div className="flex flex-col gap-0 xl:flex-row lg:gap-4 mt-5">
+                    <div className="flex flex-col gap-0 2xl:flex-row lg:gap-4 mt-5">
                         <div className="flex gap-4">
                         <div>
                             <Label htmlFor="Capex">Capex     No.</Label>
@@ -128,7 +128,7 @@ function Deliveries() {
                         </div>
                     </div>
                     </div>
-                    <div className="flex flex-col gap-0 xl:flex-row lg:gap-4 mt-5">
+                    <div className="flex flex-col gap-0 2xl:flex-row lg:gap-4 mt-5">
                         <div className="flex gap-4">
                         <div>
                             <Label htmlFor="remarks">Remarks</Label>
@@ -160,7 +160,7 @@ function Deliveries() {
                             <Input id="warranty" type="Date" className="w-48 focus:border-none"/>
                         </div>
                     </div>
-                    <div className="flex flex-col xl:flex-row w-full gap-10">
+                    <div className="flex flex-col 2xl:flex-row w-full gap-10">
                     <div className="mt-8 border border-gray-700 rounded-lg p-4 w-fit">
                         <p>Destination/Transfer to</p>
                         <div>
