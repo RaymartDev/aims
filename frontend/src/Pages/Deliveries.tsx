@@ -3,8 +3,8 @@ import { Input } from "@/Components/ui/input"
 import { Button } from "@/Components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Label } from "@/Components/ui/label"
-import { Textarea } from "@/Components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
 import SelectMaterialModal from "@/modals/SelectMaterialModal";
 
 const deliveries = [
@@ -80,80 +80,40 @@ function Deliveries() {
                     <div className="flex gap-4">
                         <div>
                             <Label htmlFor="supplier">Supplier Name</Label>
-                            <Input id="supplier" type="Text" placeholder="Supplier Name" className="w-80 focus:border-none"/>
+                            <Input id="supplier" type="Text" className="w-80 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="DR">Delivery Receipt No.</Label>
-                            <Input id="DR" placeholder="Delivery Reciept No." className="w-80 focus:border-none"/>
+                            <Input id="DR" className="w-80 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="PO">Product Order No.</Label>
-                            <Input id="PO" type="Number" placeholder="Product Order No." className="w-80 focus:border-none"/>
+                            <Input id="PO" type="Number" className="w-80 focus:border-none"/>
                         </div>
                     </div>
                     <div className="flex gap-4">
                         <div>
                             <Label htmlFor="PR">PR No.</Label>
-                            <Input id="PR" type="Number" placeholder="PR No." className="w-80 focus:border-none"/>
+                            <Input id="PR" type="Number"  className="w-80 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="unit">Unit</Label>
-                            <Input id="unit" type="Number" placeholder="Unit" className="w-40 focus:border-none"/>
+                            <Input id="unit" type="Number" className="w-40 focus:border-none"/>
                         </div>
-                     </div>
+                    </div>
                     </div>
                     <div className="flex flex-col gap-0 2xl:flex-row lg:gap-4 mt-5">
                         <div className="flex gap-4">
                         <div>
                             <Label htmlFor="Capex">Capex     No.</Label>
-                            <Input id="Capex" type="Number" placeholder="Capex No." className="w-80 focus:border-none"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="desc">Description</Label>
-                            <Textarea id="desc" placeholder="Description" className="w-80  focus:border-none"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="itemCode">Item Code</Label>
-                            <Input id="itemCode" type="Number" placeholder="Item Code" className="w-80 focus:border-none"/>
-                        </div>
-                        </div>
-                    <div className="flex gap-4">
-                        <div>
-                            <Label htmlFor="Mats">Material Code</Label>
-                            <Input id="Mats" type="Number" placeholder="Material Code" className="w-80 focus:border-none"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="matType">Material Type</Label>
-                            <Input id="matType" type="Text" placeholder="Material Type" className="w-60 focus:border-none"/>
-                        </div>
-                    </div>
-                    </div>
-                    <div className="flex flex-col gap-0 2xl:flex-row lg:gap-4 mt-5">
-                        <div className="flex gap-4">
-                        <div>
-                            <Label htmlFor="remarks">Remarks</Label>
-                            <Input id="remarks" type="Text" placeholder="Remarks" className="w-72 focus:border-none"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="quantity">Quantity</Label>
-                            <Input id="quantity" type="Text" placeholder="Quantity" className="w-64 focus:border-none"/>
-                        </div>
-                        <div>
-                            <Label htmlFor="request">Requestor</Label>
-                            <Input id="request" type="Text" placeholder="Requestor" className="w-96 focus:border-none"/>
-                        </div>
-                        </div>
-                        <div className="flex gap-4">
-                        <div>
-                            <Label htmlFor="user">User</Label>
-                            <Input id="user" type="Text" placeholder="User" className="w-96 focus:border-none"/>
+                            <Input id="Capex" type="Number" className="w-80 focus:border-none"/>
                         </div>
                         </div>
                     </div>
                     <div className="flex space-x-5 mt-5">
-                    <div>
+                        <div>
                             <Label htmlFor="date">Date Entry</Label>
-                            <Input id="date" type="Date" placeholder="Date" className="w-80 focus:border-none"/>
+                            <Input id="date" type="Date" className="w-80 focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="warranty">End Warranty</Label>
@@ -162,40 +122,56 @@ function Deliveries() {
                     </div>
                     <div className="flex flex-col 2xl:flex-row w-full gap-10">
                     <div className="mt-8 border border-gray-700 rounded-lg p-4 w-fit">
-                        <p>Destination/Transfer to</p>
+                        <div className="flex flex-row  space-x-5">
+                            <p>Destination/Transfer to</p>
+                            <div className="flex ">
+                                <RadioGroup defaultValue="employee" className="flex flex-row">
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="employee" id="employee"/>
+                                        <Label htmlFor="employee">Employee</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="store" id="store"/>
+                                        <Label htmlFor="store">Store</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+                        </div>
+                        
                         <div>
                             <div className="flex space-x-5 mt-5">
-                                <div>
-                                    <Label htmlFor="company">Company</Label>
-                                    <Input id="company" type="Text" placeholder="Company" className="w-80 focus:border-none"/>
-                                </div>
-                                <div>
-                                    <Label htmlFor="storeNo">Store Number</Label>
-                                    <Input id="storeNo"  placeholder="Store Number" className="w-80 focus:border-none"/>
-                                </div>
                                 <div>
                                     <Label htmlFor="costCenter">Cost Center</Label>
                                     <Input id="costCenter" placeholder="Cost Center" className="w-80 focus:border-none"/>
                                 </div>
+                                <div>
+                                    <Label htmlFor="storeNo">Store Name</Label>
+                                    <Input id="storeName" disabled className="w-80 focus:border-none"/>
+                                </div>
+                                <div>
+                                    <Label htmlFor="company">Company</Label>
+                                    <Input id="company" disabled className="w-80 focus:border-none"/>
+                                </div>
                             </div>
                             <div className="flex space-x-5 mt-5">
                                 <div>
-                                    <Label htmlFor="address">Address</Label>
-                                    <Textarea id="address" placeholder="Address" className="w-96 focus:border-none"/>
+                                    <Label htmlFor="request">Requestor Name</Label>
+                                    <Input id="request" type="Text" className="w-96 focus:border-none"/>
+                                </div>
+                                <div>
+                                    <Label htmlFor="user">Username</Label>
+                                    <Input id="user" type="Text" className="w-96 focus:border-none"/>
                                 </div>
                             </div>
+                            
                         </div>
-                    </div>
-                    <div className="flex justify-start lg:justify-end space-x-5 mt-4 items-end">
-                        <Button className="bg-hoverCream text-fontHeading font-semibold w-32 hover:text-white">Cancel</Button>
-                        <Button className="bg-hoverCream text-fontHeading font-semibold w-32 hover:text-white">Save</Button>
                     </div>
                     </div>
                     <div className="mt-4 space-y-2">
                         <div className="border-2 rounded-lg flex p-2 items-center space-x-3 ">
                             <h1 className="text-sm">Description</h1>
                             <div className="relative w-1/3">
-                                <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"
+                                <Input type="search" placeholder="Search Description" className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}/>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

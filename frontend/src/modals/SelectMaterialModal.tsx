@@ -77,10 +77,10 @@ function SelectMaterialModal({ open, onClose }: SelectMaterialModalProps) {
                     <h1 className="font-extrabold text-2xl">Select Material</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
                 </div>
-                <div className="flex flex-row items-center space-x-5 mt-5 w-1/2">
+                <div className="flex flex-row items-center space-x-2 mt-5 w-3/4">
                     <h1 className="w-1/6">Materials</h1>
-                    <div className="relative w-5/6 ">
-                        <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none"
+                    <div className="relative w-5/6">
+                        <Input type="search" placeholder="Search Description" className="pl-12 border-2 focus:border-none"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}/>
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

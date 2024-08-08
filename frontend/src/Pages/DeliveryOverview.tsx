@@ -110,7 +110,6 @@ function DeliveryOverview() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>DR Number</TableHead>
-                                    <TableHead>Item Description</TableHead>
                                     <TableHead>Shipped By</TableHead>
                                     <TableHead>Shipped Date</TableHead>
                                     <TableHead>Received By</TableHead>
@@ -123,7 +122,6 @@ function DeliveryOverview() {
                                 {currentDelivery.map(delivery => (
                                     <TableRow key={delivery.id}>
                                         <TableCell>{delivery.companyName}</TableCell>
-                                        <TableCell>{delivery.storeName}</TableCell>
                                         <TableCell>{delivery.costCenter}</TableCell>
                                         <TableCell>{delivery.address}</TableCell>
                                         <TableCell>{delivery.address}</TableCell>
