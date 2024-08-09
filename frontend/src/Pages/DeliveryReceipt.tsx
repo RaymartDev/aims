@@ -1,10 +1,57 @@
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import POSModal from "@/modals/POSModal";
+
+const item = [
+  { id: 1, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+  { id: 2, itemNumber: "215424", itemDesc: "2", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+  { id: 3, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A"  },
+  { id: 4, itemNumber: "215424", itemDesc: "1", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+  { id: 5, itemNumber: "215424", itemDesc: "1", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2132", remarks: "N/A" },
+  { id: 6, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4321", remarks: "N/A" },
+  { id: 7, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2412", remarks: "N/A"   },
+  { id: 8, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
+  { id: 9, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A" },
+  { id: 10, itemNumber: "123456", itemDesc: "3", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A" },
+  { id: 11, itemNumber: "123456", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2341", remarks: "N/A" },
+  { id: 12, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "5432", remarks: "N/A" },
+  { id: 13, itemNumber: "754211", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4213", remarks: "N/A" },
+  { id: 14, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4467", remarks: "N/A" },
+  { id: 15, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6743", remarks: "N/A" },
+  { id: 16, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "0971", remarks: "N/A" },
+  { id: 17, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6839", remarks: "N/A" },
+  { id: 18, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "43345", remarks: "N/A"   },
+  { id: 19, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "324234", remarks: "N/A" },
+  { id: 20, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
+];
 
 function DeliveryReceipt() {
   const [openPOSModal, setOpenPOSModal] = useState(false);
+  const headerHeight = 72;
+
+  const getItemsPerPage = (height: number): number => {
+      const availableHeight = height - headerHeight;
+      if (availableHeight < 500) return 10;
+      return 10;
+  };
+  const [currentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
+
+  useEffect(() => {
+      const handleResize = () => {
+          setItemsPerPage(getItemsPerPage(window.innerHeight));
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItem= item.slice(indexOfFirstItem, indexOfLastItem);
   
   return (
     <>
@@ -23,6 +70,10 @@ function DeliveryReceipt() {
                 <Input className="focus:outline-none w-80" />
               </div>
               <div className="flex flex-col">
+                <p className="text-sm">Product Code</p>
+                <Input className="focus:border-none" />
+              </div>
+              <div className="flex flex-col">
                 <p className="text-sm">Requestor Name</p>
                 <Input className="focus:border-none" />
               </div>
@@ -37,6 +88,38 @@ function DeliveryReceipt() {
           </div>
         </div>
         </div>
+        <div className="flex flex-row w-full mt-5">
+                        <div className="overflow-y-auto w-3/4" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Item Number</TableHead>
+                                        <TableHead>Item Description</TableHead>
+                                        <TableHead>Quantity</TableHead>
+                                        <TableHead>Unit</TableHead>
+                                        <TableHead>Serial Number</TableHead>
+                                        <TableHead>Remarks</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {currentItem.map(item => (
+                                        <TableRow key={item.id}>
+                                            <TableCell>{item.itemNumber}</TableCell>
+                                            <TableCell>{item.quantity}</TableCell>
+                                            <TableCell>{item.itemDesc}</TableCell>
+                                            <TableCell>{item.unit}</TableCell>
+                                            <TableCell>{item.serialNumber}</TableCell>
+                                            <TableCell>{item.remarks}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </div>
+                    <div className="space-x-2 flex items-end">
+                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Asset</Button>
+                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Release</Button>
+                    </div>
       <POSModal open={openPOSModal} onClose={() => setOpenPOSModal(false)}/>
     </>
   );

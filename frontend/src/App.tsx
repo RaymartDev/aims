@@ -13,6 +13,7 @@ import Company from './pages/Company'
 import Department from './pages/Department'
 import DeliveryOverview from './pages/DeliveryOverview'
 import DeliveryReceipt from './pages/DeliveryReceipt'
+import AssignToModal from './modals/AssignToModal'
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="/department" element={<Department />} />
           {/*Settings */}
           <Route path='/changepassword' element={<ChangePassword/>}/>
+          <Route path='/assignedto' element={<AssignToModal/>}/>
           </Route>
       </ Routes>
     </ BrowserRouter>

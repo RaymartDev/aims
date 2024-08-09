@@ -4,7 +4,6 @@ import { Button } from "@/Components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { Label } from "@/Components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group"
 import SelectMaterialModal from "@/modals/SelectMaterialModal";
 
 const deliveries = [
@@ -76,96 +75,39 @@ function Deliveries() {
                     </Button>
                 </div>
                 <div className="mt-6 flex-grow overflow-y-auto pl-2">
-                    <div className="flex flex-col gap-0 lg:gap-4 2xl:flex-row">
-                    <div className="flex gap-4">
+                    <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 mb-10">
                         <div>
                             <Label htmlFor="supplier">Supplier Name</Label>
-                            <Input id="supplier" type="Text" className="w-80 focus:border-none"/>
+                            <Input id="supplier" type="Text" className=" focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="DR">Delivery Receipt No.</Label>
-                            <Input id="DR" className="w-80 focus:border-none"/>
+                            <Input id="DR" className=" focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="PO">Product Order No.</Label>
-                            <Input id="PO" type="Number" className="w-80 focus:border-none"/>
+                            <Input id="PO" type="Number" className=" focus:border-none"/>
                         </div>
-                    </div>
-                    <div className="flex gap-4">
                         <div>
                             <Label htmlFor="PR">PR No.</Label>
-                            <Input id="PR" type="Number"  className="w-80 focus:border-none"/>
+                            <Input id="PR" type="Number"  className=" focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="unit">Unit</Label>
-                            <Input id="unit" type="Number" className="w-40 focus:border-none"/>
+                            <Input id="unit" type="Number" className=" focus:border-none"/>
                         </div>
-                    </div>
-                    </div>
-                    <div className="flex flex-col gap-0 2xl:flex-row lg:gap-4 mt-5">
-                        <div className="flex gap-4">
                         <div>
-                            <Label htmlFor="Capex">Capex     No.</Label>
-                            <Input id="Capex" type="Number" className="w-80 focus:border-none"/>
+                            <Label htmlFor="Capex">Capex No.</Label>
+                            <Input id="Capex" type="Number" className=" focus:border-none"/>
                         </div>
-                        </div>
-                    </div>
-                    <div className="flex space-x-5 mt-5">
                         <div>
                             <Label htmlFor="date">Date Entry</Label>
-                            <Input id="date" type="Date" className="w-80 focus:border-none"/>
+                            <Input id="date" type="Date" className=" focus:border-none"/>
                         </div>
                         <div>
                             <Label htmlFor="warranty">End Warranty</Label>
-                            <Input id="warranty" type="Date" className="w-48 focus:border-none"/>
+                            <Input id="warranty" type="Date" className=" focus:border-none"/>
                         </div>
-                    </div>
-                    <div className="flex flex-col 2xl:flex-row w-full gap-10">
-                    <div className="mt-8 border border-gray-700 rounded-lg p-4 w-fit">
-                        <div className="flex flex-row  space-x-5">
-                            <p>Destination/Transfer to</p>
-                            <div className="flex ">
-                                <RadioGroup defaultValue="employee" className="flex flex-row">
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="employee" id="employee"/>
-                                        <Label htmlFor="employee">Employee</Label>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="store" id="store"/>
-                                        <Label htmlFor="store">Store</Label>
-                                    </div>
-                                </RadioGroup>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div className="flex space-x-5 mt-5">
-                                <div>
-                                    <Label htmlFor="costCenter">Cost Center</Label>
-                                    <Input id="costCenter" placeholder="Cost Center" className="w-80 focus:border-none"/>
-                                </div>
-                                <div>
-                                    <Label htmlFor="storeNo">Store Name</Label>
-                                    <Input id="storeName" disabled className="w-80 focus:border-none"/>
-                                </div>
-                                <div>
-                                    <Label htmlFor="company">Company</Label>
-                                    <Input id="company" disabled className="w-80 focus:border-none"/>
-                                </div>
-                            </div>
-                            <div className="flex space-x-5 mt-5">
-                                <div>
-                                    <Label htmlFor="request">Requestor Name</Label>
-                                    <Input id="request" type="Text" className="w-96 focus:border-none"/>
-                                </div>
-                                <div>
-                                    <Label htmlFor="user">Username</Label>
-                                    <Input id="user" type="Text" className="w-96 focus:border-none"/>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
                     </div>
                     <div className="mt-4 space-y-2">
                         <div className="border-2 rounded-lg flex p-2 items-center space-x-3 ">

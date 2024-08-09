@@ -190,6 +190,7 @@ function POSModal({ open, onClose }: POSModalProps) {
                     </div>
                 </div>
             </div>
+            
             <AssetEntryModal open={openAssetModal} onClose={() => setOpenAssetModal(false)}/>
         </>
     );
