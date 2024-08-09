@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import KFC from '../../images/KFC_LOGO.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { BarChart, ClipboardList, UsersRound, Settings, LogOut, Truck, Boxes, UserRound, Store, Container, UserRoundCog, Building2, Briefcase, Archive, Package, ReceiptText } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 function Sidebar() {
   const [openItem, setOpenItem] =  useState<string | undefined>(undefined);
+  const navigate = useNavigate();
 
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
@@ -34,7 +35,7 @@ function Sidebar() {
                 <AccordionTrigger className='mx-5 h-12'>
                   <div className='flex space-x-2 font-extrabold'>
                     <ClipboardList />
-                    <span className="sm:hidden xl:inline">Inventory</span>
+                    <span className="sm:hidden xl:inline">Warehouse</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
@@ -43,7 +44,7 @@ function Sidebar() {
                         isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                       }`
                     }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Archive /><span>Overview</span></div>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Archive /><span>Inventory</span></div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
@@ -116,7 +117,7 @@ function Sidebar() {
                 <AccordionTrigger className='mx-5 h-12'>
                   <div className='flex space-x-2 font-extrabold'>
                     <Package />
-                    <span className="sm:hidden xl:inline">Delivery</span>
+                    <span className="sm:hidden xl:inline">Order</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
@@ -125,7 +126,7 @@ function Sidebar() {
                         isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                       }`
                     }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Archive/><span>Overview</span></div>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Archive/><span>Transactions</span></div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
@@ -134,7 +135,7 @@ function Sidebar() {
                         isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                       }`
                     }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ReceiptText /><span>Delivery Receipt</span></div>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ReceiptText /><span>Release</span></div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>
@@ -197,7 +198,7 @@ function Sidebar() {
           </li>
         </ul>
       </nav> 
-      <Button className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] hover:text-white font-bold space-x-2 ">
+      <Button onClick={() => navigate("/login")} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] hover:text-white font-bold space-x-2 ">
         <LogOut /><span className="sm:hidden xl:inline">Logout</span>
       </Button>    
     </div>
