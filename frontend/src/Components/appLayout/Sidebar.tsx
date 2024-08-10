@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import KFC from '../../images/KFC_LOGO.png';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BarChart, ClipboardList, UsersRound, Settings, LogOut, Truck, Boxes, UserRound, Store, Container, UserRoundCog, Building2, Briefcase, Archive, Package, ReceiptText } from 'lucide-react';
+import { BarChart, Warehouse, UsersRound, Settings, LogOut, Truck, Boxes, UserRound, Store, Container, UserRoundCog, Building2, Briefcase, Archive, ArrowRightLeft, Package, ReceiptText } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
@@ -18,7 +18,7 @@ function Sidebar() {
       <nav className="mt-10">
         <ul>
           <li>
-            <NavLink to="/dashboard" className={({ isActive }) =>
+            <NavLink to="/" className={({ isActive }) =>
                 `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-12 transition duration-200 font-extrabold space-x-2  ${
                   isActive ? 'bg-hoverCream': 'hover:bg-hoverCream' 
                 }`
@@ -34,7 +34,7 @@ function Sidebar() {
               <AccordionItem value="inventory">
                 <AccordionTrigger className='mx-5 h-12'>
                   <div className='flex space-x-2 font-extrabold'>
-                    <ClipboardList />
+                    <Warehouse />
                     <span className="sm:hidden xl:inline">Warehouse</span>
                   </div>
                 </AccordionTrigger>
@@ -110,7 +110,7 @@ function Sidebar() {
             </Accordion>
           </li>
 
-          {/* Delivery */}
+          {/* Order */}
           <li>
             <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
               <AccordionItem value="delivery">
@@ -126,7 +126,7 @@ function Sidebar() {
                         isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                       }`
                     }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Archive/><span>Transactions</span></div>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ArrowRightLeft/><span>Transactions</span></div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">

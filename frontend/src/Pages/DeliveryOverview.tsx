@@ -84,8 +84,8 @@ function DeliveryOverview() {
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-full relative">
                     <div className="flex flex-col">
-                        <h1 className="text-2xl font-bold">Delivery</h1>
-                        <p className="text-sm font-semibold text-[#9E9E9E]">Delivery / Overview</p>
+                        <h1 className="text-2xl font-bold">Transaction</h1>
+                        <p className="text-sm font-semibold text-[#9E9E9E]">Order / Transaction</p>
                     </div>
                     <div className="flex justify-center mt-10">
                         <div className="flex flex-row justify-between w-full">

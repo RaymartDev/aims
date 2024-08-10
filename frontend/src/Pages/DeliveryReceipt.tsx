@@ -3,6 +3,9 @@ import { Button } from "@/Components/ui/button";
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import POSModal from "@/modals/POSModal";
+import SelectItemModal from "@/modals/SelectItemModal";
+import AssetEntryModal from "@/modals/AssetEntryModal";
+import { Plus } from "lucide-react";
 
 const item = [
   { id: 1, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
@@ -29,12 +32,15 @@ const item = [
 
 function DeliveryReceipt() {
   const [openPOSModal, setOpenPOSModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openAssetModal, setOpenAssetModal] = useState(false);
+
   const headerHeight = 72;
 
   const getItemsPerPage = (height: number): number => {
       const availableHeight = height - headerHeight;
-      if (availableHeight < 500) return 10;
-      return 10;
+      if (availableHeight < 500) return 15;
+      return 15;
   };
   const [currentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
@@ -55,15 +61,13 @@ function DeliveryReceipt() {
   
   return (
     <>
-      <div className="flex h-full">
+      <div className="flex flex-col h-full">
+        <div className="flex flex-col w-full">
+          <h1 className="text-2xl font-bold">Delivery Receipt</h1>
+          <p className="text-sm font-semibold text-[#9E9E9E]">Delivery / Delivery Receipt</p>
+        </div>
         <div className="flex flex-col h-full  ">
-          <div className="flex flex-col">
-            <h1 className="text-2xl font-bold">Delivery Receipt</h1>
-            <p className="text-sm font-semibold text-[#9E9E9E]">
-              Delivery / Delivery Receipt
-            </p>
-          </div>
-          <div className="flex w-full justify-start pl-10 gap-8 2xl:gap-20 pt-10">
+          <div className="flex w-full justify-start pl-2 gap-8 2xl:gap-20 pt-10">
             <div className="flex gap-6">
               <div className="flex flex-col">
                 <p className="text-sm">Reference Number</p>
@@ -84,43 +88,47 @@ function DeliveryReceipt() {
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-10">
-            <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenPOSModal(true)}> + Add Item</Button>
+            <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenPOSModal(true)}><Plus size={20}/><span className="text-sm">Scan Item</span></Button>
+            <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Item</span></Button>
           </div>
         </div>
-        </div>
         <div className="flex flex-row w-full mt-5">
-                        <div className="overflow-y-auto w-3/4" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Item Number</TableHead>
-                                        <TableHead>Item Description</TableHead>
-                                        <TableHead>Quantity</TableHead>
-                                        <TableHead>Unit</TableHead>
-                                        <TableHead>Serial Number</TableHead>
-                                        <TableHead>Remarks</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {currentItem.map(item => (
-                                        <TableRow key={item.id}>
-                                            <TableCell>{item.itemNumber}</TableCell>
-                                            <TableCell>{item.quantity}</TableCell>
-                                            <TableCell>{item.itemDesc}</TableCell>
-                                            <TableCell>{item.unit}</TableCell>
-                                            <TableCell>{item.serialNumber}</TableCell>
-                                            <TableCell>{item.remarks}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </div>
-                    <div className="space-x-2 flex items-end">
-                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Asset</Button>
-                            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Release</Button>
-                    </div>
+          <div className="overflow-y-auto w-full" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+              <Table>
+                  <TableHeader>
+                      <TableRow>
+                          <TableHead>Item Number</TableHead>
+                          <TableHead>Item Description</TableHead>
+                          <TableHead>Quantity</TableHead>
+                          <TableHead>Unit</TableHead>
+                          <TableHead>Serial Number</TableHead>
+                          <TableHead>Remarks</TableHead>
+                      </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                      {currentItem.map(item => (
+                          <TableRow key={item.id}>
+                              <TableCell>{item.itemNumber}</TableCell>
+                              <TableCell>{item.quantity}</TableCell>
+                              <TableCell>{item.itemDesc}</TableCell>
+                              <TableCell>{item.unit}</TableCell>
+                              <TableCell>{item.serialNumber}</TableCell>
+                              <TableCell>{item.remarks}</TableCell>
+                          </TableRow>
+                      ))}
+                  </TableBody>
+              </Table>
+          </div>
+        </div>
+        <div className="space-x-2 flex items-end mt-5">
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => setOpenAssetModal(true)}>Asset</Button>
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Print</Button>
+        </div>
+      </div>
+      
       <POSModal open={openPOSModal} onClose={() => setOpenPOSModal(false)}/>
+      <SelectItemModal open={openModal} onClose={() => setOpenModal(false)}/>
+      <AssetEntryModal open={openAssetModal} onClose={() => setOpenAssetModal(false)}/>
     </>
   );
 }

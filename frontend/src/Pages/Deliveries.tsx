@@ -5,6 +5,7 @@ import { Plus, Search } from "lucide-react";
 import { Label } from "@/Components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import SelectMaterialModal from "@/modals/SelectMaterialModal";
+import DestinationModal from "@/modals/DestinationModal";
 
 const deliveries = [
     { id: 1, drNumber: "Leansel Nico", desc: "IT Department", serialNumber: "503604218", assetNumber: "IT Asset", quantity: "Registered", unit: "OU", remarks: "OU KFC - BACLARAN" },
@@ -31,6 +32,7 @@ const deliveries = [
 
 function Deliveries() {
     const [openModal, setOpenModal] = useState(false);
+    const [openNextModal, setOpenNextModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -62,13 +64,24 @@ function Deliveries() {
     const indexOfFirstDeliveries = indexOfLastDeliveries - itemsPerPage;
     const currentDeliveries= filteredDeliveries.slice(indexOfFirstDeliveries, indexOfLastDeliveries);
 
+    const handleNextModal = () => {
+        setOpenModal(false);
+        setOpenNextModal(true);
+    };
+
+    const handleBack = () => {
+        setOpenNextModal(false);
+        setOpenModal(true);
+    };
+
+
     return(
         <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-row justify-between w-full">
                     <div>
                         <h1 className="text-2xl font-bold">Deliveries</h1>
-                        <p className="text-sm font-semibold text-[#9E9E9E]">Inventory / Deliveries</p>
+                        <p className="text-sm font-semibold text-[#9E9E9E]">Warehouse / Deliveries</p>
                     </div>
                     <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={() => setOpenModal(true)}>
                         <Plus size={20}/><span className="text-sm">Add Delivery</span>
@@ -150,7 +163,8 @@ function Deliveries() {
                     </div>
                 </div>
             </div>
-            <SelectMaterialModal open={openModal} onClose={() => setOpenModal(false)}/>
+            <SelectMaterialModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
+            <DestinationModal open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
         </>
     );
 }

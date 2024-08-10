@@ -72,7 +72,7 @@ function InventoryOverview() {
             <div className="flex flex-col h-full relative">
                 <div className="flex flex-col">
                     <h1 className="text-2xl font-bold">Inventory</h1>
-                    <p className="text-sm font-semibold text-[#9E9E9E]">Inventory / Overview</p>
+                    <p className="text-sm font-semibold text-[#9E9E9E]">Warehouse / Inventory</p>
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-row justify-between w-full">

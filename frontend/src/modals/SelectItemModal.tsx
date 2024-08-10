@@ -5,13 +5,12 @@ import { Search, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 
-interface SelectMaterialModalProps {
+interface SelectItemModalProps {
     open: boolean;
     onClose: () => void;
-    onNext: () => void;
 }
 
-const materials = [
+const items = [
     {id:1, materialCode: 100231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "06/17/24" },
     {id:2, materialCode: 200231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "07/01/23" },
     {id:3, materialCode: 300231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
@@ -28,7 +27,7 @@ const materials = [
     {id:14, materialCode: 1300231, desc: "AOC 16GB RAM / 512GB SSD", itemCode: "MONI-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
 ];
 
-function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps) {
+function SelectItemModal({ open, onClose }: SelectItemModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const headerHeight = 72;
 
@@ -55,15 +54,15 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
         setCurrentPage(page);
     };
 
-    const filteredMaterial = materials.filter(materials =>
-        materials.desc.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredItems = items.filter(items =>
+        items.materialCode.toFixed().includes(searchQuery.toLowerCase())
     );
 
-    const indexOfLastMaterials = currentPage * itemsPerPage;
-    const indexOfFirstMaterials = indexOfLastMaterials - itemsPerPage;
-    const currentMaterials = filteredMaterial.slice(indexOfFirstMaterials, indexOfLastMaterials);
+    const indexOfLastItems = currentPage * itemsPerPage;
+    const indexOfFirstItems = indexOfLastItems - itemsPerPage;
+    const currentItems = filteredItems.slice(indexOfFirstItems, indexOfLastItems);
 
-    const totalPages = Math.ceil(filteredMaterial.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
     const handleRowClick = (id: number) => {
         setSelectedMaterial(id);
@@ -75,13 +74,13 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-1/2 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full">
-                    <h1 className="font-extrabold text-2xl">Select Material</h1>
+                    <h1 className="font-extrabold text-2xl">Select Item</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
                 </div>
                 <div className="flex flex-row items-center space-x-2 mt-5 w-3/4">
-                    <h1 className="w-1/6">Materials</h1>
+                    <h1 className="w-1/6">Items</h1>
                     <div className="relative w-5/6">
-                        <Input type="search" placeholder="Search Description" className="pl-12 border-2 focus:border-none"
+                        <Input type="search" placeholder="Search Material Code" className="pl-12 border-2 focus:border-none"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}/>
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -102,17 +101,17 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {currentMaterials.map(materials => (
-                                <TableRow key={materials.id}
-                                    onClick={() => handleRowClick(materials.id)}
-                                    className={selectedMaterial === materials.id ? "bg-hoverCream" : "cursor-pointer"}>
-                                    <TableCell>{materials.materialCode}</TableCell>
-                                    <TableCell>{materials.desc}</TableCell>
-                                    <TableCell>{materials.itemCode}</TableCell>
-                                    <TableCell>{materials.unit}</TableCell>
-                                    <TableCell>{materials.materialType}</TableCell>
-                                    <TableCell>{materials.cost}</TableCell>
-                                    <TableCell>{materials.dateEntry}</TableCell>
+                            {currentItems.map(items => (
+                                <TableRow key={items.id}
+                                    onClick={() => handleRowClick(items.id)}
+                                    className={selectedMaterial === items.id ? "bg-hoverCream" : "cursor-pointer"}>
+                                    <TableCell>{items.materialCode}</TableCell>
+                                    <TableCell>{items.desc}</TableCell>
+                                    <TableCell>{items.itemCode}</TableCell>
+                                    <TableCell>{items.unit}</TableCell>
+                                    <TableCell>{items.materialType}</TableCell>
+                                    <TableCell>{items.cost}</TableCell>
+                                    <TableCell>{items.dateEntry}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -147,7 +146,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                 </div>
                 <div className="flex justify-end space-x-5">
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}>Cancel</Button>
-                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}>Select</Button>
+                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white">Select</Button>
                 </div>
             </div>
         </div>
@@ -155,4 +154,4 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
     );
 }
 
-export default SelectMaterialModal
+export default SelectItemModal
