@@ -11,8 +11,8 @@ import Layout from './Components/appLayout/Layout'
 import ChangePassword from './pages/ChangePassword'
 import Company from './pages/Company'
 import Department from './pages/Department'
-import DeliveryOverview from './pages/DeliveryOverview'
-import DeliveryReceipt from './pages/DeliveryReceipt'
+import DeliveryOverview from './pages/Transactions'
+import DeliveryReceipt from './pages/Release'
 
 function App() {
 
@@ -31,8 +31,8 @@ function App() {
             <Route path="/store" element={<Store />} />
             <Route path="/supplier" element={<Supplier />} />
           {/* Delivery */}
-            <Route path="/delivery/overview" element={<DeliveryOverview />} />
-            <Route path="/delivery-receipt" element={<DeliveryReceipt/>}/>
+            <Route path="/transactions" element={<DeliveryOverview />} />
+            <Route path="/release" element={<DeliveryReceipt/>}/>
           {/* Misc */}
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />

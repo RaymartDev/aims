@@ -63,8 +63,8 @@ function DeliveryReceipt() {
     <>
       <div className="flex flex-col h-full">
         <div className="flex flex-col w-full">
-          <h1 className="text-2xl font-bold">Delivery Receipt</h1>
-          <p className="text-sm font-semibold text-[#9E9E9E]">Delivery / Delivery Receipt</p>
+          <h1 className="text-2xl font-bold">Release</h1>
+          <p className="text-sm font-semibold text-[#9E9E9E]">Order / Release</p>
         </div>
         <div className="flex flex-col h-full  ">
           <div className="flex w-full justify-start pl-2 gap-8 2xl:gap-20 pt-10">
@@ -72,10 +72,6 @@ function DeliveryReceipt() {
               <div className="flex flex-col">
                 <p className="text-sm">Reference Number</p>
                 <Input className="focus:outline-none w-80" />
-              </div>
-              <div className="flex flex-col">
-                <p className="text-sm">Product Code</p>
-                <Input className="focus:border-none" />
               </div>
               <div className="flex flex-col">
                 <p className="text-sm">Requestor Name</p>

@@ -11,27 +11,29 @@ import CancelModal from "@/modals/CancelModal";
 import ViewDetailsModal from "@/modals/ViewDetailsModal";
 
 const delivery = [
-    { id: 1, companyName: "100230457", costCenter: "Jane Doe", storeName: "HP Probook 8GB RAM / 512GB SSD", address: "01/02/24", status: "Received" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "HP Probook 8GB RAM / 512GB SSD", address: "01/02/24", status: "Shipped" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received"  },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Cancelled" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received"   },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 12, companyName: "100230457", costCenter: "Jane Doe", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
-    { id: 13, companyName: "100230457", costCenter: "Jane Doe", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 14, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
-    { id: 15, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 16, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
-    { id: 17, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 18, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped"   },
-    { id: 19, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Received" },
-    { id: 20, companyName: "100230458", costCenter: "John Smith", storeName: "SONY TV HD 4K IPS Display", address: "01/02/24", status: "Shipped" },
+    { id: 1, deliveryNumber: "100230457", shippedBy: "Jane Doe", shippedDate: "01/02/24", receivedBy: "Jack Sparrow", receivedDate: "02/10/24", status: "Received" },
+    { id: 2, deliveryNumber: "100230458", shippedBy: "John Smith", shippedDate: "01/15/24", receivedBy: "Alice Johnson", receivedDate: "02/12/24", status: "Received" },
+    { id: 3, deliveryNumber: "100230459", shippedBy: "Sarah Connor", shippedDate: "01/25/24", receivedBy: "Bob Brown", receivedDate: "02/15/24", status: "Pending" },
+    { id: 4, deliveryNumber: "100230460", shippedBy: "Michael Scott", shippedDate: "02/01/24", receivedBy: "Pam Beesly", receivedDate: "02/18/24", status: "Received" },
+    { id: 5, deliveryNumber: "100230461", shippedBy: "Laura Palmer", shippedDate: "02/05/24", receivedBy: "James Hurley", receivedDate: "02/20/24", status: "Pending" },
+    { id: 6, deliveryNumber: "100230462", shippedBy: "Tom Riddle", shippedDate: "02/10/24", receivedBy: "Harry Potter", receivedDate: "02/22/24", status: "Received" },
+    { id: 7, deliveryNumber: "100230463", shippedBy: "Walter White", shippedDate: "02/15/24", receivedBy: "Jesse Pinkman", receivedDate: "02/25/24", status: "Received" },
+    { id: 8, deliveryNumber: "100230464", shippedBy: "Tony Stark", shippedDate: "02/18/24", receivedBy: "Steve Rogers", receivedDate: "02/28/24", status: "Pending" },
+    { id: 9, deliveryNumber: "100230465", shippedBy: "Bruce Wayne", shippedDate: "02/20/24", receivedBy: "Clark Kent", receivedDate: "03/01/24", status: "Received" },
+    { id: 10, deliveryNumber: "100230466", shippedBy: "Natasha Romanoff", shippedDate: "02/22/24", receivedBy: "Clint Barton", receivedDate: "03/05/24", status: "Pending" },
+    { id: 11, deliveryNumber: "100230467", shippedBy: "Peter Parker", shippedDate: "02/25/24", receivedBy: "Mary Jane", receivedDate: "03/10/24", status: "Received" },
+    { id: 12, deliveryNumber: "100230468", shippedBy: "Diana Prince", shippedDate: "03/01/24", receivedBy: "Bruce Banner", receivedDate: "03/15/24", status: "Received" },
+    { id: 13, deliveryNumber: "100230469", shippedBy: "Clark Kent", shippedDate: "03/05/24", receivedBy: "Lois Lane", receivedDate: "03/20/24", status: "Pending" },
+    { id: 14, deliveryNumber: "100230470", shippedBy: "Bruce Banner", shippedDate: "03/10/24", receivedBy: "Thor Odinson", receivedDate: "03/25/24", status: "Received" },
+    { id: 15, deliveryNumber: "100230471", shippedBy: "Barry Allen", shippedDate: "03/15/24", receivedBy: "Iris West", receivedDate: "03/30/24", status: "Pending" },
+    { id: 16, deliveryNumber: "100230472", shippedBy: "Oliver Queen", shippedDate: "03/20/24", receivedBy: "Felicity Smoak", receivedDate: "04/05/24", status: "Received" },
+    { id: 17, deliveryNumber: "100230473", shippedBy: "Hal Jordan", shippedDate: "03/25/24", receivedBy: "John Stewart", receivedDate: "04/10/24", status: "Pending" },
+    { id: 18, deliveryNumber: "100230474", shippedBy: "Arthur Curry", shippedDate: "03/30/24", receivedBy: "Mera", receivedDate: "04/15/24", status: "Received" },
+    { id: 19, deliveryNumber: "100230475", shippedBy: "Lex Luthor", shippedDate: "04/05/24", receivedBy: "Lena Luthor", receivedDate: "04/20/24", status: "Pending" },
+    { id: 20, deliveryNumber: "100230476", shippedBy: "Harvey Dent", shippedDate: "04/10/24", receivedBy: "Rachel Dawes", receivedDate: "04/25/24", status: "Received" },
+    { id: 21, deliveryNumber: "200230477", shippedBy: "Bane", shippedDate: "04/15/24", receivedBy: "Talia al Ghul", receivedDate: "04/30/24", status: "Pending" }
 ];
+
 
 function DeliveryOverview() {
     const [openViewDetailsModal, setOpenViewDetailsModal] = useState(false);
@@ -71,7 +73,7 @@ function DeliveryOverview() {
     }, [searchQuery]);
 
     const filteredDelivery = delivery.filter(delivery =>
-        delivery.storeName.toLowerCase().includes(searchQuery.toLowerCase())
+        delivery.deliveryNumber.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastDelivery = currentPage * itemsPerPage;
@@ -121,11 +123,11 @@ function DeliveryOverview() {
                             <TableBody>
                                 {currentDelivery.map(delivery => (
                                     <TableRow key={delivery.id}>
-                                        <TableCell>{delivery.companyName}</TableCell>
-                                        <TableCell>{delivery.costCenter}</TableCell>
-                                        <TableCell>{delivery.address}</TableCell>
-                                        <TableCell>{delivery.address}</TableCell>
-                                        <TableCell>{delivery.address}</TableCell>
+                                        <TableCell>{delivery.deliveryNumber}</TableCell>
+                                        <TableCell>{delivery.shippedBy}</TableCell>
+                                        <TableCell>{delivery.shippedDate}</TableCell>
+                                        <TableCell>{delivery.receivedBy}</TableCell>
+                                        <TableCell>{delivery.receivedDate}</TableCell>
                                         <TableCell>{delivery.status}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
