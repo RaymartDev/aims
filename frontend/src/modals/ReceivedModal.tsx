@@ -50,8 +50,8 @@ function ReceivedModal({ open, onClose }: ReceivedModalProps) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Update</span></Button>
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Update</span></Button>
                 </div>
             </div>
         </div>

@@ -7,27 +7,35 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useEffect, useState } from "react";
 
 const inventory = [
-    { id: 1, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
-    { id: 2, number: "100230457", name: "Jane Doe", department: "Finance", costCode: "503604219", division: "Accounting", company: "ABC Corp", dateHired: "07/01/23", status: "Not Registered" },
-    { id: 3, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 4, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 5, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 6, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 7, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 8, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 9, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 10, number: "100230458", name: "kMAOTE", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 11, number: "100230458", name: "SABAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 12, number: "100230458", name: "SABzzxcAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 13, number: "100230458", name: "SABqwewqeAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 14, number: "100230458", name: "asdasd", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 15, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
-    { id: 16, number: "100230457", name: "Jane Doe", department: "Finance", costCode: "503604219", division: "Accounting", company: "ABC Corp", dateHired: "07/01/23", status: "Registered" },
-    { id: 17, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 18, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 19, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 20, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
+    { id: 1, materialCode: "1098392", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "120", reBal: "120", qtyOut: "50", unit: "PC", materialType: "OU", cost: "40,000", dateHired: "06/17/24" },
+    { id: 2, materialCode: "1098393", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "142", reBal: "115", qtyOut: "27", unit: "PC", materialType: "DEMO", cost: "135,000", dateHired: "01/12/24" },
+    { id: 3, materialCode: "1098394", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "110", reBal: "80", qtyOut: "30", unit: "PC", materialType: "BILLING", cost: "95,000", dateHired: "03/05/24" },
+    { id: 4, materialCode: "1098395", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "98", reBal: "50", qtyOut: "48", unit: "PC", materialType: "OU", cost: "50,000", dateHired: "02/25/24" },
+    { id: 5, materialCode: "1098396", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "50", reBal: "20", qtyOut: "30", unit: "PC", materialType: "DEMO", cost: "65,000", dateHired: "04/08/24" },
+    { id: 6, materialCode: "1098397", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "140", reBal: "120", qtyOut: "20", unit: "PC", materialType: "BILLING", cost: "120,000", dateHired: "05/18/24" },
+    { id: 7, materialCode: "1098398", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "130", reBal: "110", qtyOut: "20", unit: "PC", materialType: "OU", cost: "110,000", dateHired: "02/20/24" },
+    { id: 8, materialCode: "1098399", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "60", reBal: "40", qtyOut: "20", unit: "PC", materialType: "DEMO", cost: "80,000", dateHired: "06/02/24" },
+    { id: 9, materialCode: "1098400", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "100", reBal: "70", qtyOut: "30", unit: "PC", materialType: "BILLING", cost: "90,000", dateHired: "01/30/24" },
+    { id: 10, materialCode: "1098401", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "80", reBal: "60", qtyOut: "20", unit: "PC", materialType: "OU", cost: "75,000", dateHired: "03/11/24" },
+    { id: 11, materialCode: "1098402", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "70", reBal: "40", qtyOut: "30", unit: "PC", materialType: "DEMO", cost: "55,000", dateHired: "04/14/24" },
+    { id: 12, materialCode: "1098403", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "120", reBal: "90", qtyOut: "30", unit: "PC", materialType: "BILLING", cost: "100,000", dateHired: "05/25/24" },
+    { id: 13, materialCode: "1098404", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "90", reBal: "50", qtyOut: "40", unit: "PC", materialType: "OU", cost: "60,000", dateHired: "02/10/24" },
+    { id: 14, materialCode: "1098405", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "110", reBal: "80", qtyOut: "30", unit: "PC", materialType: "DEMO", cost: "85,000", dateHired: "01/20/24" },
+    { id: 15, materialCode: "1098406", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "100", reBal: "60", qtyOut: "40", unit: "PC", materialType: "BILLING", cost: "70,000", dateHired: "03/01/24" },
+    { id: 16, materialCode: "1098407", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "140", reBal: "130", qtyOut: "10", unit: "PC", materialType: "OU", cost: "130,000", dateHired: "06/05/24" },
+    { id: 17, materialCode: "1098408", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "80", reBal: "60", qtyOut: "20", unit: "PC", materialType: "DEMO", cost: "75,000", dateHired: "04/30/24" },
+    { id: 18, materialCode: "1098409", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "60", reBal: "30", qtyOut: "30", unit: "PC", materialType: "BILLING", cost: "45,000", dateHired: "02/28/24" },
+    { id: 19, materialCode: "1098410", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "50", reBal: "20", qtyOut: "30", unit: "PC", materialType: "OU", cost: "40,000", dateHired: "03/12/24" },
+    { id: 20, materialCode: "1098411", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "30", reBal: "10", qtyOut: "20", unit: "PC", materialType: "DEMO", cost: "20,000", dateHired: "04/18/24" },
+    { id: 21, materialCode: "1098412", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "20", reBal: "10", qtyOut: "10", unit: "PC", materialType: "BILLING", cost: "15,000", dateHired: "05/15/24" },
+    { id: 22, materialCode: "1098413", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "10", reBal: "5", qtyOut: "5", unit: "PC", materialType: "OU", cost: "10,000", dateHired: "06/07/24" },
+    { id: 23, materialCode: "1098414", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "120", reBal: "100", qtyOut: "20", unit: "PC", materialType: "DEMO", cost: "105,000", dateHired: "02/14/24" },
+    { id: 24, materialCode: "1098415", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "140", reBal: "110", qtyOut: "30", unit: "PC", materialType: "BILLING", cost: "125,000", dateHired: "05/08/24" },
+    { id: 25, materialCode: "1098416", description: "HP Probook 8GB RAM / 512GB SSD", totalBal: "100", reBal: "60", qtyOut: "40", unit: "PC", materialType: "OU", cost: "70,000", dateHired: "03/20/24" },
+    { id: 26, materialCode: "1098417", description: "ASUS Predator 8GB RAM / 512GB SSD", totalBal: "80", reBal: "50", qtyOut: "30", unit: "PC", materialType: "DEMO", cost: "65,000", dateHired: "01/15/24" },
 ];
+
+
 
 function InventoryOverview() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -58,7 +66,7 @@ function InventoryOverview() {
     };
 
     const filteredInventory = inventory.filter(inventory =>
-        inventory.name.toLowerCase().includes(searchQuery.toLowerCase())
+        inventory.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastInventory = currentPage * itemsPerPage;
@@ -111,14 +119,14 @@ function InventoryOverview() {
                         <TableBody>
                             {currentInventory.map(inventory => (
                                 <TableRow key={inventory.id}>
-                                    <TableCell>{inventory.id}</TableCell>
-                                    <TableCell>{inventory.number}</TableCell>
-                                    <TableCell>{inventory.name}</TableCell>
-                                    <TableCell>{inventory.department}</TableCell>
-                                    <TableCell>{inventory.costCode}</TableCell>
-                                    <TableCell>{inventory.division}</TableCell>
-                                    <TableCell>{inventory.company}</TableCell>
-                                    <TableCell>{inventory.status}</TableCell>
+                                    <TableCell>{inventory.materialCode}</TableCell>
+                                    <TableCell>{inventory.description}</TableCell>
+                                    <TableCell>{inventory.totalBal}</TableCell>
+                                    <TableCell>{inventory.reBal}</TableCell>
+                                    <TableCell>{inventory.qtyOut}</TableCell>
+                                    <TableCell>{inventory.unit}</TableCell>
+                                    <TableCell>{inventory.materialType}</TableCell>
+                                    <TableCell>{inventory.cost}</TableCell>
                                     <TableCell>{inventory.dateHired}</TableCell>
                                     <TableCell>
                                         <DropdownMenu>

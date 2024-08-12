@@ -159,10 +159,30 @@
                                 </Select>
                             </div>
                         </div>
+                            <div className="flex flex-row w-full space-x-2">
+                                <div className="space-y-1 w-full">
+                                    <p className="text-sm text-[#697386]">Maximum Stock</p>
+                                    <Input className="focus:border-none border-black"></Input>
+                                </div>
+                                <div className="space-y-1 w-full">
+                                    <p className="text-sm text-[#697386]">Unit Cost</p>
+                                    <Input className="focus:border-none border-black"></Input>
+                                </div>
+                            </div>
+                            <div className="flex flex-row w-full space-x-2">
+                                <div className="space-y-1 w-full">
+                                    <p className="text-sm text-[#697386]">OUM Type</p>
+                                    <Input className="focus:border-none border-black"></Input>
+                                </div>
+                                <div className="space-y-1 w-full">
+                                    <p className="text-sm text-[#697386]">Date Entry</p>
+                                    <Input type="Date" className="focus:border-none border-black"></Input>
+                                </div>
+                            </div>
                     </div>
                     <div className="space-x-2 mt-5 flex justify-end">
                         <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}><span>Next</span></Button>
+                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                     </div>
                 </div>
             </div>
