@@ -9,27 +9,28 @@ import AddStoreModal from "@/modals/AddStoreModal";
 import UserRegistration from "@/modals/UserRegistration";
 
 const stores = [
-    { id: 1, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
-    { id: 2, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 3, companyName: "100230458", costCenter: "John Smith", storeName: "Tindahan ni Aling Nena", address: "503604220", status: "Registered"  },
-    { id: 4, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 5, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 6, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 7, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
-    { id: 8, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 9, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 10, companyName: "100230458", costCenter: "kMAOTE", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 11, companyName: "100230458", costCenter: "SABAW", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 12, companyName: "Leansel Nico", costCenter: "IT Department", storeName: "503604218", address: "IT Asset", status: "Registered" },
-    { id: 13, companyName: "100230457", costCenter: "Jane Doe", storeName: "Finance", address: "503604219", status: "Registered" },
-    { id: 14, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 15, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 16, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 17, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 18, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered"   },
-    { id: 19, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
-    { id: 20, companyName: "100230458", costCenter: "John Smith", storeName: "Marketing", address: "503604220", status: "Registered" },
+    { id: 1, companyName: "InnoWave Corp", costCenter: "100230468", storeName: "KFC PH", address: "123 Main St, Manila, PH", status: "Registered" },
+    { id: 2, companyName: "Foodie Ventures", costCenter: "100230469", storeName: "Pizza Hut PH", address: "456 Elm St, Quezon City, PH", status: "Registered" },
+    { id: 3, companyName: "QuickBite Inc", costCenter: "100230470", storeName: "Taco Bell PH", address: "789 Oak St, Makati, PH", status: "Not Registered" },
+    { id: 4, companyName: "TasteMasters", costCenter: "100230471", storeName: "Wendy's PH", address: "321 Pine St, Taguig, PH", status: "Deactivated" },
+    { id: 5, companyName: "Gourmet Group", costCenter: "100230472", storeName: "Burger King PH", address: "654 Maple St, Pasig, PH", status: "Registered" },
+    { id: 6, companyName: "Flavor Fusion", costCenter: "100230473", storeName: "Subway PH", address: "987 Cedar St, Mandaluyong, PH", status: "Registered" },
+    { id: 7, companyName: "Culinary Creations", costCenter: "100230474", storeName: "Domino's PH", address: "213 Birch St, Marikina, PH", status: "Not Registered" },
+    { id: 8, companyName: "Savory Delights", costCenter: "100230475", storeName: "McDonald's PH", address: "546 Willow St, Muntinlupa, PH", status: "Registered" },
+    { id: 9, companyName: "Urban Eats", costCenter: "100230476", storeName: "Jollibee PH", address: "879 Cherry St, Pasay, PH", status: "Deactivated" },
+    { id: 10, companyName: "Epicurean Enterprises", costCenter: "100230477", storeName: "Shakey's PH", address: "345 Palm St, Las Piñas, PH", status: "Registered" },
+    { id: 11, companyName: "Feast Factory", costCenter: "100230478", storeName: "Chowking PH", address: "678 Mango St, Caloocan, PH", status: "Registered" },
+    { id: 12, companyName: "FoodQuest Ltd.", costCenter: "100230479", storeName: "Greenwich PH", address: "901 Coconut St, Malabon, PH", status: "Not Registered" },
+    { id: 13, companyName: "Cuisine Craft", costCenter: "100230480", storeName: "Popeyes PH", address: "234 Banana St, Mandaluyong, PH", status: "Registered" },
+    { id: 14, companyName: "Tasty Ventures", costCenter: "100230481", storeName: "Mang Inasal PH", address: "567 Papaya St, Manila, PH", status: "Deactivated" },
+    { id: 15, companyName: "Flavor Haven", costCenter: "100230482", storeName: "Kenny Rogers PH", address: "890 Guava St, Quezon City, PH", status: "Registered" },
+    { id: 16, companyName: "Palate Pleasers", costCenter: "100230483", storeName: "Dunkin' PH", address: "123 Pear St, Makati, PH", status: "Registered" },
+    { id: 17, companyName: "Gastro Hub", costCenter: "100230484", storeName: "Max's PH", address: "456 Peach St, Pasig, PH", status: "Not Registered" },
+    { id: 18, companyName: "TasteMakers", costCenter: "100230485", storeName: "Red Ribbon PH", address: "789 Orange St, Marikina, PH", status: "Registered" },
+    { id: 19, companyName: "Dining Dynamics", costCenter: "100230486", storeName: "Chooks-to-Go PH", address: "321 Pineapple St, Pasay, PH", status: "Deactivated" },
+    { id: 20, companyName: "Gourmet Solutions", costCenter: "100230487", storeName: "Yellow Cab PH", address: "654 Berry St, Las Piñas, PH", status: "Registered" },
 ];
+
 
 function Store() {
     const [openModal, setOpenModal] = useState(false);
@@ -91,7 +92,7 @@ function Store() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12">
-                                    <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none" 
+                                    <Input type="search" placeholder="Search Store Name" className="pl-12 border-2 focus:border-none" 
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />

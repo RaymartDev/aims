@@ -11,29 +11,28 @@ import Layout from './Components/appLayout/Layout'
 import ChangePassword from './pages/ChangePassword'
 import Company from './pages/Company'
 import Department from './pages/Department'
-import DeliveryOverview from './pages/DeliveryOverview'
-import DeliveryReceipt from './pages/DeliveryReceipt'
+import DeliveryOverview from './pages/Transactions'
+import DeliveryReceipt from './pages/Release'
 
 function App() {
 
   return (
     <BrowserRouter>
       <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route element={<Layout />} >
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Dashboard />} />
           {/* Inventory */}
             <Route path="/inventory/overview" element={<InventoryOverview />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/materials" element={<Materials />} />
-           
           {/* User */}
             <Route path="/employee" element={<Employee />} />
             <Route path="/store" element={<Store />} />
             <Route path="/supplier" element={<Supplier />} />
           {/* Delivery */}
-            <Route path="/delivery/overview" element={<DeliveryOverview />} />
-            <Route path="/delivery-receipt" element={<DeliveryReceipt/>}/>
+            <Route path="/transactions" element={<DeliveryOverview />} />
+            <Route path="/release" element={<DeliveryReceipt/>}/>
           {/* Misc */}
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />

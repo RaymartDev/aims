@@ -12,7 +12,7 @@ function AddEmployeeModal ({ open, onClose }: AddEmployeeModalProps) {
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
-            <div className="flex flex-col w-1/3 bg-slate-50 rounded-2xl p-6">
+            <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full border-b-2 border-black">
                     <h1 className="font-extrabold text-xl">Add Employee</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
@@ -43,7 +43,7 @@ function AddEmployeeModal ({ open, onClose }: AddEmployeeModalProps) {
                             <p className="text-sm text-[#697386]">Company Name</p>
                             <Input className="focus:border-none border-black"></Input>
                         </div>
-                        <div className="space-y-1 w-1/4">
+                        <div className="space-y-1 w-1/3">
                             <p className="text-sm text-[#697386]">Date Hired</p>
                             <Input type="Date" className="focus:border-none border-black justify-center"></Input>
                         </div>

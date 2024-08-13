@@ -74,7 +74,7 @@ function POSModal({ open, onClose }: POSModalProps) {
                     <div className="flex flex-col justify-start mt-5 space-y-2">
                         <div className="flex flex-row w-full space-x-2 justify-between">
                             <div className="space-y-1 w-1/4">
-                                <p className="text-sm text-[#697386]">Invoice Number</p>
+                                <p className="text-sm text-[#697386]">DR Number</p>
                                 <Input className="focus:border-none border-black"></Input>
                             </div>
                             <div className="space-x-2 flex items-center w-2/3">
@@ -190,6 +190,7 @@ function POSModal({ open, onClose }: POSModalProps) {
                     </div>
                 </div>
             </div>
+            
             <AssetEntryModal open={openAssetModal} onClose={() => setOpenAssetModal(false)}/>
         </>
     );

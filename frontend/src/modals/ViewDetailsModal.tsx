@@ -10,16 +10,16 @@ interface ViewDetailsModalProps {
 }
 
 const item = [
-    { id: 1, itemNumber: "Leansel Nico", itemDesc: "IT Department", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
-    { id: 2, itemNumber: "100230457", itemDesc: "Jane Doe", quantity: "Finance", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
-    { id: 3, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"  },
-    { id: 4, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 5, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 6, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 7, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
-    { id: 8, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 9, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 10, itemNumber: "100230458", itemDesc: "kMAOTE", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 1, itemNumber: "Leansel Nico", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
+    { id: 2, itemNumber: "100230457", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
+    { id: 3, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A"  },
+    { id: 4, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 5, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 6, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 7, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
+    { id: 8, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 9, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
+    { id: 10, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
 ];
 
 
@@ -53,7 +53,7 @@ function ViewDetailsModal({ open, onClose }: ViewDetailsModalProps) {
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
-            <div className="flex flex-col w-1/3 bg-slate-50 rounded-2xl p-6">
+            <div className="flex flex-col w-4/6 2xl:w-3/6 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full border-b-2 border-black">
                     <h1 className="font-extrabold text-xl">View Details</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>

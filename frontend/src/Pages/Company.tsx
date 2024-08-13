@@ -7,27 +7,28 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useEffect, useState } from "react";
 
 const company = [
-    { id: 1, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
-    { id: 2, number: "100230457", name: "Jane Doe", department: "Finance", costCode: "503604219", division: "Accounting", company: "ABC Corp", dateHired: "07/01/23", status: "Not Registered" },
-    { id: 3, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 4, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 5, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 6, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 7, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 8, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Registered" },
-    { id: 9, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 10, number: "100230458", name: "kMAOTE", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 11, number: "100230458", name: "SABAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 12, number: "100230458", name: "SABzzxcAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 13, number: "100230458", name: "SABqwewqeAW", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 14, number: "100230458", name: "asdasd", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 15, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
-    { id: 16, number: "100230457", name: "Jane Doe", department: "Finance", costCode: "503604219", division: "Accounting", company: "ABC Corp", dateHired: "07/01/23", status: "Registered" },
-    { id: 17, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 18, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 19, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
-    { id: 20, number: "100230458", name: "John Smith", department: "Marketing", costCode: "503604220", division: "Sales", company: "XYZ Inc", dateHired: "05/21/22", status: "Not Registered" },
+    { id: 1,  companyName: "TechNova Solutions", status: "Active" },
+    { id: 2,  companyName: "InnoWave Corp", status: "Inactive" },
+    { id: 3,  companyName: "FusionWorks Ltd.", status: "Active" },
+    { id: 4,  companyName: "Pioneer Ventures", status: "Inactive" },
+    { id: 5,  companyName: "Skyline Innovations", status: "Active" },
+    { id: 6,  companyName: "Quantum Dynamics", status: "Inactive" },
+    { id: 7,  companyName: "Vertex Technologies", status: "Active" },
+    { id: 8,  companyName: "Apex Industries", status: "Inactive" },
+    { id: 9,  companyName: "NexGen Enterprises", status: "Active" },
+    { id: 10, companyName: "Blue Horizon Inc.", status: "Inactive" },
+    { id: 11, companyName: "StellarTech", status: "Active" },
+    { id: 12, companyName: "FuturePath Systems", status: "Inactive" },
+    { id: 13, companyName: "OmniTech Solutions", status: "Active" },
+    { id: 14, companyName: "Visionary Labs", status: "Inactive" },
+    { id: 15, companyName: "Synergy Global", status: "Active" },
+    { id: 16, companyName: "EcoVision Technologies", status: "Inactive" },
+    { id: 17, companyName: "UrbanGrid", status: "Active" },
+    { id: 18, companyName: "AstraEdge", status: "Inactive" },
+    { id: 19, companyName: "Zenith Solutions", status: "Active" },
+    { id: 20, companyName: "PrimeWave", status: "Inactive" }
 ];
+
 
 function Company() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -62,7 +63,7 @@ function Company() {
     }, [searchQuery]);
 
     const filteredCompany = company.filter(company =>
-        company.name.toLowerCase().includes(searchQuery.toLowerCase())
+        company.companyName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastCompany = currentPage * itemsPerPage;
@@ -85,7 +86,7 @@ function Company() {
                         </div>
                         <div className="flex flex-row w-6/12 space-x-2">
                             <div className="relative w-10/12 ">
-                                <Input type="search" placeholder="Search..." className="pl-12 border-2 focus:border-none" 
+                                <Input type="search" placeholder="Search Company" className="pl-12 border-2 focus:border-none" 
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}/>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -100,14 +101,7 @@ function Company() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Employee ID</TableHead>
-                                <TableHead>Employee Number</TableHead>
-                                <TableHead>Employee Name</TableHead>
-                                <TableHead>Department</TableHead>
-                                <TableHead>Cost Code</TableHead>
-                                <TableHead>Division</TableHead>
-                                <TableHead>Company</TableHead>
-                                <TableHead>Date Hired</TableHead>
+                                <TableHead>Company Name</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
@@ -115,14 +109,7 @@ function Company() {
                         <TableBody>
                             {currentCompany.map(company => (
                                 <TableRow key={company.id}>
-                                    <TableCell>{company.id}</TableCell>
-                                    <TableCell>{company.number}</TableCell>
-                                    <TableCell>{company.name}</TableCell>
-                                    <TableCell>{company.department}</TableCell>
-                                    <TableCell>{company.costCode}</TableCell>
-                                    <TableCell>{company.division}</TableCell>
-                                    <TableCell>{company.company}</TableCell>
-                                    <TableCell>{company.dateHired}</TableCell>
+                                    <TableCell>{company.companyName}</TableCell>
                                     <TableCell>{company.status}</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
