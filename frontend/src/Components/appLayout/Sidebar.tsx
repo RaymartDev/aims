@@ -18,8 +18,7 @@ import { BarChart,
   ArrowRightLeft, 
   Package, 
   ReceiptText, 
-  Undo2,
-  Handshake 
+  Undo2
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
@@ -157,27 +156,13 @@ function Sidebar() {
                     <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ReceiptText /><span>Release</span></div>
                   </NavLink>
                 </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </li>
-
-          {/* Return */}
-          <li>
-            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
-              <AccordionItem value="return">
-                <AccordionTrigger className='mx-5 h-12'>
-                  <div className='flex space-x-2 font-extrabold'>
-                    <Undo2 />
-                    <span className="sm:hidden xl:inline">Return</span>
-                  </div>
-                </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
                     <NavLink to="/acknowledgement" className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
                         isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                       }`
                     }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Handshake/><span>Acknowledgement</span></div>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Undo2/><span>Return</span></div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>

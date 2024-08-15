@@ -22,11 +22,6 @@ const item = [
   { id: 13, itemNumber: "754211", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4213", remarks: "N/A" },
   { id: 14, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4467", remarks: "N/A" },
   { id: 15, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6743", remarks: "N/A" },
-  { id: 16, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "0971", remarks: "N/A" },
-  { id: 17, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6839", remarks: "N/A" },
-  { id: 18, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "43345", remarks: "N/A"   },
-  { id: 19, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "324234", remarks: "N/A" },
-  { id: 20, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
 ];
 
 function AcknowledgementReceipt() {
@@ -60,24 +55,30 @@ function AcknowledgementReceipt() {
     <>
       <div className="flex flex-col h-full">
         <div className="flex flex-col w-full">
-          <h1 className="text-2xl font-bold">Acknowledgement Receipt</h1>
-          <p className="text-sm font-semibold text-[#9E9E9E]">Return / Acknowledgement</p>
+          <h1 className="text-2xl font-bold">Return</h1>
+          <p className="text-sm font-semibold text-[#9E9E9E]">Order / Return</p>
         </div>
         <div className="flex w-full justify-between gap-8 2xl:gap-20 pt-10">
-          <div className="flex gap-6 w-2/3">
-            <div className="flex flex-col space-y-2 w-1/3">
-                <div>
-                    <p className="text-sm">Reason Transfer</p>
+          <div className="flex flex-row gap-6 w-2/3">
+            <div className="flex flex-col w-2/3 space-y-3">
+                <div className="flex space-x-5">
+                  <div className="space-y-2 w-1/2">
+                    <p className="text-sm">DR Number</p>
                     <Input className="focus:border-none" />
-                </div>
-                <div>
+                  </div>
+                  <div className="space-y-2 w-1/2">
                     <p className="text-sm">Tagged Item As</p>
                     <Input className="focus:border-none" />
+                  </div>
                 </div>
+                <div className="space-y-2">
+                  <p className="text-sm">Reason Transfer</p>
+                  <Input className="focus:border-none" />
+                </div> 
             </div>
-            <div className="flex flex-col w-2/3">
+            <div className="flex flex-col w-2/5">
               <p className="text-sm">Remarks</p>
-              <Textarea className="focus:border-none max-h-24 min-h-24" />
+              <Textarea className="focus:border-none max-h-28 min-h-28" />
             </div>
           </div>
           <div className="flex justify-end items-end">
