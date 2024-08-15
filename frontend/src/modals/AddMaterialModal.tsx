@@ -10,7 +10,6 @@
     interface AddMaterialModalProps {
         open: boolean;
         onClose: () => void;
-        onNext: () => void;
     }
 
     const categoryOptions = [

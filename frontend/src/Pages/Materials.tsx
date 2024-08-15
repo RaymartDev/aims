@@ -6,7 +6,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddMaterialModal from "@/modals/AddMaterialModal";
-import AddMaterialModal2 from "@/modals/AddMaterialModal2";
 
 const materials = [
     { id: 1, materialCode: "1000", desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "503604218", unit: "PC", materialType: "OU", cost: "40,000", dateEntry: "06/17/24" },
@@ -39,7 +38,6 @@ const materials = [
 
 function Materials() {
     const [openModal, setOpenModal] = useState(false);
-    const [openNextModal, setOpenNextModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -80,16 +78,6 @@ function Materials() {
     const currentMaterials = filteredMaterial.slice(indexOfFirstMaterials, indexOfLastMaterials);
 
     const totalPages = Math.ceil(filteredMaterial.length / itemsPerPage);
-
-    const handleNextModal = () => {
-        setOpenModal(false);
-        setOpenNextModal(true);
-    };
-
-    const handleBack = () => {
-        setOpenNextModal(false);
-        setOpenModal(true);
-    };
 
     return(
         <>
@@ -188,8 +176,7 @@ function Materials() {
                     </Pagination>
                 </div>
             </div>
-            <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
-            <AddMaterialModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
+            <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} />
         </>
     );
 }
