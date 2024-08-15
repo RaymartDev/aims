@@ -43,12 +43,11 @@ function Deliveries() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
-    const itemHeight = 50;
 
     const getItemsPerPage = (height: number): number => {
         const availableHeight = height - headerHeight;
-        if (availableHeight < 0) return 0;
-        return Math.floor(availableHeight / itemHeight);
+        if (availableHeight < 500) return 15;
+        return 15;
     };
 
     const [currentPage] = useState(1);
@@ -90,9 +89,11 @@ function Deliveries() {
                         <h1 className="text-2xl font-bold">Deliveries</h1>
                         <p className="text-sm font-semibold text-[#9E9E9E]">Warehouse / Deliveries</p>
                     </div>
-                    <Button className="bg-hoverCream text-fontHeading hover:text-white" onClick={() => setOpenModal(true)}>
-                        <Plus size={20}/><span className="text-sm">Add Delivery</span>
-                    </Button>
+                    <div className="flex items-end">
+                        <Button className="bg-hoverCream text-fontHeading hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
+                            <Plus size={20}/><span className="text-sm">Add Delivery</span>
+                        </Button>
+                    </div>
                 </div>
                 <div className="mt-6 flex-grow overflow-y-auto pl-2">
                     <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 mb-10">
@@ -154,7 +155,7 @@ function Deliveries() {
                                 </TableHeader>
                                 <TableBody>
                                     {currentDeliveries.map(deliveries => (
-                                        <TableRow key={deliveries.id}>
+                                        <TableRow className="h-8" key={deliveries.id}>
                                             <TableCell>{deliveries.delivery}</TableCell>
                                             <TableCell>{deliveries.desc}</TableCell>
                                             <TableCell>{deliveries.serialNumber}</TableCell>

@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
+import AddDepartmentModal from "@/modals/AddDepartmentModal";
 
 const data = [
     { id: 1,  department: "IT Department", status: "Active" },
@@ -30,6 +31,7 @@ const data = [
 ];
 
 function Department() {
+    const [openModal, setOpenModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 70;
@@ -90,7 +92,7 @@ function Department() {
                                     onChange={(e) => setSearchQuery(e.target.value)}/>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             </div>   
-                            <Button className="bg-hoverCream text-fontHeading border hover:text-white">
+                            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
                                 <Plus size={20}/><span className="text-sm">Add Department</span>
                             </Button>
                         </div>    
@@ -156,6 +158,7 @@ function Department() {
                     </PaginationContent>
                 </Pagination>
             </div>
+            <AddDepartmentModal open={openModal} onClose={() => setOpenModal(false)}/>
         </div>
     );
 }
