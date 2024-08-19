@@ -6,7 +6,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddMaterialModal from "@/modals/AddMaterialModal";
-import AddMaterialModal2 from "@/modals/AddMaterialModal2";
 
 const materials = [
     { id: 1, materialCode: "1000", desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "503604218", unit: "PC", materialType: "OU", cost: "40,000", dateEntry: "06/17/24" },
@@ -39,7 +38,6 @@ const materials = [
 
 function Materials() {
     const [openModal, setOpenModal] = useState(false);
-    const [openNextModal, setOpenNextModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -81,16 +79,6 @@ function Materials() {
 
     const totalPages = Math.ceil(filteredMaterial.length / itemsPerPage);
 
-    const handleNextModal = () => {
-        setOpenModal(false);
-        setOpenNextModal(true);
-    };
-
-    const handleBack = () => {
-        setOpenNextModal(false);
-        setOpenModal(true);
-    };
-
     return(
         <>
             <div className="flex flex-col h-full">
@@ -111,7 +99,7 @@ function Materials() {
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border hover:text-white" onClick={() => setOpenModal(true)}>
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Materials</span>
                                 </Button>
                             </div>    
@@ -188,8 +176,7 @@ function Materials() {
                     </Pagination>
                 </div>
             </div>
-            <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
-            <AddMaterialModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
+            <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} />
         </>
     );
 }

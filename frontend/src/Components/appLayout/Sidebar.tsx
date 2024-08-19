@@ -1,7 +1,25 @@
 import { useState } from 'react';
 import KFC from '../../images/KFC_LOGO.png';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { BarChart, Warehouse, UsersRound, Settings, LogOut, Truck, Boxes, UserRound, Store, Container, UserRoundCog, Building2, Briefcase, Archive, ArrowRightLeft, Package, ReceiptText } from 'lucide-react';
+import { BarChart, 
+  Warehouse, 
+  UsersRound, 
+  Settings, 
+  LogOut, 
+  Truck, 
+  Boxes, 
+  UserRound, 
+  Store, 
+  Container, 
+  UserRoundCog, 
+  Building2, 
+  Briefcase, 
+  Archive, 
+  ArrowRightLeft, 
+  Package, 
+  ReceiptText, 
+  Undo2
+} from 'lucide-react';
 import { Button } from '../ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
@@ -39,7 +57,7 @@ function Sidebar() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/inventory/overview" className={({ isActive }) =>
+                    <NavLink to="/inventory" className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
                         isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
                       }`
@@ -113,7 +131,7 @@ function Sidebar() {
           {/* Order */}
           <li>
             <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
-              <AccordionItem value="delivery">
+              <AccordionItem value="order">
                 <AccordionTrigger className='mx-5 h-12'>
                   <div className='flex space-x-2 font-extrabold'>
                     <Package />
@@ -136,6 +154,15 @@ function Sidebar() {
                       }`
                     }>
                     <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ReceiptText /><span>Release</span></div>
+                  </NavLink>
+                </AccordionContent>
+                <AccordionContent className="my-0 py-0 border-b">
+                    <NavLink to="/acknowledgement" className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-12 ${
+                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                      }`
+                    }>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Undo2/><span>Return</span></div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>

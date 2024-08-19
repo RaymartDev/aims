@@ -10,7 +10,6 @@
     interface AddMaterialModalProps {
         open: boolean;
         onClose: () => void;
-        onNext: () => void;
     }
 
     const categoryOptions = [
@@ -40,7 +39,7 @@
     ];
 
 
-    function AddMaterialModal ({ open, onClose, onNext  }: AddMaterialModalProps) {
+    function AddMaterialModal ({ open, onClose }: AddMaterialModalProps) {
         const [categoryOpen, setCategoryOpen] = React.useState(false);
         const [selectedCategory, setSelectedCategory] = React.useState("");
 
