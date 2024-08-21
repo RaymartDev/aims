@@ -39,6 +39,7 @@ function AddAssetModal({ open, onClose }: AddAssetModalProps) {
     const [currentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
+    const [selectAll, setSelectAll] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -61,6 +62,15 @@ function AddAssetModal({ open, onClose }: AddAssetModalProps) {
         }
     };
 
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedMaterials([]);
+        } else {
+            setSelectedMaterials(currentAsset.map(item => item.id));
+        }
+        setSelectAll(!selectAll);
+    };
+
     if (!open) return null;
 
     return(
@@ -70,9 +80,14 @@ function AddAssetModal({ open, onClose }: AddAssetModalProps) {
                     <h1 className="font-extrabold text-2xl">Add Asset</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
                 </div>
-                <div className="flex flex-row items-center space-x-2 mt-5 w-3/4">
-                    <h1 className="w-1/6">DR Number</h1>
-                    <h1 className="border px-3 py-2 rounded-lg bg w-2/6">100231</h1>
+                <div className="flex justify-between mt-5 ">
+                    <div className="flex flex-row items-center w-3/4">
+                        <h1 className="w-1/6">DR Number</h1>
+                        <h1 className="border px-3 py-2 rounded-lg bg w-2/6">100231</h1>
+                    </div>
+                    <div className="flex items-center">
+                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={handleSelectAll}><span>Select All</span></Button>
+                    </div>
                 </div>
                 <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                     <Table>

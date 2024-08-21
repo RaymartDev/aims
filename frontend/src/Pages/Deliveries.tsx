@@ -95,7 +95,7 @@ function Deliveries() {
                         </Button>
                     </div>
                 </div>
-                <div className="mt-6 flex-grow overflow-y-auto pl-2">
+                <div className="mt-6 flex-grow overflow-y-auto px-2">
                     <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 mb-10">
                         <div>
                             <Label htmlFor="supplier">Supplier Name</Label>

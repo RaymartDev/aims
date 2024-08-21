@@ -1,10 +1,21 @@
+    import React from "react";
     import { Button } from "@/Components/ui/button";
     import { Input } from "@/Components/ui/input";
     import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
-    import { X, Check, ChevronsUpDown } from "lucide-react";
-    import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
-    import {Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover"
-    import React from "react";
+    import { X, Check, ChevronDown, } from "lucide-react";
+    import {
+        Command,
+        CommandEmpty,
+        CommandGroup,
+        CommandInput,
+        CommandItem,
+        CommandList,
+      } from "@/Components/ui/command";
+      import {
+        Popover,
+        PopoverContent,
+        PopoverTrigger,
+      } from "@/Components/ui/popover";
     import { cn } from "@/lib/utils";
 
     interface AddMaterialModalProps {
@@ -12,7 +23,7 @@
         onClose: () => void;
     }
 
-    const categoryOptions = [
+    const categories = [
         { value: "cpu", label: "CPU" },
         { value: "laptop", label: "Laptop" },
         { value: "ac_adapter", label: "AC Adapter" },
@@ -36,17 +47,23 @@
         { value: "motherboard", label: "Motherboard" },
         { value: "touch_panel", label: "Touch Panel" },
         { value: "projector", label: "Projector" }
-    ];
-
+      ];
 
     function AddMaterialModal ({ open, onClose }: AddMaterialModalProps) {
-        const [categoryOpen, setCategoryOpen] = React.useState(false);
+        const [openPopover, setOpenPopover] = React.useState(false);
         const [selectedCategory, setSelectedCategory] = React.useState("");
+        const [inputValue, setInputValue] = React.useState("");
+        
+        const handleSelect = (currentValue: string) => {
+            setSelectedCategory(currentValue === selectedCategory ? "" : currentValue);
+            setOpenPopover(false);
+          };
 
-        const handleCategorySelect = (value: string) => {
-            setSelectedCategory(value);
-            setCategoryOpen(false);
-        };    
+        const filteredCategories = categories
+        .filter((category) =>
+            category.label.toLowerCase().includes(inputValue.toLowerCase())
+        )
+        .slice(0, 3);
 
         if (!open) return null;
 
@@ -69,44 +86,54 @@
                             </div>
                             <div className="space-y-1 w-1/3">
                                 <p className="text-sm text-[#697386]">Category</p>
-                                <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                                <Popover open={openPopover} onOpenChange={setOpenPopover}>
                                     <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        aria-expanded={categoryOpen}
-                                        className="w-full justify-between border-black"
-                                    >
-                                        {selectedCategory
-                                        ? categoryOptions.find((category) => category.value === selectedCategory)?.label
-                                        : "Select category..."}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={openPopover}
+                                            className="w-full justify-between border-black"
+                                        >
+                                            {selectedCategory
+                                            ? categories.find(
+                                                (category) => category.value === selectedCategory
+                                                )?.label
+                                            : "Select Category"}
+                                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-full p-0">
-                                    <Command>
-                                        <CommandInput placeholder="Search category..." />
-                                        <CommandList>
-                                        <CommandEmpty>No category found.</CommandEmpty>
-                                        <CommandGroup>
-                                            {categoryOptions.map((category) => (
-                                            <CommandItem
-                                                key={category.value}
-                                                value={category.value}
-                                                onSelect={() => handleCategorySelect(category.value)}
-                                            >
-                                                <Check
-                                                className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    selectedCategory === category.value ? "opacity-100" : "opacity-0"
+                                        <Command>
+                                            <CommandInput
+                                                placeholder="Search Category"
+                                                value={inputValue}
+                                                onValueChange={setInputValue}
+                                            />
+                                            <CommandList>
+                                                <CommandEmpty>No category found.</CommandEmpty>
+                                                {filteredCategories.length > 0 && (
+                                                <CommandGroup>
+                                                    {filteredCategories.map((category) => (
+                                                        <CommandItem
+                                                            key={category.value}
+                                                            value={category.value}
+                                                            onSelect={() => handleSelect(category.value)}
+                                                        >
+                                                            <Check
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                selectedCategory === category.value
+                                                                ? "opacity-100"
+                                                                : "opacity-0"
+                                                            )}
+                                                            />
+                                                            {category.label}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
                                                 )}
-                                                />
-                                                {category.label}
-                                            </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                        </CommandList>
-                                    </Command>
+                                            </CommandList>
+                                        </Command>
                                     </PopoverContent>
                                 </Popover>
                             </div>

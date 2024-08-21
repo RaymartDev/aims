@@ -2,6 +2,7 @@ import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import AddAssetModal from "@/modals/AddAssetModal";
 import { Plus } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
@@ -68,7 +69,23 @@ function AcknowledgementReceipt() {
                   </div>
                   <div className="space-y-2 w-1/2">
                     <p className="text-sm">Tagged Item As</p>
-                    <Input className="focus:border-none" />
+                    <Select>
+                        <SelectTrigger className="focus:border-none">
+                            <SelectValue placeholder="Select Type"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="ou">Original Unit</SelectItem>
+                                <SelectItem value="billing">Billing</SelectItem>
+                                <SelectItem value="du">Return Demo Unit</SelectItem>
+                                <SelectItem value="su">Return Service Unit</SelectItem>
+                                <SelectItem value="fl">Safekeep</SelectItem>
+                                <SelectItem value="fr">For Repair</SelectItem>
+                                <SelectItem value="pu">Pull Out</SelectItem>
+                                <SelectItem value="pt">P. Transfer</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <div className="space-y-2">
