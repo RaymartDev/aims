@@ -1,10 +1,7 @@
-
 function Dashboard() {
     return(
-        <div>
-            <div>
-                <h1 className="text-2xl font-bold">Dashboard</h1>
-            </div>
+        <div className="flex flex-col h-full">
+            <h1 className="text-2xl font-bold">Dashboard</h1>
         </div>
     );
 }

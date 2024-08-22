@@ -25,7 +25,7 @@ module.exports = {
         fontHeading: '#1B1212',
         subHeading: '#343434',
         fontGray: '#9E9E9E',
-        hoverCream: '#FFF1E2',
+        hoverCream: '#FCE3C5',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
