@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import ErrorResponse from './interfaces/ErrorResponse';
-import UserInterface from './interfaces/UserInterface';
+import UserRequest from './interfaces/UserRequest';
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
   res.status(404);
@@ -22,10 +22,6 @@ export function errorHandler(err: Error, req: Request, res: Response<ErrorRespon
 interface JwtPayload {
   id: number;
   username: string;
-}
-
-interface UserRequest extends Request {
-  user?: UserInterface;
 }
 
 export function authenticateToken(req: UserRequest, res: Response, next: NextFunction) {

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Department, User } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 export async function findUserByUsername(username: string): Promise<User | null> {
@@ -7,6 +7,42 @@ export async function findUserByUsername(username: string): Promise<User | null>
       where: { username },
     });
     return user;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function findDepartmentByName(name: string): Promise<Department | null> {
+  try {
+    const dept = await prisma.department.findFirst({
+      where: { name },
+    });
+    return dept;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function createUser(user: any): Promise<User | null> {
+  try {
+    const createdUser = await prisma.user.create({
+      data: {
+        ...user,
+      },
+    });
+    return createdUser;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function updateUser(username: string, props: any): Promise<User | null> {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { username }, // Condition to find the user
+      data: { ...props }, // New data to update
+    });
+    return updatedUser;
   } catch (error) {
     throw new Error('Database error');
   }

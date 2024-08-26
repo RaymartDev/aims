@@ -12,6 +12,7 @@ interface UserInterfaceRaw {
   effective_to: Date;
   token: string;
   password: string;
+  admin: boolean;
 }
 
 type UserInterface = Partial<UserInterfaceRaw> | null;
