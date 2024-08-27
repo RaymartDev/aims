@@ -1,4 +1,4 @@
-import { Department, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 export async function findUserByUsername(username: string): Promise<User | null> {
@@ -7,17 +7,6 @@ export async function findUserByUsername(username: string): Promise<User | null>
       where: { username },
     });
     return user;
-  } catch (error) {
-    throw new Error('Database error');
-  }
-}
-
-export async function findDepartmentByName(name: string): Promise<Department | null> {
-  try {
-    const dept = await prisma.department.findFirst({
-      where: { name },
-    });
-    return dept;
   } catch (error) {
     throw new Error('Database error');
   }

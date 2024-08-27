@@ -2,8 +2,11 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { generateHashedPassword, generateToken } from '../../lib';
-import { createUser, findDepartmentByName, findUserByUsername, updateUser } from './service';
+import { createUser, findUserByUsername, updateUser } from './service';
 import UserRequest from '../../interfaces/UserRequest';
+import { findDepartmentByName } from '../department/service';
+import { findEmployeeById } from '../employee/service';
+import { findStoreById } from '../store/service';
 
 export const register = async (req: UserRequest, res: Response, next: NextFunction) => {
   const { 
@@ -39,6 +42,20 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
       return res.status(401).json({ message: 'Department does not exist' });
     }
 
+    if (registrationType === 'employee') {
+      const employee = await findEmployeeById(employee_id);
+      if (!employee) {
+        return res.status(404).json({ message: 'Employee does not exist' });
+      }
+    }
+    
+    if (registrationType === 'store') {
+      const store = await findStoreById(store_id);
+      if (!store) {
+        return res.status(404).json({ message: 'Store does not exist' });
+      }
+    }
+
     // Hash the password
     const hashedPassword = await generateHashedPassword(password);
 
@@ -53,6 +70,7 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
       cost_center_code,
       employee_no: employee_number,
       division,
+      modified_by_id: req.user?.id || 1,
     };
 
     const user = await createUser(newUser);

@@ -38,3 +38,16 @@ export async function findCompanyById(id: number): Promise<Company | null> {
     throw new Error('Database error');
   }
 }
+
+export async function findCompanyByName(name: string): Promise<Company | null> {
+  try {
+    const dept = await prisma.company.findFirst({
+      where: { name: {
+        equals: name,
+      } },
+    });
+    return dept;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

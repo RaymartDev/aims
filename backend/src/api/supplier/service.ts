@@ -1,4 +1,4 @@
-import { Company, Department, Supplier } from '@prisma/client';
+import { Supplier, Supplier_Contact_Details } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 export async function insertSupplier(supplier: any): Promise<Supplier | null> {
@@ -9,6 +9,19 @@ export async function insertSupplier(supplier: any): Promise<Supplier | null> {
       },
     });
     return createSupplier;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function insertSupplierContact(supplier_details: any): Promise<Supplier_Contact_Details | null> {
+  try {
+    const createSupplierDetails = await prisma.supplier_Contact_Details.create({
+      data: {
+        ...supplier_details,
+      },
+    });
+    return createSupplierDetails;
   } catch (error) {
     throw new Error('Database error');
   }
@@ -28,17 +41,6 @@ export async function updateSupplier(supplier: any, id: number): Promise<Supplie
   }
 }
 
-export async function findDepartmentByName(name: string): Promise<Department | null> {
-  try {
-    const dept = await prisma.department.findFirst({
-      where: { name },
-    });
-    return dept;
-  } catch (error) {
-    throw new Error('Database error');
-  }
-}
-
 export async function findSupplierById(id: number): Promise<Supplier | null> {
   try {
     const supplier = await prisma.supplier.findFirst({
@@ -50,12 +52,12 @@ export async function findSupplierById(id: number): Promise<Supplier | null> {
   }
 }
 
-export async function findCompanyByName(name: string): Promise<Company | null> {
+export async function findSupplierByCode(supplier_code: string): Promise<Supplier | null> {
   try {
-    const dept = await prisma.company.findFirst({
-      where: { name },
+    const supplier = await prisma.supplier.findFirst({
+      where: { supplier_code },
     });
-    return dept;
+    return supplier;
   } catch (error) {
     throw new Error('Database error');
   }

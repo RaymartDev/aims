@@ -73,7 +73,6 @@ model User {
   modified_companies Company[] @relation("CompanyModifiedBy")
   modified_suppliers Supplier[] @relation("SupplierModifiedBy")
   modified_supplier_contacts Supplier_Contact_Details[] @relation("SupplierContactModifiedBy")
-  modified_supplier_status Supplier_Status[] @relation("SupplierStatusModifiedBy")
 }
 
 // TODO store, user
@@ -122,8 +121,6 @@ model Supplier {
   address         String
   contract_term   String
   tin_number      String
-  status_id     Int
-  status          Supplier_Status  @relation(fields: [status_id], references: [id], onDelete: Cascade)
   contact_id Int
   contact_details Supplier_Contact_Details @relation(fields: [contact_id], references: [id], onDelete: Cascade)
   effective_from DateTime @default(now())
@@ -150,15 +147,4 @@ model Supplier_Contact_Details {
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by User? @relation("SupplierContactModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
-}
-
-model Supplier_Status {
-  id              Int             @id @default(autoincrement())
-  description     String
-  suppliers       Supplier[]      @relation
-  effective_from DateTime @default(now())
-  effective_to DateTime @default("2099-12-01T00:00:00Z")
-  modified_on DateTime @updatedAt
-  modified_by_id Int?      // Foreign key to Employee.id
-  modified_by User? @relation("SupplierStatusModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }

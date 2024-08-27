@@ -1,4 +1,4 @@
-import { Company, Department, Employee } from '@prisma/client';
+import { Employee } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 export async function insertEmployee(employee: any): Promise<Employee | null> {
@@ -28,17 +28,6 @@ export async function updateEmployee(employee: any, id: number): Promise<Employe
   }
 }
 
-export async function findDepartmentByName(name: string): Promise<Department | null> {
-  try {
-    const dept = await prisma.department.findFirst({
-      where: { name },
-    });
-    return dept;
-  } catch (error) {
-    throw new Error('Database error');
-  }
-}
-
 export async function findEmployeeById(id: number): Promise<Employee | null> {
   try {
     const employee = await prisma.employee.findFirst({
@@ -50,12 +39,12 @@ export async function findEmployeeById(id: number): Promise<Employee | null> {
   }
 }
 
-export async function findCompanyByName(name: string): Promise<Company | null> {
+export async function findEmployeeByEmployeeNo(employee_no: string): Promise<Employee | null> {
   try {
-    const dept = await prisma.company.findFirst({
-      where: { name },
+    const employee = await prisma.employee.findFirst({
+      where: { employee_no },
     });
-    return dept;
+    return employee;
   } catch (error) {
     throw new Error('Database error');
   }
