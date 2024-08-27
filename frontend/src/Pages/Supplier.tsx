@@ -7,6 +7,8 @@ import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddSupplierModal from "@/modals/AddSupplierModal";
 import AddSupplierModal2 from "@/modals/AddSupplierModal2";
+import EditSupplierModal from "@/modals/EditSupplierModal";
+import EditSupplierModal2 from "@/modals/EditSupplierModal2";
 
 const suppliers = [
     { id: 1, supplierNumber: "100230456", companyName: "TasteMasters", contactPerson: "Leansel Nico", businessNumber: "503604218", mobileNumber: "09481298472", dateHired: "06/17/24" },
@@ -33,8 +35,10 @@ const suppliers = [
 
 
 function Supplier() {
-    const [openModal, setOpenModal] = useState(false);
-    const [openNextModal, setOpenNextModal] = useState(false);
+    const [openAddModal, setOpenAddModal] = useState(false);
+    const [openNextAddModal, setOpenNextAddModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [openNextEditModal, setOpenNextEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -76,14 +80,24 @@ function Supplier() {
 
     const totalPages = Math.ceil(filteredSupplier.length / itemsPerPage);
 
-    const handleNextModal = () => {
-        setOpenModal(false);
-        setOpenNextModal(true);
+    const handleNextAddModal = () => {
+        setOpenAddModal(false);
+        setOpenNextAddModal(true);
     };
 
-    const handleBack = () => {
-        setOpenNextModal(false);
-        setOpenModal(true);
+    const handleAddBack = () => {
+        setOpenNextAddModal(false);
+        setOpenAddModal(true);
+    };
+
+    const handleNextEditModal = () => {
+        setOpenEditModal(false);
+        setOpenNextEditModal(true);
+    };
+
+    const handleEditBack = () => {
+        setOpenNextEditModal(false);
+        setOpenEditModal(true);
     };
 
 
@@ -107,7 +121,8 @@ function Supplier() {
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" 
+                                    onClick={() => setOpenAddModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Supplier</span>
                                 </Button>
                             </div>    
@@ -143,7 +158,7 @@ function Supplier() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -182,8 +197,10 @@ function Supplier() {
                     </Pagination>
                 </div>
             </div>
-            <AddSupplierModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
-            <AddSupplierModal2 open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
+            <AddSupplierModal open={openAddModal} onClose={() => setOpenAddModal(false)} onNext={handleNextAddModal}/>
+            <AddSupplierModal2 open={openNextAddModal} onClose={() => setOpenNextAddModal(false)} onBack={handleAddBack}/>
+            <EditSupplierModal open={openEditModal} onClose={() => setOpenEditModal(false)} onNext={handleNextEditModal}/>
+            <EditSupplierModal2 open={openNextEditModal} onClose={() => setOpenNextEditModal(false)} onBack={handleEditBack}/>
         </>
     );
 }

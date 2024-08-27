@@ -2,7 +2,6 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
-import { Select, SelectContent, SelectGroup, SelectTrigger, SelectValue, SelectItem } from "@/Components/ui/select";
 
 interface AddSupplierModalProps {
     open: boolean;
@@ -22,28 +21,14 @@ function AddSupplierModal ({ open, onClose, onNext  }: AddSupplierModalProps) {
                 </div>
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="flex flex-row w-full space-x-2">
-                        <div className="space-y-1 w-2/3">
+                        <div className="space-y-1 w-1/3">
                             <p className="text-sm text-[#697386]">Supplier Code</p>
                             <Input className="focus:border-none border-black"></Input>
                         </div>
-                        <div className="space-y-1 w-1/3">
-                            <p className="text-sm text-[#697386]">Status Code</p>
-                            <Select>
-                                <SelectTrigger className="border-black focus:border-none">
-                                    <SelectValue placeholder="Select Status"/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectItem value="Active">Active</SelectItem>
-                                        <SelectItem value="Inactive">Inactive</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                        <div className="space-y-1 w-2/3">
+                            <p className="text-sm text-[#697386]">Company Name</p>
+                            <Input className="focus:border-none border-black"></Input>
                         </div>
-                    </div>
-                    <div className="space-y-1">
-                        <p className="text-sm text-[#697386]">Company Name</p>
-                        <Input className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Address</p>

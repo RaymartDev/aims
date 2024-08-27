@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddEmployeeModal from "@/modals/AddEmployeeModal";
 import UserRegistration from "@/modals/UserRegistration";
+import EditEmployeeModal from "@/modals/EditEmployeeModal";
 
 const employees = [
     { id: 1, number: "100230456", name: "Leansel Nico", department: "IT Department", costCode: "503604218", division: "IT Asset", company: "KFC Canada", dateHired: "06/17/24", status: "Registered" },
@@ -33,8 +34,9 @@ const employees = [
 
 
 function Employee() {
-    const [openModal, setOpenModal] = useState(false);
+    const [openAddModal, setOpenAddModal] = useState(false);
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 70;
@@ -96,7 +98,8 @@ function Employee() {
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" 
+                                    onClick={() => setOpenAddModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Employee</span>
                                 </Button>
                             </div>    
@@ -136,7 +139,7 @@ function Employee() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setOpenUserRegModal(true)}>Register</DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -176,8 +179,9 @@ function Employee() {
                     </Pagination>
                 </div>
             </div>
-            <AddEmployeeModal open={openModal} onClose={() => setOpenModal(false)}/>
+            <AddEmployeeModal open={openAddModal} onClose={() => setOpenAddModal(false)}/>
             <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
+            <EditEmployeeModal open={openEditModal} onClose={() => setOpenEditModal(false)}/>
         </>
     );
 }

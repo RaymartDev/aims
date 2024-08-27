@@ -119,3 +119,4 @@ function DestinationModal({ open, onClose, onBack }: DestinationModalProps) {
 }
 
 export default DestinationModal;
+

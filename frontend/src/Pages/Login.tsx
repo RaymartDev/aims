@@ -21,6 +21,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react'
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   username: z.string()
@@ -49,7 +50,10 @@ function Login() {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
+
     <div
       className="h-screen flex justify-center items-center bg-cover bg-center bg-gradient-to-t from-purple-600 to-pink-300"
     >
@@ -108,7 +112,7 @@ function Login() {
               )}
             />
             <div className="flex justify-center items-center">
-              <Button type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6">
+              <Button type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6" onClick={()=> navigate("/")}>
                 Login
               </Button>
             </div>

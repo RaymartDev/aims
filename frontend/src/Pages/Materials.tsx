@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddMaterialModal from "@/modals/AddMaterialModal";
+import EditMaterialModal from "@/modals/EditMaterialModal";
 
 const materials = [
     { id: 1, materialCode: "1000", desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "503604218", unit: "PC", materialType: "OU", cost: "40,000", dateEntry: "06/17/24" },
@@ -37,7 +38,8 @@ const materials = [
 ];
 
 function Materials() {
-    const [openModal, setOpenModal] = useState(false);
+    const [openAddModal, setOpenAddModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -99,7 +101,8 @@ function Materials() {
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" 
+                                    onClick={() => setOpenAddModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Materials</span>
                                 </Button>
                             </div>    
@@ -137,7 +140,7 @@ function Materials() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -176,7 +179,8 @@ function Materials() {
                     </Pagination>
                 </div>
             </div>
-            <AddMaterialModal open={openModal} onClose={() => setOpenModal(false)} />
+            <AddMaterialModal open={openAddModal} onClose={() => setOpenAddModal(false)} />
+            <EditMaterialModal open={openEditModal} onClose={() => setOpenEditModal(false)} />
         </>
     );
 }

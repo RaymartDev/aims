@@ -4,34 +4,30 @@ import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import SelectItemModal from "@/modals/SelectItemModal";
 import AssetEntryModal from "@/modals/AssetEntryModal";
-import { Plus } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 
-const item = [
-  { id: 1, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
-  { id: 2, itemNumber: "215424", itemDesc: "2", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
-  { id: 3, itemNumber: "215424", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A"  },
-  { id: 4, itemNumber: "215424", itemDesc: "1", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "1234", remarks: "N/A" },
-  { id: 5, itemNumber: "215424", itemDesc: "1", quantity: "ASUS Predator 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2132", remarks: "N/A" },
-  { id: 6, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4321", remarks: "N/A" },
-  { id: 7, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2412", remarks: "N/A"   },
-  { id: 8, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
-  { id: 9, itemNumber: "123456", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A" },
-  { id: 10, itemNumber: "123456", itemDesc: "3", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2134", remarks: "N/A" },
-  { id: 11, itemNumber: "123456", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2341", remarks: "N/A" },
-  { id: 12, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "5432", remarks: "N/A" },
-  { id: 13, itemNumber: "754211", itemDesc: "2", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4213", remarks: "N/A" },
-  { id: 14, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "4467", remarks: "N/A" },
-  { id: 15, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6743", remarks: "N/A" },
-  { id: 16, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "0971", remarks: "N/A" },
-  { id: 17, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "6839", remarks: "N/A" },
-  { id: 18, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "43345", remarks: "N/A"   },
-  { id: 19, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "324234", remarks: "N/A" },
-  { id: 20, itemNumber: "754211", itemDesc: "1", quantity: "HP Probook 8GB RAM / 512GB SSD", unit: "PC", serialNumber: "2342", remarks: "N/A" },
+const itemList = [
+  { id: 1, itemNumber: "215424", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "", unit: "PC", serialNumber: "1234", remarks: "N/A" },
+  { id: 2, itemNumber: "215425", itemDesc: "ASUS ROG 16GB RAM / 1TB SSD", quantity: "", unit: "PC", serialNumber: "5678", remarks: "New" },
+  { id: 3, itemNumber: "215426", itemDesc: "Dell XPS 13 8GB RAM / 256GB SSD", quantity: "", unit: "PC", serialNumber: "9101", remarks: "Refurbished" },
+  { id: 4, itemNumber: "215427", itemDesc: "Lenovo ThinkPad 16GB RAM / 512GB SSD", quantity: "", unit: "PC", serialNumber: "1121", remarks: "In Use" },
+  { id: 5, itemNumber: "215428", itemDesc: "Apple MacBook Pro 16GB RAM / 512GB SSD", quantity: "", unit: "PC", serialNumber: "3141", remarks: "Damaged" },
+  { id: 6, itemNumber: "215429", itemDesc: "HP EliteBook 8GB RAM / 1TB SSD", quantity: "", unit: "PC", serialNumber: "5161", remarks: "Under Repair" },
+  { id: 7, itemNumber: "215430", itemDesc: "Microsoft Surface Pro 4GB RAM / 128GB SSD", quantity: "", unit: "PC", serialNumber: "7181", remarks: "Returned" },
+  { id: 8, itemNumber: "215431", itemDesc: "Acer Aspire 8GB RAM / 256GB SSD", quantity: "", unit: "PC", serialNumber: "9202", remarks: "New" },
+  { id: 9, itemNumber: "215432", itemDesc: "Samsung Galaxy Book 12GB RAM / 512GB SSD", quantity: "", unit: "PC", serialNumber: "1232", remarks: "N/A" },
+  { id: 10, itemNumber: "215433", itemDesc: "Razer Blade 16GB RAM / 1TB SSD", quantity: "", unit: "PC", serialNumber: "3243", remarks: "Used" },
+  { id: 11, itemNumber: "215434", itemDesc: "MSI GF63 8GB RAM / 512GB SSD", quantity: "", unit: "PC", serialNumber: "4254", remarks: "New" },
+  { id: 12, itemNumber: "215435", itemDesc: "HP Pavilion 8GB RAM / 1TB SSD", quantity: "", unit: "PC", serialNumber: "5265", remarks: "In Use" },
+  { id: 13, itemNumber: "215436", itemDesc: "Toshiba Tecra 4GB RAM / 256GB SSD", quantity: "", unit: "PC", serialNumber: "6276", remarks: "Returned" },
+  { id: 14, itemNumber: "215437", itemDesc: "Sony Vaio 8GB RAM / 512GB SSD", quantity: "", unit: "PC", serialNumber: "7287", remarks: "Refurbished" },
+  { id: 15, itemNumber: "215438", itemDesc: "Huawei MateBook 16GB RAM / 1TB SSD", quantity: "", unit: "PC", serialNumber: "8298", remarks: "New" },
 ];
+
 
 function DeliveryReceipt() {
   const [openModal, setOpenModal] = useState(false);
-  const [openAssetModal, setOpenAssetModal] = useState(false);
+  const [openAssetModal, setOpenAssetModal] = useState(false) 
 
   const headerHeight = 72;
 
@@ -55,8 +51,8 @@ function DeliveryReceipt() {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItem= item.slice(indexOfFirstItem, indexOfLastItem);
-  
+  const currentItem= itemList.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -94,17 +90,24 @@ function DeliveryReceipt() {
                         <TableHead>Unit</TableHead>
                         <TableHead>Serial Number</TableHead>
                         <TableHead>Remarks</TableHead>
+                        <TableHead><span className="sr-only">Actions</span></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {currentItem.map(item => (
-                        <TableRow className="h-8" key={item.id}>
-                            <TableCell >{item.itemNumber}</TableCell>
-                            <TableCell>{item.quantity}</TableCell>
-                            <TableCell>{item.itemDesc}</TableCell>
-                            <TableCell>{item.unit}</TableCell>
-                            <TableCell>{item.serialNumber}</TableCell>
-                            <TableCell>{item.remarks}</TableCell>
+                    {currentItem.map(itemList => (
+                        <TableRow className="h-8" key={itemList.id}>
+                            <TableCell >{itemList.itemNumber}</TableCell>
+                            <TableCell>{itemList.itemDesc}</TableCell>
+                            <TableCell>
+                              <Input
+                                type="number"
+                                className="w-16 focus:border-none h-7"
+                              />
+                            </TableCell>
+                            <TableCell>{itemList.unit}</TableCell>
+                            <TableCell>{itemList.serialNumber}</TableCell>
+                            <TableCell>{itemList.remarks}</TableCell>
+                            <TableCell><Button className="bg-white text-red-500 hover:text-white"><Trash/></Button></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

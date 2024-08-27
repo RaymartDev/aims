@@ -225,7 +225,7 @@ function Sidebar() {
           </li>
         </ul>
       </nav> 
-      <Button onClick={() => navigate("/login")} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] hover:text-white font-bold space-x-2 ">
+      <Button onClick={() => navigate("/login")} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream">
         <LogOut /><span className="sm:hidden xl:inline">Logout</span>
       </Button>    
     </div>
