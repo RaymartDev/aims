@@ -7,6 +7,7 @@ import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddStoreModal from "@/modals/AddStoreModal";
 import UserRegistration from "@/modals/UserRegistration";
+import EditStoreModal from "@/modals/EditStoreModal";
 
 const stores = [
     { id: 1, companyName: "InnoWave Corp", costCenter: "100230468", storeName: "KFC PH", address: "123 Main St, Manila, PH", status: "Registered" },
@@ -33,8 +34,9 @@ const stores = [
 
 
 function Store() {
-    const [openModal, setOpenModal] = useState(false);
+    const [openAddModal, setOpenAddModal] = useState(false);
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 72;
@@ -97,7 +99,8 @@ function Store() {
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" 
+                                    onClick={() => setOpenAddModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Store</span>
                                 </Button>
                             </div>    
@@ -131,7 +134,7 @@ function Store() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => setOpenUserRegModal(true)}>Register</DropdownMenuItem>
                                                 </DropdownMenuContent>
@@ -171,8 +174,9 @@ function Store() {
                     </Pagination>
                 </div>
             </div>
-            <AddStoreModal open={openModal} onClose={() => setOpenModal(false)}/>
+            <AddStoreModal open={openAddModal} onClose={() => setOpenAddModal(false)}/>
             <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
+            <EditStoreModal open={openEditModal} onClose={() => setOpenEditModal(false)}/>
         </>
     );
 }

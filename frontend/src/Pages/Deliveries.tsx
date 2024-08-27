@@ -5,7 +5,7 @@ import { Plus, Search } from "lucide-react";
 import { Label } from "@/Components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import SelectMaterialModal from "@/modals/SelectMaterialModal";
-import DestinationModal from "@/modals/DestinationModal";
+import AssignToModal from "@/modals/AssignToModal";
 
 const deliveries = [
     { id: 1, delivery: "1000", desc: "HP Probook 8GB RAM / 512GB SSD", serialNumber: "503604218", assetNumber: "503604220", quantity: "1", unit: "OU", remarks: "OU KFC - BACLARAN" },
@@ -63,7 +63,7 @@ function Deliveries() {
     }, []);
 
     const filteredDeliveries = deliveries.filter(deliveries =>
-        deliveries.desc.toLowerCase().includes(searchQuery.toLowerCase())
+        deliveries.delivery.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const indexOfLastDeliveries = currentPage * itemsPerPage;
@@ -95,7 +95,7 @@ function Deliveries() {
                         </Button>
                     </div>
                 </div>
-                <div className="mt-6 flex-grow overflow-y-auto pl-2">
+                <div className="mt-6 flex-grow overflow-y-auto px-2">
                     <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 mb-10">
                         <div>
                             <Label htmlFor="supplier">Supplier Name</Label>
@@ -172,7 +172,7 @@ function Deliveries() {
                 </div>
             </div>
             <SelectMaterialModal open={openModal} onClose={() => setOpenModal(false)} onNext={handleNextModal}/>
-            <DestinationModal open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
+            <AssignToModal open={openNextModal} onClose={() => setOpenNextModal(false)} onBack={handleBack}/>
         </>
     );
 }

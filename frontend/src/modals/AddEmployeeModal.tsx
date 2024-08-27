@@ -24,7 +24,7 @@ function AddEmployeeModal ({ open, onClose }: AddEmployeeModalProps) {
                             <Input className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
-                            <p className="text-sm text-[#697386]">Last Number</p>
+                            <p className="text-sm text-[#697386]">Last Name</p>
                             <Input className="focus:border-none border-black"></Input>
                         </div>
                     </div>

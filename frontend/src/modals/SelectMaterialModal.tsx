@@ -73,7 +73,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
-            <div className="flex flex-col w-1/2 bg-slate-50 rounded-2xl p-6">
+            <div className="flex flex-col w-2/3 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full">
                     <h1 className="font-extrabold text-2xl">Select Material</h1>
                     <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
