@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findCompanyById, findCompanyByName, insertCompany, updateCompany } from './service';
+import { findCompanyById, findCompanyByName, insertCompany, searchCompanyByName, updateCompany } from './service';
+import { Company } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -51,6 +52,22 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newCompany = await updateCompany({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newCompany) {
       res.status(200).json({ company: newCompany, message: 'Successfully updated company' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { name } = req.query;
+
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
+    }
+    const companies: Company[] = await searchCompanyByName(name as string);
+    if (companies.length > 0) {
+      res.status(200).json({ companies, message: 'Successfully found companies' });
     }
   } catch (err) {
     next(err);

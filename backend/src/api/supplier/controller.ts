@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, updateSupplier } from './service';
+import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, searchSupplierByName, updateSupplier } from './service';
 import { findCompanyByName } from '../company/service';
+import { Supplier } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -101,6 +102,23 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newSupplier = await updateSupplier({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newSupplier) {
       res.status(200).json({ supplier: newSupplier, message: 'Successfully updated supplier' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { supplier_code } = req.query;
+    
+    if (!supplier_code || typeof supplier_code !== 'string') {
+      return res.status(400).json({ error: 'Cost code query parameter is required and must be a string' });
+    }
+
+    const suppliers: Supplier[] = await searchSupplierByName(supplier_code as string);
+    if (suppliers.length > 0) {
+      res.status(200).json({ suppliers, message: 'Successfully found suppliers' });
     }
   } catch (err) {
     next(err);

@@ -49,3 +49,22 @@ export async function findEmployeeByEmployeeNo(employee_no: string): Promise<Emp
     throw new Error('Database error');
   }
 }
+
+export async function searchEmployeeByEmployeeNo(employee_no: string): Promise<Employee[]> {
+  try {
+    const employees: Employee[] = await prisma.employee.findMany({
+      where: {
+        employee_no: {
+          startsWith: employee_no,
+        },
+      },
+      take: 10,
+      orderBy: {
+        employee_no: 'asc',
+      },
+    });
+    return employees;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

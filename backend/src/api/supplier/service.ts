@@ -62,3 +62,22 @@ export async function findSupplierByCode(supplier_code: string): Promise<Supplie
     throw new Error('Database error');
   }
 }
+
+export async function searchSupplierByName(supplier_code: string): Promise<Supplier[]> {
+  try {
+    const suppliers: Supplier[] = await prisma.supplier.findMany({
+      where: {
+        supplier_code: {
+          startsWith: supplier_code,
+        },
+      },
+      take: 10,
+      orderBy: {
+        supplier_code: 'asc',
+      },
+    });
+    return suppliers;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

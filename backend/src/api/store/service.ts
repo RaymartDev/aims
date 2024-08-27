@@ -49,3 +49,22 @@ export async function findStoreByCostCode(cost_center_code: string): Promise<Sto
     throw new Error('Database error');
   }
 }
+
+export async function searchStoreByCostCode(cost_code: string): Promise<Store[]> {
+  try {
+    const stores: Store[] = await prisma.store.findMany({
+      where: {
+        cost_center_code: {
+          startsWith: cost_code,
+        },
+      },
+      take: 10,
+      orderBy: {
+        cost_center_code: 'asc',
+      },
+    });
+    return stores;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

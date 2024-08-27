@@ -51,3 +51,22 @@ export async function findCompanyByName(name: string): Promise<Company | null> {
     throw new Error('Database error');
   }
 }
+
+export async function searchCompanyByName(name: string): Promise<Company[]> {
+  try {
+    const companies: Company[] = await prisma.company.findMany({
+      where: {
+        name: {
+          startsWith: name,
+        },
+      },
+      take: 10,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return companies;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

@@ -51,3 +51,22 @@ export async function findDepartmentByName(name: string): Promise<Department | n
     throw new Error('Database error');
   }
 }
+
+export async function searchDepartmentByName(name: string): Promise<Department[]> {
+  try {
+    const departments: Department[] = await prisma.department.findMany({
+      where: {
+        name: {
+          startsWith: name,
+        },
+      },
+      take: 10,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return departments;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
