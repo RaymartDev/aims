@@ -68,3 +68,33 @@ export async function searchEmployeeByEmployeeNo(employee_no: string): Promise<E
     throw new Error('Database error');
   }
 }
+
+export async function listEmployees(page: number, limit: number): Promise<Employee[]> {
+  try {
+    // Get total count for pagination
+    const totalEmployees = await prisma.employee.count();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalEmployees / limit);
+
+    if (page > totalPages) {
+      page = totalPages;
+    }
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    const employees: Employee[] = await prisma.employee.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        employee_no: 'asc',
+      },
+    });
+    
+    return employees;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

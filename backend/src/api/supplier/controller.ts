@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, searchSupplierByName, updateSupplier } from './service';
+import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, listSuppliers, searchSupplierByName, updateSupplier } from './service';
 import { findCompanyByName } from '../company/service';
 import { Supplier } from '@prisma/client';
 
@@ -119,6 +119,22 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     const suppliers: Supplier[] = await searchSupplierByName(supplier_code as string);
     if (suppliers.length > 0) {
       res.status(200).json({ suppliers, message: 'Successfully found suppliers' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+
+    const suppliers: Supplier[] = await listSuppliers(page, 10);
+    if (suppliers) {
+      res.status(200).json({ suppliers, message: 'Successfully retrieved suppliers' });
     }
   } catch (err) {
     next(err);

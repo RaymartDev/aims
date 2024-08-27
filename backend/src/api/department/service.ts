@@ -70,3 +70,33 @@ export async function searchDepartmentByName(name: string): Promise<Department[]
     throw new Error('Database error');
   }
 }
+
+export async function listDepartments(page: number, limit: number): Promise<Department[]> {
+  try {
+    // Get total count for pagination
+    const totalDepartments = await prisma.department.count();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalDepartments / limit);
+
+    if (page > totalPages) {
+      page = totalPages;
+    }
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    const departments: Department[] = await prisma.department.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    
+    return departments;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

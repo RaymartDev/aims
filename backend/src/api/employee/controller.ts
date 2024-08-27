@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, searchEmployeeByEmployeeNo, updateEmployee } from './service';
+import { findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNo, updateEmployee } from './service';
 import { findCompanyByName } from '../company/service';
 import { findDepartmentByName } from '../department/service';
 import { Employee } from '@prisma/client';
@@ -108,6 +108,22 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     const employees: Employee[] = await searchEmployeeByEmployeeNo(employee_no as string);
     if (employees.length > 0) {
       res.status(200).json({ employees, message: 'Successfully found employees' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+
+    const employees: Employee[] = await listEmployees(page, 10);
+    if (employees) {
+      res.status(200).json({ employees, message: 'Successfully retrieved employees' });
     }
   } catch (err) {
     next(err);

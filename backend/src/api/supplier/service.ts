@@ -81,3 +81,33 @@ export async function searchSupplierByName(supplier_code: string): Promise<Suppl
     throw new Error('Database error');
   }
 }
+
+export async function listSuppliers(page: number, limit: number): Promise<Supplier[]> {
+  try {
+    // Get total count for pagination
+    const totalSuppliers = await prisma.supplier.count();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalSuppliers / limit);
+
+    if (page > totalPages) {
+      page = totalPages;
+    }
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    const suppliers: Supplier[] = await prisma.supplier.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        supplier_code: 'asc',
+      },
+    });
+    
+    return suppliers;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

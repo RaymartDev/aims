@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findDepartmentById, findDepartmentByName, insertDepartment, searchDepartmentByName, updateDepartment } from './service';
+import { findDepartmentById, findDepartmentByName, insertDepartment, listDepartments, searchDepartmentByName, updateDepartment } from './service';
 import { Department } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -66,6 +66,23 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     const departments: Department[] = await searchDepartmentByName(name as string);
     if (departments.length > 0) {
       res.status(200).json({ departments, message: 'Successfully found departments' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+
+    const departments: Department[] = await listDepartments(page, 10);
+    if (departments) {
+      res.status(200).json({ departments, message: 'Successfully retrieved departments' });
     }
   } catch (err) {
     next(err);

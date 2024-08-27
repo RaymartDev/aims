@@ -70,3 +70,33 @@ export async function searchCompanyByName(name: string): Promise<Company[]> {
     throw new Error('Database error');
   }
 }
+
+export async function listCompanies(page: number, limit: number): Promise<Company[]> {
+  try {
+    // Get total count for pagination
+    const totalCompanies = await prisma.company.count();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCompanies / limit);
+
+    if (page > totalPages) {
+      page = totalPages;
+    }
+
+    if (page < 1) {
+      page = 1;
+    }
+
+    const companies: Company[] = await prisma.company.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    
+    return companies;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}

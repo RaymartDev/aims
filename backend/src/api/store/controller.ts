@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findStoreByCostCode, findStoreById, insertStore, searchStoreByCostCode, updateStore } from './service';
+import { findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCode, updateStore } from './service';
 import { findCompanyByName } from '../company/service';
 import { Store } from '@prisma/client';
 
@@ -90,6 +90,22 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     const stores: Store[] = await searchStoreByCostCode(cost_code as string);
     if (stores.length > 0) {
       res.status(200).json({ stores, message: 'Successfully found stores' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+
+    const stores: Store[] = await listStores(page, 10);
+    if (stores) {
+      res.status(200).json({ stores, message: 'Successfully retrieved stores' });
     }
   } catch (err) {
     next(err);
