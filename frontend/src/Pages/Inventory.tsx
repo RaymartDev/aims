@@ -94,7 +94,7 @@ function InventoryOverview() {
                                     onChange={(e) => setSearchQuery(e.target.value)}/>
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             </div>   
-                            <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold">
+                            <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
                                 <Download size={20}/><span className="text-sm">Export</span>
                             </Button>
                         </div>    
@@ -106,9 +106,9 @@ function InventoryOverview() {
                             <TableRow>
                                 <TableHead>Material Code</TableHead>
                                 <TableHead>Description</TableHead>
-                                <TableHead>Total Bal</TableHead>
-                                <TableHead>Re-Bal</TableHead>
-                                <TableHead>Qty-Out</TableHead>
+                                <TableHead>Total Balance</TableHead>
+                                <TableHead>Remaining Balance</TableHead>
+                                <TableHead>Quantity Out</TableHead>
                                 <TableHead>Unit</TableHead>
                                 <TableHead>Material Type</TableHead>
                                 <TableHead>Cost</TableHead>

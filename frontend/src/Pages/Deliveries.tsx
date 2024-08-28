@@ -90,7 +90,7 @@ function Deliveries() {
                         <p className="text-sm font-semibold text-[#9E9E9E]">Warehouse / Deliveries</p>
                     </div>
                     <div className="flex items-end">
-                        <Button className="bg-hoverCream text-fontHeading hover:text-white font-semibold" onClick={() => setOpenModal(true)}>
+                        <Button className="bg-hoverCream text-fontHeading hover:text-white font-semibold w-36" onClick={() => setOpenModal(true)}>
                             <Plus size={20}/><span className="text-sm">Add Delivery</span>
                         </Button>
                     </div>

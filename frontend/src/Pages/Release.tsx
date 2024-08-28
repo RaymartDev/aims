@@ -76,8 +76,8 @@ function DeliveryReceipt() {
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-10">
-            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold"><Plus size={20}/><span className="text-sm">Scan Item</span></Button>
-            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Item</span></Button>
+            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36"><Plus size={20}/><span className="text-sm">Scan Item</span></Button>
+            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Item</span></Button>
           </div>
         </div>
         <div className="overflow-y-auto mt-5" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
@@ -114,8 +114,8 @@ function DeliveryReceipt() {
             </Table>
         </div>
         <div className="space-x-2 flex items-end mt-5">
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => setOpenAssetModal(true)}>Asset</Button>
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Print</Button>
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36" onClick={() => setOpenAssetModal(true)}>Asset</Button>
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36">Print</Button>
         </div>
       </div>
       

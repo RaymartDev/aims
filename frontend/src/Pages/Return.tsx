@@ -74,8 +74,8 @@
             <p className="text-sm font-semibold text-[#9E9E9E]">Order / Return</p>
           </div>
           <div className="flex w-full justify-between gap-8 2xl:gap-20 pt-10">
-            <div className="flex flex-row gap-6 w-2/3">
-              <div className="flex flex-col w-2/3 space-y-3">
+            <div className="flex flex-row gap-6 w-3/4">
+              <div className="flex flex-col w-2/3 space-y-5">
                   <div className="flex space-x-5">
                     <div className="space-y-2 w-1/2">
                       <p className="text-sm">DR Number</p>
@@ -107,25 +107,25 @@
                     <Input className="focus:border-none" />
                   </div>
               </div>
-              <div className="flex flex-col w-2/5">
+              <div className="flex flex-col w-full space-y-2">
                 <p className="text-sm">Remarks</p>
                 <Textarea className="focus:border-none max-h-28 min-h-28" />
               </div>
             </div>
             <div className="flex justify-end items-end">
-              <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Asset</span></Button>
+              <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Asset</span></Button>
             </div>
           </div>
-          <div className="flex flex-row w-full space-x-5 mt-3">
-            <div className="space-y-2 w-1/4">
+          <div className="flex flex-row w-3/4 space-x-5 mt-3">
+            <div className="space-y-2 w-1/3">
               <p className="text-sm">Name</p>
               <Input className="focus:border-none" />
             </div>
-            <div className="space-y-2 w-1/4">
+            <div className="space-y-2 w-1/3">
               <p className="text-sm">Employee Number</p>
               <Input className="focus:border-none" />
             </div>
-            <div className="space-y-2 w-1/4 ">
+            <div className="space-y-2 w-1/3">
               <p className="text-sm">Cost Center Code</p>
               <Input className="focus:border-none" />
             </div>
@@ -168,7 +168,7 @@
               </Table>
           </div>
           <div className="flex items-end mt-5">
-            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Print</Button>
+            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36">Print</Button>
           </div>
         </div>
     
