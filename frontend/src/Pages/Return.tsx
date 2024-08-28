@@ -25,6 +25,13 @@
     { id: 15, itemNumber: "215438", itemDesc: "Huawei MateBook 16GB RAM / 1TB SSD", quantity: 1, unit: "PC", serialNumber: "8298", remarks: "New" },
   ];
 
+  const drData = [
+    { drNumber: "DR001", name: "John Doe", employeeId: "EMP001" },
+    { drNumber: "DR002", name: "Acme Store", costCenterCode: "CC001" },
+    { drNumber: "DR003", name: "Jane Smith", employeeId: "EMP002" },
+    { drNumber: "DR004", name: "Tech Supplies", costCenterCode: "CC002" },
+  ];
+
   type ReturnQuantities = {
     [key: number]: number;
   };
@@ -34,6 +41,9 @@
     const [returnQuantities, setReturnQuantities] = useState<ReturnQuantities>(
       itemList.reduce((acc, item) => ({ ...acc, [item.id]: 0 }), {})
     );
+    const [selectedDR, setSelectedDR] = useState("");
+    const [selectedName, setSelectedName] = useState("");
+    const [selectedType, setSelectedType] = useState("");
     
     const headerHeight = 72;
 
@@ -65,7 +75,26 @@
       setReturnQuantities({ ...returnQuantities, [id]: newValue });
     };
 
+    const handleDRNumberChange = (value: string) => {
+      setSelectedDR(value);
   
+      const associatedData = drData.find((dr) => dr.drNumber === value);
+      if (associatedData) {
+        setSelectedName(associatedData.name);
+        setSelectedType(associatedData.costCenterCode ? "store" : "employee");
+      } else {
+        setSelectedName("");
+        setSelectedType("");
+      }
+    };
+  
+    const getCodeOrId = () => {
+      const selectedData = drData.find((item) => item.drNumber === selectedDR);
+      return selectedType === "store"
+        ? selectedData?.costCenterCode || ""
+        : selectedData?.employeeId || "";
+    };
+
     return (
       <>
         <div className="flex flex-col h-full">
@@ -79,7 +108,9 @@
                   <div className="flex space-x-5">
                     <div className="space-y-2 w-1/2">
                       <p className="text-sm">DR Number</p>
-                      <Input className="focus:border-none" />
+                      <Input className="focus:border-none" 
+                      value={selectedDR}
+                      onChange={(e) => handleDRNumberChange(e.target.value)}/>
                     </div>
                     <div className="space-y-2 w-1/2">
                       <p className="text-sm">Tagged Item As</p>
@@ -116,18 +147,24 @@
               <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Asset</span></Button>
             </div>
           </div>
+          <div className="mt-5">
+            <p className="text-lg font-semibold">Assigned To</p>
+          </div>
           <div className="flex flex-row w-3/4 space-x-5 mt-3">
             <div className="space-y-2 w-1/3">
               <p className="text-sm">Name</p>
-              <Input className="focus:border-none" />
+              <Input className="focus:border-none" value={selectedName} readOnly disabled />
             </div>
             <div className="space-y-2 w-1/3">
-              <p className="text-sm">Employee Number</p>
-              <Input className="focus:border-none" />
-            </div>
-            <div className="space-y-2 w-1/3">
-              <p className="text-sm">Cost Center Code</p>
-              <Input className="focus:border-none" />
+              <p className="text-sm">
+                {selectedType === "store" ? "Cost Center Code" : "Employee ID"}
+              </p>
+              <Input
+                className="focus:border-none text-black"
+                value={getCodeOrId()}
+                readOnly
+                disabled
+              />
             </div>
           </div>
           <div className="overflow-y-auto mt-5" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>

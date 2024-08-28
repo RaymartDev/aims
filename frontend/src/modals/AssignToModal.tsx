@@ -45,7 +45,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                     <div className="flex flex-col justify-start mt-5 space-y-2">
                         <div>
                             <Label htmlFor="firstField">
-                                {selectedOption === 'employee' ? 'Employee Number' : 'Cost Center'}
+                                {selectedOption === 'employee' ? 'Employee Number' : 'Cost Center Number'}
                             </Label>
                             <Input
                                 id="firstField"
