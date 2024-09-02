@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findDepartmentById, findDepartmentByName, insertDepartment, listDepartments, searchDepartmentByName, updateDepartment } from './service';
 import { Department } from '@prisma/client';
+import { findDepartmentById, findDepartmentByName, insertDepartment, listDepartments, searchDepartmentByName, updateDepartment } from './service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const findDepartment = await findDepartmentByName(req.body.department || '');
+    const findDepartment = await findDepartmentByName(req.body.company);
     if (findDepartment) {
-      return res.status(400).json({ message: 'Department with that name already exists' });
+      return res.status(200).json({ message: 'Company with that name already exists' });
     }
+
     const newDepartment = await insertDepartment({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newDepartment) {
-      res.status(200).json({ department: newDepartment, message: 'Successfully created department' });
+      res.status(200).json({ company: newDepartment, message: 'Successfully created department' });
     }
   } catch (err) {
     next(err);
@@ -27,8 +28,9 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
     }
     const department = await findDepartmentById(parseInt(id));
     if (!department) {
-      return res.status(400).json({ message: 'Department could not be found!' });
+      return res.status(400).json({ message: 'Department not found' });
     }
+
     res.status(200).json( { department, message: 'Successfully found department' });
   } catch (err) {
     next(err);
@@ -41,14 +43,15 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     if (!id) {
       return res.status(400).json({ message: 'Department ID is required!' });
     }
+
     const findDepartment = await findDepartmentById(parseInt(id));
     if (!findDepartment) {
-      return res.status(400).json({ message: 'Department could not be found!' });
+      return res.status(400).json({ message: 'Department not found' });
     }
 
     const newDepartment = await updateDepartment({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newDepartment) {
-      res.status(200).json({ department: newDepartment, message: 'Successfully updated department' });
+      res.status(200).json({ company: newDepartment, message: 'Successfully updated department' });
     }
   } catch (err) {
     next(err);
@@ -58,11 +61,10 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const { name } = req.query;
-    
+
     if (!name || typeof name !== 'string') {
       return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
     }
-
     const departments: Department[] = await searchDepartmentByName(name as string);
     if (departments.length > 0) {
       res.status(200).json({ departments, message: 'Successfully found departments' });
@@ -71,7 +73,6 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     next(err);
   }
 };
-
 
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
