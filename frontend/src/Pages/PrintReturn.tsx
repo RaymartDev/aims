@@ -113,45 +113,45 @@ function Downloadpdf() {
           <div className="text-sm px-24 mt-[-8px] flex gap-32">
             <input
               type="text"
-              className="bg-transparent text-[12px]"
+              className="bg-transparent text-[12px] border-b border-black"
             />
             <input
               type="text"
-              className="bg-transparent text-[12px]"
+              className="bg-transparent text-[12px] border-b border-black"
             />
           </div>
           <div className="flex gap-16 pt-4">
             <div className="ml-28">
               <input
                 type="text"
-                className="bg-transparent text-[12px] w-[250px]"
+                className="bg-transparent text-[12px] w-[250px] border-b border-black"
               />
             </div>
-            <div className="ml-[-110px]">
+            <div className="ml-[-50px]">
               <input
                 type="text"
-                className="bg-transparent text-[12px]"
+                className="bg-transparent text-[12px] border-b border-black"
               />
             </div>
             <div>
               <input
                 type="text"
-                className="bg-transparent text-[12px]"
+                className="bg-transparent text-[12px] border-b border-black"
               />
             </div>
           </div>
           <div className="flex justify-between pt-4">
               <div className="flex pl-6 gap-8">
-                <input type="text" className="w-[75px] text-[12px] px-1"/>
-                <input type="text" className="w-[75px] text-[12px] px-2"/>
+                <input type="text" className="w-[75px] text-[12px] px-1 border-black border-b"/>
+                <input type="text" className="w-[75px] text-[12px] px-2 border-black border-b"/>
               </div>
               <div className="flex pl-20 gap-8">
-                <input type="text" className="w-[75px] text-[12px] px-1"/>
-                <input type="text" className="w-[75px] text-[12px] px-2"/>
+                <input type="text" className="w-[75px] text-[12px] px-1 border-b border-black"/>
+                <input type="text" className="w-[75px] text-[12px] px-2 border-b border-black"/>
               </div>
               <div className="flex pl-8 gap-8">
-                <input type="text" className="w-[75px] text-[12px] px-1"/>
-                <input type="text" className="w-[75px] text-[12px] px-2"/>
+                <input type="text" className="w-[75px] text-[12px] px-1 border-b border-black"/>
+                <input type="text" className="w-[75px] text-[12px] px-2 border-b border-black"/>
               </div>
           </div>
         </div>
