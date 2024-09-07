@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import KFC from '../../images/KFC_LOGO.png';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { BarChart, 
   Warehouse, 
   UsersRound, 
@@ -22,10 +22,20 @@ import { BarChart,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { useAppDispatch } from '@/store/store';
+import { logout } from '@/slices/userSlice';
+import { toast } from 'react-toastify';
 
 function Sidebar() {
   const [openItem, setOpenItem] =  useState<string | undefined>(undefined);
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    toast.success('Successfully logged out');
+    setTimeout(() => {
+      dispatch(logout());
+    }, 1000);
+  }
 
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
@@ -225,7 +235,7 @@ function Sidebar() {
           </li>
         </ul>
       </nav> 
-      <Button onClick={() => navigate("/login")} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream">
+      <Button onClick={(e) => handleLogout(e)} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream">
         <LogOut /><span className="sm:hidden xl:inline">Logout</span>
       </Button>    
     </div>

@@ -14,6 +14,7 @@ import AcknowledgementReceipt from './pages/Return'
 import Company from './pages/Company'
 import Department from './pages/Department'
 import ChangePassword from './pages/ChangePassword'
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -40,7 +41,7 @@ function App() {
             <Route path="/company" element={<Company />} />
             <Route path="/department" element={<Department />} />
           {/*Settings */}
-          <Route path='/changepassword' element={<ChangePassword/>}/>
+            <Route path='/changepassword' element={<ChangePassword/>}/>
           </Route>
       </ Routes>
     </ BrowserRouter>

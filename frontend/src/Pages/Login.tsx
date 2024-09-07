@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import {
@@ -20,8 +21,15 @@ import {
   LockKeyhole,
   Eye,
   EyeOff
-} from 'lucide-react'
+} from 'lucide-react';
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import { getVersion } from "@/lib/utils";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useNavigate } from "react-router-dom";
+import { login } from "@/slices/userSlice";
+import { jwtDecode } from 'jwt-decode';
 
 const formSchema = z.object({
   username: z.string()
@@ -31,6 +39,16 @@ const formSchema = z.object({
 });
 
 function Login() {
+
+  const user = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (user.isLoggedIn) {
+      navigate('/');
+    }
+  }, [user.isLoggedIn, navigate])
+  
   const { isPasswordVisible, togglePasswordVisibility } = useTogglePasswordVisibility();
   const form = useForm({ 
     resolver: zodResolver(formSchema), 
@@ -39,24 +57,56 @@ function Login() {
     }
   });
 
-  const onSubmit = async (data: unknown) => {
+  interface DecodedToken {
+    name: string | null;
+    username: string | null;
+    admin: boolean;
+  }
+
+  const getDecodedToken = (token: string) => {
+    return token ? jwtDecode<DecodedToken>(token) : null;
+  };
+
+  const onSubmit = async (data: { username: string; password: string }) => {
     try {
       await form.trigger();
       if (form.formState.isValid) {
-        console.log("Form submitted", data);
+        const response = await axios.post(`${getVersion()}/user/login`, {
+          username: data.username,
+          password: data.password,
+        });
+
+        if (response.status >= 200 && response.status < 300) {
+          const decodedToken = getDecodedToken(response.data.token);
+          toast.success(response.data.message);
+          setTimeout(() => {
+            dispatch(login(
+              {
+                name: decodedToken?.name || '', 
+                username: decodedToken?.username || '', 
+                isAdmin: decodedToken?.admin || false, 
+                token: response.data.token as string || ''
+              }
+            ));
+          }, 1000);
+        }
       }
     } catch (error) {
-      console.error("Form submission error:", error);
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || 'Something went wrong');
+      } else {
+        toast.error('Something went wrong')
+        console.error("Form submission error:", error);
+      }
     }
   };
-
-  const navigate = useNavigate();
 
   return (
 
     <div
       className="h-screen flex justify-center items-center bg-cover bg-center bg-gradient-to-t from-purple-600 to-pink-300"
     >
+      <ToastContainer />
       
       <div className="bg-white w-[80%] lg:w-[1000px] h-[80%] py-10 rounded-xl shadow-xl font-poppins flex justify-center items-center">
         <div className="hidden lg:block"><img src={loginImage} alt="" /></div>
@@ -112,7 +162,7 @@ function Login() {
               )}
             />
             <div className="flex justify-center items-center">
-              <Button type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6" onClick={()=> navigate("/")}>
+              <Button type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6" onClick={() => onSubmit}>
                 Login
               </Button>
             </div>
