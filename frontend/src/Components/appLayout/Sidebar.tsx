@@ -34,7 +34,7 @@ function Sidebar() {
     toast.success('Successfully logged out');
     setTimeout(() => {
       dispatch(logout());
-    }, 1000);
+    }, 700);
   }
 
   return (

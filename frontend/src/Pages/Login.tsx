@@ -88,7 +88,7 @@ function Login() {
                 token: response.data.token as string || ''
               }
             ));
-          }, 1000);
+          }, 700);
         }
       }
     } catch (error) {
