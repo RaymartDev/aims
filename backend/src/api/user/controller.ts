@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { generateHashedPassword, generateToken } from '../../lib';
-import { createUser, findUserByUsername, updateUser } from './service';
+import { createUser, findUserByEmployeeId, findUserByUsername, updateUser } from './service';
 import UserRequest from '../../interfaces/UserRequest';
 import { findDepartmentByName } from '../department/service';
 import { findEmployeeById } from '../employee/service';
@@ -20,14 +20,32 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
     department,
     division,
     cost_center_code,
+    admin,
   } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' });
+  if (!username) {
+    return res.status(400).json({ message: 'Username is required!' });
+  }
+  if (!password) {
+    return res.status(400).json({ message: 'Password is required!' });
   }
 
   if (!req.user?.admin) {
     return res.status(404).json({ message: 'You are not permitted to do that!' });
+  }
+
+  if (!registrationType) {
+    return res.status(401).json({ message: 'Registration type must be specified!' });
+  }
+
+  if (!employee_id && !store_id) {
+    if (registrationType === 'employee') {
+      return res.status(401).json({ message: 'Please enter an Employee ID' });
+    }
+    if (registrationType === 'store') {
+      return res.status(401).json({ message: 'Please enter an Store ID' });
+    }
+    return res.status(401).json({ message: 'Please enter a valid registration type' });
   }
 
   try {
@@ -43,16 +61,40 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
     }
 
     if (registrationType === 'employee') {
-      const employee = await findEmployeeById(employee_id);
+      const employee = await findEmployeeById(parseInt(employee_id));
       if (!employee) {
         return res.status(404).json({ message: 'Employee does not exist' });
+      }
+
+      const findRegisteredStatus = await findUserByEmployeeId(parseInt(employee_id));
+      if (findRegisteredStatus) {
+        return res.status(401).json({ message: 'This employee is already registered' });
+      }
+      if (!employee_number) {
+        return res.status(401).json({ message: 'Employee number is required!' });
+      }
+      if (!name) {
+        return res.status(401).json({ message: 'Name is required!' });
+      }
+      if (!admin) {
+        return res.status(401).json({ message: 'Admin status is required!' });
       }
     }
     
     if (registrationType === 'store') {
-      const store = await findStoreById(store_id);
+      const store = await findStoreById(parseInt(store_id));
       if (!store) {
         return res.status(404).json({ message: 'Store does not exist' });
+      }
+      const findRegisteredStatus = await findUserByEmployeeId(parseInt(store_id));
+      if (findRegisteredStatus) {
+        return res.status(401).json({ message: 'This store is already registered' });
+      }
+      if (!cost_center_code) {
+        return res.status(401).json({ message: 'Cost center code is required!' });
+      }
+      if (!name) {
+        return res.status(401).json({ message: 'Name is required!' });
       }
     }
 
@@ -62,7 +104,7 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
     const newUser = {
       employee_id: registrationType === 'employee' ? employee_id : null,
       store_id: registrationType === 'store' ? store_id : null,
-      role_id: registrationType === 'employee' ? 1 : 2,
+      role_id: registrationType === 'employee' ? (admin === 'y' ? 2 : 1) : 1,
       name,
       username,
       password: hashedPassword,
@@ -123,8 +165,20 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     // create token
-    const token =  generateToken({ id: findUser.id, username: findUser.username, name: findUser.name });
-    res.status(200).json({ token, message: 'Successfully logged in' });
+    const token =  generateToken({ 
+      id: findUser.id, 
+      username: findUser.username, 
+      name: findUser.name, 
+      admin: findUser.role?.name === 'Administrator',
+      employee_number: findUser.employee_no,
+      cost_code: findUser.cost_center_code,
+    });
+    res.cookie('token', token, {
+      httpOnly: true,   // Prevents JavaScript access
+      secure: process.env.NODE_ENV === 'production',  // Use HTTPS in production
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    });
+    res.status(200).json({ message: 'Successfully logged in', token });
   } catch (err) {
     next(err);
   }

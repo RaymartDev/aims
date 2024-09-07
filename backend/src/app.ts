@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import * as middlewares from './middlewares';
 import api from './api';
@@ -11,11 +12,19 @@ require('dotenv').config();
 
 const app = express();
 
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' ? 'http://localhost' : '*', // Allow all origins in development, restrict in production
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all basic request methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+  credentials: true, // Allow cookies to be sent if needed
+};
+
 app.use(morgan('dev'));
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.get<{}, MessageResponse>('/', (req, res) => {
   res.json({

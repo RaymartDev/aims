@@ -1,10 +1,17 @@
-import { User } from '@prisma/client';
+import { User, UserRole } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
-export async function findUserByUsername(username: string): Promise<User | null> {
+interface UserWRole extends User {
+  role?: UserRole;
+}
+
+export async function findUserByUsername(username: string): Promise<UserWRole | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { username },
+      include: {
+        role: true,
+      },
     });
     return user;
   } catch (error) {
@@ -32,6 +39,28 @@ export async function updateUser(username: string, props: any): Promise<User | n
       data: { ...props }, // New data to update
     });
     return updatedUser;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function findUserByEmployeeId(id: number): Promise<User | null> {
+  try {
+    const user = await prisma.user.findFirst({
+      where: { employee_id: id }, // Condition to find the user
+    });
+    return user;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function findUserByStoreId(id: number): Promise<User | null> {
+  try {
+    const user = await prisma.user.findFirst({
+      where: { store_id: id }, // Condition to find the user
+    });
+    return user;
   } catch (error) {
     throw new Error('Database error');
   }

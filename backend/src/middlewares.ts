@@ -25,13 +25,11 @@ interface JwtPayload {
 }
 
 export function authenticateToken(req: UserRequest, res: Response, next: NextFunction) {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.token;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!token) {
     return res.status(401).json({ message: 'Access token missing or invalid' });
   }
-
-  const token = authHeader.split(' ')[1];
 
   try {
     // Verify token using the promisified version
@@ -41,6 +39,6 @@ export function authenticateToken(req: UserRequest, res: Response, next: NextFun
     req.user = payload;
     next();
   } catch (err) {
-    res.status(403).json({ message: 'Invalid or expired token' });
+    res.status(403).json({ message: 'Invalid or expired token', error: process.env.NODE_ENV === 'production' ? ''  : err });
   }
 }
