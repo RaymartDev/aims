@@ -54,6 +54,7 @@ function AddEmployeeModal ({ addEmployee, onClose }: AddEmployeeModalProps) {
                     registered_status: false,
                 })
             }
+            onClose();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');

@@ -83,7 +83,16 @@ export async function searchStoreByCostCode(cost_code: string): Promise<Store[]>
   }
 }
 
-export async function listStores(page: number, limit: number): Promise<Store[]> {
+interface StoreType {
+  id: number;
+  company_name: string;
+  name: string;
+  cost_center_code: string;
+  address: string;
+  registered_status: boolean;
+}
+
+export async function listStores(page: number, limit: number): Promise<{ storesFinal: StoreType[], totalPages: number }> {
   try {
     // Get total count for pagination
     const totalStores = await prisma.store.count();
@@ -99,15 +108,34 @@ export async function listStores(page: number, limit: number): Promise<Store[]> 
       page = 1;
     }
 
-    const stores: Store[] = await prisma.store.findMany({
+    const stores = await prisma.store.findMany({
       skip: (page - 1) * limit,
       take: limit,
       orderBy: {
         name: 'asc',
       },
+      include: {
+        company: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
+    if (stores && stores.length > 0) {
+      const storesFinal: StoreType[] = stores.map((store) => ({
+        id: store.id,
+        company_name: store.company.name,
+        name: store.name,
+        cost_center_code: store.cost_center_code,
+        address: store.address,
+        registered_status: store.registered,
+      }));
+
+      return { storesFinal: storesFinal, totalPages };
+    }
     
-    return stores;
+    return { storesFinal: [], totalPages };
   } catch (error) {
     throw new Error('Database error');
   }

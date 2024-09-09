@@ -9,7 +9,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
   try {
     const { 
       company,
-      store,
+      name,
       cost_center_code,
       address,
     } = req.body;
@@ -26,10 +26,10 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
 
     const newStore = await insertStore({ 
       company_id: companyObj.id,
-      store,
+      name,
       cost_center_code,
       address,
-      registered: 0,
+      registered: false,
       modified_by_id: req.user?.id || 1,
     });
     if (newStore) {
@@ -69,7 +69,19 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Store not found!' });
     }
 
-    const newStore = await updateStore({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
+    const updateData: Record<string, any> = {
+      modified_by_id: req.user?.id || 1, // Always include the user ID
+    };
+
+    if (req.body.company_name) {
+      const findCompany = await findCompanyByName(req.body.company_name);
+      if (!findCompany) {
+        return res.status(400).json({ message: 'Company not found' });
+      }
+      updateData.company_id = findCompany.id;
+    }
+
+    const newStore = await updateStore({ ...updateData }, parseInt(id));
     
     if (newStore) {
       res.status(200).json({ store: newStore, message: 'Successfully updated store' });
@@ -99,13 +111,18 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
     if (isNaN(page) || page < 1) {
       page = 1;
     }
 
-    const stores: Store[] = await listStores(page, 10);
+    const stores = await listStores(page, 10);
     if (stores) {
-      res.status(200).json({ stores, message: 'Successfully retrieved stores' });
+      res.status(200).json({ stores: stores.storesFinal, message: 'Successfully retrieved stores', misc: {
+        page,
+        limit,
+        totalPages: stores.totalPages,
+      } });
     }
   } catch (err) {
     next(err);

@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { generateHashedPassword, generateToken } from '../../lib';
-import { createUser, findUserByEmployeeId, findUserByUsername, updateUser } from './service';
+import { createUser, findUserByEmployeeId, findUserByStoreId, findUserByUsername, updateUser } from './service';
 import UserRequest from '../../interfaces/UserRequest';
 import { findDepartmentByName } from '../department/service';
 import { findEmployeeById, updateEmployeeRegistration } from '../employee/service';
@@ -86,7 +86,7 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
       if (!store) {
         return res.status(404).json({ message: 'Store does not exist' });
       }
-      const findRegisteredStatus = await findUserByEmployeeId(parseInt(store_id));
+      const findRegisteredStatus = await findUserByStoreId(parseInt(store_id));
       if (findRegisteredStatus) {
         return res.status(401).json({ message: 'This store is already registered' });
       }

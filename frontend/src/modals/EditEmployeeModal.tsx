@@ -40,7 +40,6 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
           });
           if (response.status >= 200 && response.status < 300) {
             toast.success(response.data?.message || 'Successfully updated employee');
-            onClose();
             updateEmployee(employee?.id || 1, {
                 id: employee?.id || 1,
                 first_name: firstName,
@@ -54,6 +53,7 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
                 registered_status: response.data?.employee.registered,
             });
           }
+          onClose();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');

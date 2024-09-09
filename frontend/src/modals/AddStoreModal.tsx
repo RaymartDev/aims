@@ -1,14 +1,56 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import { useState } from "react";
+import type StoreType from "@/interface/store";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
 
 interface AddStoreModalProps {
-    open: boolean;
     onClose: () => void;
+    addStore: (store: StoreType | null) => void;
 }
 
-function AddStoreModal({ open, onClose }: AddStoreModalProps) {
-    if (!open) return null;
+function AddStoreModal({ onClose, addStore }: AddStoreModalProps) {
+    const [companyName, setCompanyName] = useState('');
+    const [name, setName] = useState('');
+    const [costCode, setCostCode] = useState('');
+    const [address, setAddress] = useState('');
+
+    const handleSave = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${getVersion()}/store`, {
+                company: companyName,
+                name,
+                cost_center_code: costCode,
+                address: address,
+            });
+            if (response.status >= 200 && response.status < 300) {
+                toast.success(response.data?.message || 'Successfully created store');
+                addStore({
+                    id: response.data?.store?.id || 1,
+                    company_name: companyName,
+                    name,
+                    cost_center_code: costCode,
+                    address,
+                    registered_status: false,
+                })
+            }
+            onClose();
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                toast.error(err.response?.data?.message || 'Something went wrong');
+              } else {
+                toast.error('Something went wrong')
+              }
+        }
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">
@@ -20,24 +62,24 @@ function AddStoreModal({ open, onClose }: AddStoreModalProps) {
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Company</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Store Name</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={name} onChange={(e) => setName(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Cost Center Code</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={costCode} onChange={(e) => setCostCode(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Address</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={address} onChange={(e) => setAddress(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
+                    <Button onClick={(e) => handleSave(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
         </div>

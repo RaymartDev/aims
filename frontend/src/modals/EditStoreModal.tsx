@@ -1,14 +1,57 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import type StoreType from "@/interface/store";
+import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { getVersion } from "@/lib/utils";
 
 interface EditStoreModalProps {
-    open: boolean;
+    store: StoreType | null;
     onClose: () => void;
+    updateStore: (id: number, store: StoreType | null) => void;
 }
 
-function EditStoreModal({ open, onClose }: EditStoreModalProps) {
-    if (!open) return null;
+function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
+    const [companyName, setCompanyName] = useState(store?.company_name || '');
+    const [name, setName] = useState(store?.name || '');
+    const [costCode, setCostCode] = useState(store?.cost_center_code || '');
+    const [address, setAddress] = useState(store?.address || '');
+
+    const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`${getVersion()}/store/update/${store?.id || 1}`, {
+                company_name: companyName,
+                name,
+                cost_center_code: costCode,
+                address: address,
+            });
+            if (response.status >= 200 && response.status < 300) {
+                toast.success(response.data?.message || 'Successfully added store');
+                updateStore(store?.id || 1, {
+                    id: store?.id || 1,
+                    company_name: companyName,
+                    name,
+                    cost_center_code: costCode,
+                    address,
+                    registered_status: response.data?.registered,
+                })
+            }
+            onClose();
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                toast.error(err.response?.data?.message || 'Something went wrong');
+              } else {
+                toast.error('Something went wrong')
+              }
+        }
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">
@@ -20,24 +63,24 @@ function EditStoreModal({ open, onClose }: EditStoreModalProps) {
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Company</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Store Name</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={name} onChange={(e) => setName(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Cost Center Code</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={costCode} onChange={(e) => setCostCode(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Address</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={address} onChange={(e) => setAddress(e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
+                    <Button onClick={(e) => handleUpdate(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
         </div>
