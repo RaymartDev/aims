@@ -16,11 +16,8 @@ const supplierSlice = createSlice({
                 state[index] = action.payload;
             }
         },
-        findSupplier: (state, action: PayloadAction<number>) => {
-            return state.filter(supplier => supplier.id === action.payload);
-        },
     }
 })
 
-export const { addSupplier, updateSupplier, findSupplier } = supplierSlice.actions;
+export const { addSupplier, updateSupplier } = supplierSlice.actions;
 export default supplierSlice.reducer;

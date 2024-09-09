@@ -16,11 +16,8 @@ const departmentSlice = createSlice({
                 state[index] = action.payload;
             }
         },
-        findDepartment: (state, action: PayloadAction<number>) => {
-            return state.filter(department => department.id === action.payload);
-        },
     }
 })
 
-export const { addDepartment, updateDepartment, findDepartment } = departmentSlice.actions;
+export const { addDepartment, updateDepartment} = departmentSlice.actions;
 export default departmentSlice.reducer;

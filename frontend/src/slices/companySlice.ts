@@ -16,11 +16,8 @@ const companySlice = createSlice({
                 state[index] = action.payload;
             }
         },
-        findCompany: (state, action: PayloadAction<number>) => {
-            return state.filter(company => company.id === action.payload);
-        },
     }
 })
 
-export const { addCompany, updateCompany, findCompany } = companySlice.actions;
+export const { addCompany, updateCompany } = companySlice.actions;
 export default companySlice.reducer;
