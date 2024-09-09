@@ -73,13 +73,17 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       modified_by_id: req.user?.id || 1, // Always include the user ID
     };
 
-    if (req.body.company_name) {
-      const findCompany = await findCompanyByName(req.body.company_name);
+    const { company_name, ...restOfBody } = req.body;
+    
+    if (company_name) {
+      const findCompany = await findCompanyByName(company_name);
       if (!findCompany) {
         return res.status(400).json({ message: 'Company not found' });
       }
       updateData.company_id = findCompany.id;
     }
+
+    Object.assign(updateData, restOfBody);
 
     const newStore = await updateStore({ ...updateData }, parseInt(id));
     
@@ -116,7 +120,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       page = 1;
     }
 
-    const stores = await listStores(page, 10);
+    const stores = await listStores(page, limit);
     if (stores) {
       res.status(200).json({ stores: stores.storesFinal, message: 'Successfully retrieved stores', misc: {
         page,

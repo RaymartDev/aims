@@ -112,8 +112,6 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
     Object.assign(updateData, restOfBody);
 
-    console.log(updateData);
-
     const newEmployee = await updateEmployee(updateData, parseInt(id));
     if (newEmployee) {
       res.status(200).json({ employee: newEmployee, message: 'Successfully updated employee' });

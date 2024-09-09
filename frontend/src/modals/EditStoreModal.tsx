@@ -23,6 +23,13 @@ function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
     const [costCode, setCostCode] = useState(store?.cost_center_code || '');
     const [address, setAddress] = useState(store?.address || '');
 
+    const clearData = () => {
+        setCompanyName('');
+        setName('');
+        setCostCode('');
+        setAddress('');
+    }
+
     const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         try {
@@ -43,6 +50,7 @@ function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
                     registered_status: response.data?.registered,
                 })
             }
+            clearData();
             onClose();
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -79,7 +87,10 @@ function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => {
+                        onClose();
+                        clearData();
+                    }}><span>Cancel</span></Button>
                     <Button onClick={(e) => handleUpdate(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>

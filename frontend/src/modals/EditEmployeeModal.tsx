@@ -26,6 +26,16 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
     const [departmentName, setDepartmentName] = useState(employee?.department_name || '');
     const [division, setDivision] = useState(employee?.division || '');
 
+    const clearData = () => {
+        setFirstName('');
+        setLastName('');
+        setEmployeeNo('');
+        setCostCode('');
+        setCompanyName('');
+        setDepartmentName('');
+        setDivision('');
+    }
+
     const handleUpdate = async(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.preventDefault();
         try {
@@ -54,6 +64,7 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
             });
           }
           onClose();
+          clearData();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');
@@ -112,6 +123,7 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={(e) => {
                         e.preventDefault();
                         onClose();
+                        clearData();
                     }}><span>Cancel</span></Button>
                     <Button onClick={(e) => handleUpdate(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>

@@ -26,6 +26,17 @@ function AddEmployeeModal ({ addEmployee, onClose }: AddEmployeeModalProps) {
     const [departmentName, setDepartmentName] = useState('');
     const [division, setDivision] = useState('');
 
+    const clearData = () => {
+        setFirstName('');
+        setLastName('');
+        setEmployeeNo('');
+        setCostCode('');
+        setCompanyName('');
+        setDateHired('');
+        setDepartmentName('');
+        setDivision('');
+    }
+
     const createEmployee = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.preventDefault();
         try {
@@ -55,6 +66,7 @@ function AddEmployeeModal ({ addEmployee, onClose }: AddEmployeeModalProps) {
                 })
             }
             onClose();
+            clearData();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');
@@ -114,7 +126,10 @@ function AddEmployeeModal ({ addEmployee, onClose }: AddEmployeeModalProps) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => {
+                        onClose();
+                        clearData();
+                    }}><span>Cancel</span></Button>
                     <Button onClick={(e) => createEmployee(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>

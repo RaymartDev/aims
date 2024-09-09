@@ -1,13 +1,17 @@
 export default interface Supplier {
     id: number;
     supplier_code: string;
-    company_id: number;
+    company_name: string;
     address: string;
     contract_term: string;
     tin_number: string;
-    status_id: number;
-    contact_id: number;
-    effective_on: Date;
-    modified_on: Date;
-    modified_by_jd: number;
-}
+    contact_person: string;
+    email: string;
+    mobile_number: string;
+    business_number: string;
+    teleFax: string;
+    cityTown: string;
+    province: string;
+    zip: string;
+    remarks: string;
+  }

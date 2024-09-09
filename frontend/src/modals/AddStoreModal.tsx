@@ -21,6 +21,13 @@ function AddStoreModal({ onClose, addStore }: AddStoreModalProps) {
     const [name, setName] = useState('');
     const [costCode, setCostCode] = useState('');
     const [address, setAddress] = useState('');
+    
+    const clearData = () => {
+        setCompanyName('');
+        setName('');
+        setCostCode('');
+        setAddress('');
+    }
 
     const handleSave = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -43,6 +50,7 @@ function AddStoreModal({ onClose, addStore }: AddStoreModalProps) {
                 })
             }
             onClose();
+            clearData();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');
@@ -78,7 +86,10 @@ function AddStoreModal({ onClose, addStore }: AddStoreModalProps) {
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => {
+                        onClose();
+                        clearData();
+                    }}><span>Cancel</span></Button>
                     <Button onClick={(e) => handleSave(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useEffect, useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
@@ -9,76 +12,152 @@ import AddSupplierModal from "@/modals/AddSupplierModal";
 import AddSupplierModal2 from "@/modals/AddSupplierModal2";
 import EditSupplierModal from "@/modals/EditSupplierModal";
 import EditSupplierModal2 from "@/modals/EditSupplierModal2";
+import type SupplierType from "@/interface/supplier";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
 
-const suppliers = [
-    { id: 1, supplierNumber: "100230456", companyName: "TasteMasters", contactPerson: "Leansel Nico", businessNumber: "503604218", mobileNumber: "09481298472", dateHired: "06/17/24" },
-    { id: 2, supplierNumber: "100230457", companyName: "Flavor Fusion", contactPerson: "Sarah Johnson", businessNumber: "503604219", mobileNumber: "09481298473", dateHired: "05/15/23" },
-    { id: 3, supplierNumber: "100230458", companyName: "Epicurean Enterprises", contactPerson: "Michael Brown", businessNumber: "503604220", mobileNumber: "09481298474", dateHired: "07/12/22" },
-    { id: 4, supplierNumber: "100230459", companyName: "QuickBite Inc", contactPerson: "Emily Davis", businessNumber: "503604221", mobileNumber: "09481298475", dateHired: "03/18/21" },
-    { id: 5, supplierNumber: "100230460", companyName: "Savory Delights", contactPerson: "James Wilson", businessNumber: "503604222", mobileNumber: "09481298476", dateHired: "08/22/23" },
-    { id: 6, supplierNumber: "100230461", companyName: "Foodie Ventures", contactPerson: "Olivia Martinez", businessNumber: "503604223", mobileNumber: "09481298477", dateHired: "09/30/21" },
-    { id: 7, supplierNumber: "100230462", companyName: "InnoWave Corp", contactPerson: "William Garcia", businessNumber: "503604224", mobileNumber: "09481298478", dateHired: "01/10/22" },
-    { id: 8, supplierNumber: "100230463", companyName: "Culinary Creations", contactPerson: "Sophia Rodriguez", businessNumber: "503604225", mobileNumber: "09481298479", dateHired: "04/05/20" },
-    { id: 9, supplierNumber: "100230464", companyName: "Gourmet Group", contactPerson: "Benjamin Harris", businessNumber: "503604226", mobileNumber: "09481298480", dateHired: "11/14/22" },
-    { id: 10, supplierNumber: "100230465", companyName: "Urban Eats", contactPerson: "Ava Clark", businessNumber: "503604227", mobileNumber: "09481298481", dateHired: "06/25/24" },
-    { id: 11, supplierNumber: "100230466", companyName: "TasteMakers", contactPerson: "Lucas Lewis", businessNumber: "503604228", mobileNumber: "09481298482", dateHired: "02/09/23" },
-    { id: 12, supplierNumber: "100230467", companyName: "Gourmet Solutions", contactPerson: "Mia Walker", businessNumber: "503604229", mobileNumber: "09481298483", dateHired: "08/11/23" },
-    { id: 13, supplierNumber: "100230468", companyName: "Cuisine Concepts", contactPerson: "Alexander Hall", businessNumber: "503604230", mobileNumber: "09481298484", dateHired: "10/19/22" },
-    { id: 14, supplierNumber: "100230469", companyName: "Dining Dynamics", contactPerson: "Isabella Young", businessNumber: "503604231", mobileNumber: "09481298485", dateHired: "03/21/21" },
-    { id: 15, supplierNumber: "100230470", companyName: "Palate Pleasers", contactPerson: "Henry King", businessNumber: "503604232", mobileNumber: "09481298486", dateHired: "05/17/22" },
-    { id: 16, supplierNumber: "100230471", companyName: "Feast Factory", contactPerson: "Amelia Scott", businessNumber: "503604233", mobileNumber: "09481298487", dateHired: "01/04/24" },
-    { id: 17, supplierNumber: "100230472", companyName: "Cuisine Craft", contactPerson: "Elijah Green", businessNumber: "503604234", mobileNumber: "09481298488", dateHired: "07/23/22" },
-    { id: 18, supplierNumber: "100230473", companyName: "FoodQuest Ltd.", contactPerson: "Charlotte Adams", businessNumber: "503604235", mobileNumber: "09481298489", dateHired: "12/09/21" },
-    { id: 19, supplierNumber: "100230474", companyName: "Tasty Ventures", contactPerson: "Daniel Baker", businessNumber: "503604236", mobileNumber: "09481298490", dateHired: "09/14/23" },
-    { id: 20, supplierNumber: "100230475", companyName: "Flavor Haven", contactPerson: "Harper Phillips", businessNumber: "503604237", mobileNumber: "09481298491", dateHired: "06/07/22" },
-];
 
 
 function Supplier() {
+    const [suppliers, setSuppliers] = useState<SupplierType[]>([]);
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openNextAddModal, setOpenNextAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openNextEditModal, setOpenNextEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-
-    const headerHeight = 72;
-    const itemHeight = 50;
-
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight < 0) return 0;
-        return Math.floor(availableHeight / itemHeight);
-    };
-
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
+    const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
+    const [maxPage, setMaxPage] = useState(1);
+    const [formData, setFormData] = useState({
+        supplierCode: '',
+        companyName: '',
+        address: '',
+        contractTerm: '',
+        tinNumber: '',
+        contactPerson: '',
+        emailAddress: '',
+        mobileNumber: '',
+        businessTel: '',
+        teleFaxNumber: '',
+        cityTown: '',
+        province: '',
+        zipCode: '',
+        remarks: '',
+    })
+
+    const [editFormData, setEditFormData] = useState({
+        supplierCode: '',
+        companyName: '',
+        address: '',
+        contractTerm: '',
+        tinNumber: '',
+        contactPerson: '',
+        emailAddress: '',
+        mobileNumber: '',
+        businessTel: '',
+        teleFaxNumber: '',
+        cityTown: '',
+        province: '',
+        zipCode: '',
+        remarks: '',
+    })
+    const itemsPerPage = 17;
 
     useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
+        const fetchData = async () => {
+            try {
+              const response = await axios.get(`${getVersion()}/supplier/list?limit=${itemsPerPage}&page=${currentPage}`);
+              if (response.status >= 200 && response.status < 300) {
+                setSuppliers(response.data.suppliers); // Update state with employee data
+                setMaxPage(response.data.misc.totalPages);
+            }
+            } catch (e) {
+              console.error(e);
+            }
         };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+        fetchData(); // Call the fetch function
+    }, [itemsPerPage, currentPage])
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
+    const addSupplier = (supplier: SupplierType | null) => {
+        if (supplier) {
+            setSuppliers(prevSuppliers => [...prevSuppliers, supplier]);
+        }
+    };
 
-    const filteredSupplier = suppliers.filter(suppliers =>
-        suppliers.supplierNumber.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const clearAddData = () => {
+        setFormData({
+            supplierCode: '',
+            companyName: '',
+            address: '',
+            contractTerm: '',
+            tinNumber: '',
+            contactPerson: '',
+            emailAddress: '',
+            mobileNumber: '',
+            businessTel: '',
+            teleFaxNumber: '',
+            cityTown: '',
+            province: '',
+            zipCode: '',
+            remarks: '',
+        })
+    }
 
-    const indexOfLastSupplier = currentPage * itemsPerPage;
-    const indexOfFirstSupplier = indexOfLastSupplier - itemsPerPage;
-    const currentSupplier = filteredSupplier.slice(indexOfFirstSupplier, indexOfLastSupplier);
+    const clearEditData = () => {
+        setEditFormData({
+            supplierCode: '',
+            companyName: '',
+            address: '',
+            contractTerm: '',
+            tinNumber: '',
+            contactPerson: '',
+            emailAddress: '',
+            mobileNumber: '',
+            businessTel: '',
+            teleFaxNumber: '',
+            cityTown: '',
+            province: '',
+            zipCode: '',
+            remarks: '',
+        });
+    }
 
-    const totalPages = Math.ceil(filteredSupplier.length / itemsPerPage);
+    const setEditSupplierData = (supplier: SupplierType | null) => {
+        if (supplier) {
+            setEditFormData({
+                supplierCode: supplier.supplier_code,
+                companyName: supplier.company_name,
+                address: supplier.address,
+                contractTerm: supplier.contract_term,
+                tinNumber: supplier.tin_number,
+                contactPerson: supplier.contact_person,
+                emailAddress: supplier.email,
+                mobileNumber: supplier.mobile_number,
+                businessTel: supplier.business_number,
+                teleFaxNumber: supplier.teleFax,
+                cityTown: supplier.cityTown,
+                province: supplier.province,
+                zipCode: supplier.zip,
+                remarks: supplier.remarks,
+            });
+            setEditSupplier(supplier);
+        }
+    }
+
+    const updateSupplier = (id: number, supplier: SupplierType | null) => {
+        if (supplier) {
+            const index = suppliers.findIndex(supplier => supplier.id === id);
+            if (index !== -1) {
+                suppliers[index] = supplier;
+                setEditSupplier(null);
+            }
+        }
+    }
+      
 
     const handleNextAddModal = () => {
         setOpenAddModal(false);
@@ -98,6 +177,28 @@ function Supplier() {
     const handleEditBack = () => {
         setOpenNextEditModal(false);
         setOpenEditModal(true);
+    };
+
+    const handleAddDetailChange = (target: string, value: string) => {
+        setFormData({
+          ...formData, // Keep existing state
+          [target]: value, // Dynamically update the field
+        });
+    };
+
+    const getAddDataByKey = (key: string) => {
+      return formData[key as keyof typeof formData] || '';
+    };
+
+    const handleEditDetailChange = (target: string, value: string) => {
+        setEditFormData({
+          ...editFormData, // Keep existing state
+          [target]: value, // Dynamically update the field
+        });
+    };
+
+    const getEditDataByKey = (key: string) => {
+      return editFormData[key as keyof typeof editFormData] || '';
     };
 
 
@@ -128,7 +229,7 @@ function Supplier() {
                             </div>    
                         </div>
                     </div>
-                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${72 + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -137,19 +238,17 @@ function Supplier() {
                                     <TableHead>Contact Person</TableHead>
                                     <TableHead>Business Number</TableHead>
                                     <TableHead>Mobile Number</TableHead>
-                                    <TableHead>Date Hired</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {currentSupplier.map(suppliers => (
-                                    <TableRow key={suppliers.id}>
-                                        <TableCell>{suppliers.supplierNumber}</TableCell>
-                                        <TableCell>{suppliers.companyName}</TableCell>
-                                        <TableCell>{suppliers.contactPerson}</TableCell>
-                                        <TableCell>{suppliers.businessNumber}</TableCell>
-                                        <TableCell>{suppliers.mobileNumber}</TableCell>
-                                        <TableCell>{suppliers.dateHired}</TableCell>
+                                {suppliers.map(supplier => (
+                                    <TableRow key={supplier.id}>
+                                        <TableCell>{supplier.supplier_code}</TableCell>
+                                        <TableCell>{supplier.company_name}</TableCell>
+                                        <TableCell>{supplier.contact_person}</TableCell>
+                                        <TableCell>{supplier.business_number}</TableCell>
+                                        <TableCell>{supplier.mobile_number}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
@@ -158,7 +257,10 @@ function Supplier() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setEditSupplierData(supplier);
+                                                        setOpenEditModal(true);
+                                                    }}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -177,7 +279,7 @@ function Supplier() {
                                     <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
                                 </PaginationItem>
                             )}
-                            {Array.from({ length: totalPages }, (_, index) => (
+                            {Array.from({ length: maxPage }, (_, index) => (
                                 <PaginationItem key={index}>
                                     <PaginationLink
                                         href="#"
@@ -188,7 +290,7 @@ function Supplier() {
                                     </PaginationLink>
                                 </PaginationItem>
                             ))}
-                            {currentPage < totalPages && (
+                            {currentPage < maxPage && (
                                 <PaginationItem>
                                     <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
                                 </PaginationItem>
@@ -197,10 +299,32 @@ function Supplier() {
                     </Pagination>
                 </div>
             </div>
-            <AddSupplierModal open={openAddModal} onClose={() => setOpenAddModal(false)} onNext={handleNextAddModal}/>
-            <AddSupplierModal2 open={openNextAddModal} onClose={() => setOpenNextAddModal(false)} onBack={handleAddBack}/>
-            <EditSupplierModal open={openEditModal} onClose={() => setOpenEditModal(false)} onNext={handleNextEditModal}/>
-            <EditSupplierModal2 open={openNextEditModal} onClose={() => setOpenNextEditModal(false)} onBack={handleEditBack}/>
+            {openAddModal && <AddSupplierModal 
+                onClose={() => setOpenAddModal(false)} 
+                onNext={handleNextAddModal} 
+                getAddDataByKey={getAddDataByKey}
+                handleAddDetailChange={handleAddDetailChange}/>}
+            {openNextAddModal && <AddSupplierModal2 
+                onClose={() => setOpenNextAddModal(false)} 
+                onBack={handleAddBack}
+                getAddDataByKey={getAddDataByKey} 
+                addSupplier={addSupplier}
+                clearAddData={clearAddData}
+                handleAddDetailChange={handleAddDetailChange}/>}
+            {openEditModal && <EditSupplierModal 
+                onClose={() => setOpenEditModal(false)}
+                getEditDataByKey={getEditDataByKey}
+                handleEditDetailChange={handleEditDetailChange}
+                clearEditData={clearEditData}
+                onNext={handleNextEditModal}/>}
+            {openNextEditModal && <EditSupplierModal2 
+                onClose={() => setOpenNextEditModal(false)} 
+                getEditDataByKey={getEditDataByKey}
+                clearEditData={clearEditData}
+                editSupplier={editSupplier}
+                updateSupplier={updateSupplier}
+                handleEditDetailChange={handleEditDetailChange}
+                onBack={handleEditBack}/>}
         </>
     );
 }
