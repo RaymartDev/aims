@@ -86,7 +86,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ materialTypes: materialTypes.materialTypesFinal, message: 'Successfully retrieved material types', misc: {
         page,
         limit,
-        maxPage: materialTypes.maxPage,
+        maxPage: materialTypes.maxPage || 1,
       } });
     }
   } catch (err) {

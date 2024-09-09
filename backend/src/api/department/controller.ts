@@ -87,7 +87,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ departments: departments.departmentsFinal, message: 'Successfully retrieved departments', misc: {
         page,
         limit,
-        maxPage: departments.maxPage,
+        maxPage: departments.maxPage || 1,
       } });
     }
   } catch (err) {

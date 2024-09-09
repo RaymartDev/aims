@@ -105,10 +105,10 @@ export async function listMaterialTypes(page: number, limit: number): Promise<{ 
         description: materialType.description,
       }));
       
-      return { materialTypesFinal, maxPage: totalPages || 1 };
+      return { materialTypesFinal, maxPage: totalPages };
     }
     
-    return { materialTypesFinal: [], maxPage: totalPages || 1 };
+    return { materialTypesFinal: [], maxPage: totalPages };
   } catch (error) {
     throw new Error('Database error');
   }

@@ -122,7 +122,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ materials: materials.materialsFinal, message: 'Successfully retrieved materials', misc: {
         page,
         limit,
-        maxPage: materials.maxPage,
+        maxPage: materials.maxPage || 1,
       } });
     }
   } catch (err) {

@@ -87,7 +87,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ companies: companies.companiesFinal, message: 'Successfully retrieved companies', misc: {
         page,
         limit,
-        maxPage: companies.maxPage,
+        maxPage: companies.maxPage || 1,
       } });
     }
   } catch (err) {

@@ -133,12 +133,12 @@ export const changePassword = async (req: UserRequest, res: Response, next: Next
   try {
     const findUser = await findUserByUsername(req.user?.username || '');
     if (!findUser) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: 'Invalid old password' });
     }
 
     const match = await bcrypt.compare(password, findUser.password);
     if (!match) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: 'Invalid old password' });
     }
 
     const hashedPassword = await generateHashedPassword(newPassword);

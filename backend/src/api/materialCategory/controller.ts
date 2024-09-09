@@ -84,7 +84,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ material_categories: materialCategories.materialCategoriesFinal, message: 'Successfully retrieved material categories', misc: {
         page,
         limit,
-        maxPage: materialCategories.maxPage,
+        maxPage: materialCategories.maxPage || 1,
       } });
     }
   } catch (err) {

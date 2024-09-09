@@ -106,10 +106,10 @@ export async function listMaterialCategories(page: number, limit: number): Promi
         description: materialCategory.description,
       }));
       
-      return { materialCategoriesFinal, maxPage: totalPages || 1 };
+      return { materialCategoriesFinal, maxPage: totalPages };
     }
     
-    return { materialCategoriesFinal: [], maxPage: totalPages || 1 };
+    return { materialCategoriesFinal: [], maxPage: totalPages };
   } catch (error) {
     throw new Error('Database error');
   }

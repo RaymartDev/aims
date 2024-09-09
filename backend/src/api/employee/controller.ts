@@ -151,7 +151,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ employees: employees.employeesFinal, message: 'Successfully retrieved employees', misc: {
         page,
         limit,
-        totalPages: employees.totalPages,
+        totalPages: employees.totalPages || 1,
       } });
     }
   } catch (err) {

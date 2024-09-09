@@ -164,7 +164,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ suppliers: suppliers.suppliersFinal, message: 'Successfully retrieved suppliers', misc: {
         page,
         limit,
-        maxPage: suppliers.maxPage,
+        maxPage: suppliers.maxPage || 1,
       } });
     }
   } catch (err) {

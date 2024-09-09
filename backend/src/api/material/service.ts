@@ -127,10 +127,10 @@ export async function listMaterials(page: number, limit: number): Promise<{ mate
         uom: material.unit_of_measure,
         date_entry: new Date(material.date_entry),
       }));
-      return { materialsFinal, maxPage: totalPages || 1 };
+      return { materialsFinal, maxPage: totalPages };
     }
     
-    return { materialsFinal: [], maxPage: totalPages || 1 };
+    return { materialsFinal: [], maxPage: totalPages };
   } catch (error) {
     throw new Error('Database error');
   }

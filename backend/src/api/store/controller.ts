@@ -125,7 +125,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
       res.status(200).json({ stores: stores.storesFinal, message: 'Successfully retrieved stores', misc: {
         page,
         limit,
-        totalPages: stores.totalPages,
+        totalPages: stores.totalPages || 1,
       } });
     }
   } catch (err) {
