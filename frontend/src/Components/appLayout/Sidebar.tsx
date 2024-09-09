@@ -1,6 +1,6 @@
 import { useState } from "react";
 import KFC from "../../images/KFC_LOGO.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   BarChart,
   Warehouse,
@@ -39,6 +39,7 @@ import { toast } from "react-toastify";
 function Sidebar() {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -50,9 +51,9 @@ function Sidebar() {
 
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
-      <div className="flex p-6 space-x-2">
-        <img src={KFC} className="h-12 block xl:hidden" />
-        <h1 className="text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden xl:block">
+      <div onClick={() => navigate('/')} className="cursor-pointer flex p-6 space-x-2">
+        <img src={KFC} className="h-12 block" />
+        <h1 className="text-center text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden xl:block">
           Asset Inventory
         </h1>
       </div>
