@@ -135,7 +135,8 @@ function Store() {
                                                         <MoreHorizontal/>
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuItem>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => {
                                                         setRegStore(store);

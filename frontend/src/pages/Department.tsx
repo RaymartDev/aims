@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { MoreHorizontal, Plus, Search } from "lucide-react";
+import { MoreHorizontal, Pencil, Plus, Search, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
@@ -98,18 +98,20 @@ function Department() {
                                 <TableRow key={department.id}>
                                     <TableCell>{department.name}</TableCell>
                                     <TableCell>Active</TableCell>
-                                    <TableCell>
+                                    <TableCell align="center">
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                            setEditDepartment(department);
+                                            setEditModal(true);
+                                        }}><Pencil/>
+                                        </Button>
+                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
                                                     <MoreHorizontal/>
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => {
-                                                    setEditDepartment(department);
-                                                    setEditModal(true);
-                                                }}>Edit</DropdownMenuItem>
+                                            <DropdownMenuContent>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>

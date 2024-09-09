@@ -11,6 +11,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddEmployeeModal from "@/modals/AddEmployeeModal";
 import UserRegistration from "@/modals/UserRegistration";
 import EditEmployeeModal from "@/modals/EditEmployeeModal";
+import ViewEmployeeModal from "@/modals/ViewEmployeeModal";
 import type EmployeeType from "@/interface/employee";
 import { formatDateAsString, getVersion } from "@/lib/utils";
 import axios from "axios";
@@ -23,6 +24,8 @@ function Employee() {
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openViewModal, setOpenViewModal] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -72,6 +75,11 @@ function Employee() {
             setEmployees(prevEmployees => [...prevEmployees, employee]);
         }
       };
+
+    const handleViewDetails = (employeeId: number) => {
+        setSelectedEmployeeId(employeeId);
+        setOpenViewModal(true);
+    };
 
     return(
         <>
@@ -141,7 +149,8 @@ function Employee() {
                                                         <MoreHorizontal/>
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuItem onClick={() => handleViewDetails(employee.id)}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);
@@ -187,6 +196,7 @@ function Employee() {
             {openAddModal && <AddEmployeeModal addEmployee={addEmployee} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
+            {openViewModal && selectedEmployeeId !== null && <ViewEmployeeModal employeeId={selectedEmployeeId} onClose={() => setOpenViewModal(false)}/>}
         </>
     );
 }
