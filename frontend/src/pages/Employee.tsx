@@ -24,6 +24,7 @@ function Employee() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
     const itemsPerPage = 17;
 
     useEffect(() => {
@@ -32,6 +33,7 @@ function Employee() {
           const response = await axios.get(`${getVersion()}/employee/list?limit=${itemsPerPage}&page=${currentPage}`);
           if (response.status >= 200 && response.status < 300) {
             setEmployees(response.data.employees); // Update state with employee data
+            setMaxPage(response.data.misc.totalPages);
         }
         } catch (e) {
           console.error(e);
@@ -43,12 +45,6 @@ function Employee() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
-
-    const indexOfLastEmployee = currentPage * itemsPerPage;
-    const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
-    const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
-
-    const totalPages = Math.ceil(employees.length  / itemsPerPage);
 
     return(
         <>
@@ -93,7 +89,7 @@ function Employee() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {currentEmployees.map(employee => (
+                                {employees.map(employee => (
                                     <TableRow key={employee.id}>
                                         <TableCell>{employee.employee_no}</TableCell>
                                         <TableCell>{`${employee.first_name} ${employee.last_name}`}</TableCell>
@@ -131,7 +127,7 @@ function Employee() {
                                     <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
                                 </PaginationItem>
                             )}
-                            {Array.from({ length: totalPages }, (_, index) => (
+                            {Array.from({ length: maxPage }, (_, index) => (
                                 <PaginationItem key={index}>
                                     <PaginationLink
                                         href="#"
@@ -142,7 +138,7 @@ function Employee() {
                                     </PaginationLink>
                                 </PaginationItem>
                             ))}
-                            {currentPage < totalPages && (
+                            {currentPage < maxPage && (
                                 <PaginationItem>
                                     <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
                                 </PaginationItem>
