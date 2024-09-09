@@ -1,14 +1,67 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import type EmployeeType from "@/interface/employee";
+import { MouseEvent, useState } from "react";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 interface AddEmployeeModalProps {
-    open: boolean;
     onClose: () => void;
+    addEmployee: (employee: EmployeeType | null) => void;
 }
 
-function AddEmployeeModal ({ open, onClose }: AddEmployeeModalProps) {
-    if (!open) return null;
+function AddEmployeeModal ({ addEmployee, onClose }: AddEmployeeModalProps) {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [employeeNo, setEmployeeNo] = useState('');
+    const [costCode, setCostCode] = useState('');
+    const [companyName, setCompanyName] = useState('');
+    const [dateHired, setDateHired] = useState('');
+    const [departmentName, setDepartmentName] = useState('');
+    const [division, setDivision] = useState('');
+
+    const createEmployee = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${getVersion()}/employee`, {
+                first_name: firstName,
+                last_name: lastName,
+                employee_no: employeeNo,
+                cost_center_code: costCode,
+                company: companyName,
+                date_hired: new Date(dateHired),
+                department: departmentName,
+                division
+            });
+            if (response.status >= 200 && response.status < 300) {
+                toast.success('Successfully added employee!');
+                addEmployee({
+                    id: response.data?.employee?.id || 1,
+                    first_name: firstName,
+                    last_name: lastName,
+                    employee_no: employeeNo,
+                    division,
+                    department_name: departmentName,
+                    cost_center_code: costCode,
+                    company_name: companyName,
+                    date_hired: new Date(dateHired),
+                    registered_status: false,
+                })
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                toast.error(err.response?.data?.message || 'Something went wrong');
+              } else {
+                toast.error('Something went wrong')
+              }
+        }
+    }
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -21,47 +74,47 @@ function AddEmployeeModal ({ open, onClose }: AddEmployeeModalProps) {
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">First Name</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Last Name</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={lastName} onChange={(e) => setLastName(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Employee Number</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={employeeNo} onChange={(e) => setEmployeeNo(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Cost Center Code</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={costCode} onChange={(e) => setCostCode(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-3/4">
                             <p className="text-sm text-[#697386]">Company Name</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-1/3">
                             <p className="text-sm text-[#697386]">Date Hired</p>
-                            <Input type="Date" className="focus:border-none border-black justify-center"></Input>
+                            <Input value={dateHired} onChange={(e) => setDateHired(e.target.value)} type="Date" className="focus:border-none border-black justify-center"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Department</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={departmentName} onChange={(e) => setDepartmentName(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Division</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={division} onChange={(e) => setDivision(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
+                    <Button onClick={(e) => createEmployee(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
         </div>

@@ -23,7 +23,6 @@ model Employee {
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
   date_entry DateTime @default(now())
-  admin Boolean @default(false)
   registered Boolean @default(false)
   modified_by_id Int? 
   modified_by User? @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)

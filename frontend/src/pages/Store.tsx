@@ -6,7 +6,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddStoreModal from "@/modals/AddStoreModal";
-import UserRegistration from "@/modals/UserRegistration";
 import EditStoreModal from "@/modals/EditStoreModal";
 
 const stores = [
@@ -35,7 +34,7 @@ const stores = [
 
 function Store() {
     const [openAddModal, setOpenAddModal] = useState(false);
-    const [openUserRegModal, setOpenUserRegModal] = useState(false);
+    {/*const [openUserRegModal, setOpenUserRegModal] = useState(false);*/}
     const [openEditModal, setOpenEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -136,7 +135,7 @@ function Store() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenUserRegModal(true)}>Register</DropdownMenuItem>
+                                                    <DropdownMenuItem>Register</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -174,9 +173,9 @@ function Store() {
                     </Pagination>
                 </div>
             </div>
-            <AddStoreModal open={openAddModal} onClose={() => setOpenAddModal(false)}/>
-            <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
-            <EditStoreModal open={openEditModal} onClose={() => setOpenEditModal(false)}/>
+            {openAddModal && <AddStoreModal open={openAddModal} onClose={() => setOpenAddModal(false)}/>}
+            {/*openUserRegModal && <UserRegistration onClose={() => setOpenUserRegModal(false)}/>*/}
+            {openEditModal && <EditStoreModal open={openEditModal} onClose={() => setOpenEditModal(false)}/>}
         </>
     );
 }

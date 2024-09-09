@@ -28,6 +28,20 @@ export async function updateStore(store: any, id: number): Promise<Store | null>
   }
 }
 
+export async function updateStoreRegistration(status: boolean, id: number): Promise<Store | null> {
+  try {
+    const updatedStore = await prisma.store.update({
+      data: {
+        registered: status,
+      },
+      where: { id },
+    });
+    return updatedStore;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findStoreById(id: number): Promise<Store | null> {
   try {
     const store = await prisma.store.findFirst({

@@ -1,7 +1,6 @@
 import express from 'express';
 import { authenticateToken } from '../../middlewares';
-import { create } from 'domain';
-import { getOne, list, search, update } from './controller';
+import { getOne, list, search, update, create } from './controller';
 
 const router = express.Router();
 

@@ -50,6 +50,20 @@ export async function findEmployeeByEmployeeNo(employee_no: string): Promise<Emp
   }
 }
 
+export async function updateEmployeeRegistration(status: boolean, id: number): Promise<Employee | null> {
+  try {
+    const updatedEmployee = await prisma.employee.update({
+      data: {
+        registered: status,
+      },
+      where: { id },
+    });
+    return updatedEmployee;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function searchEmployeeByEmployeeNo(employee_no: string): Promise<Employee[]> {
   try {
     const employees: Employee[] = await prisma.employee.findMany({

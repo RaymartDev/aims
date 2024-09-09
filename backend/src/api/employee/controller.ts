@@ -87,10 +87,38 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Employee not found!' });
     }
 
-    const newEmployee = await updateEmployee({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
+    const { department_name, company_name, ...restOfBody } = req.body;
+
+    // Create an update dictionary
+    const updateData: Record<string, any> = {
+      modified_by_id: req.user?.id || 1, // Always include the user ID
+    };
+
+    if (department_name) {
+      const findDepartment = await findDepartmentByName(department_name);
+      if (!findDepartment) {
+        return res.status(400).json({ message: 'Department not found!' });
+      }
+      updateData.department_id = findDepartment.id; // Add department_id to the update dictionary
+    }
+
+    if (company_name) {
+      const findCompany = await findCompanyByName(company_name);
+      if (!findCompany) {
+        return res.status(400).json({ message: 'Company not found' });
+      }
+      updateData.company_id = findCompany.id;
+    }
+
+    Object.assign(updateData, restOfBody);
+
+    console.log(updateData);
+
+    const newEmployee = await updateEmployee(updateData, parseInt(id));
     if (newEmployee) {
       res.status(200).json({ employee: newEmployee, message: 'Successfully updated employee' });
     }
+
   } catch (err) {
     next(err);
   }

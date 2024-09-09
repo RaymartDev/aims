@@ -18,6 +18,8 @@ import axios from "axios";
 
 function Employee() {
     const [employees, setEmployees] = useState<EmployeeType[]>([]);
+    const [editEmployee, setEditEmployee] = useState<EmployeeType | null>(null);
+    const [regEmployee, setRegEmployee] = useState<EmployeeType | null>(null);
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
@@ -45,6 +47,31 @@ function Employee() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    const updateEmployee = (id: number, employee: EmployeeType) => {
+        const index = employees.findIndex(employee => employee.id === id);
+        if (index !== -1) {
+            employees[index] = employee;
+            setEditEmployee(null);
+        }
+    }
+
+    const registerEmployee = (id: number) => {
+        setEmployees(prevEmployees => 
+          prevEmployees.map(employee => 
+            employee.id === id 
+              ? { ...employee, registered_status: true }  // Create a new object with the updated field
+              : employee  // Return the original object if no changes are needed
+          )
+        );
+        setRegEmployee(null);
+      };
+
+      const addEmployee = (employee: EmployeeType | null) => {
+        if (employee) {
+            setEmployees(prevEmployees => [...prevEmployees, employee]);
+        }
+      };
 
     return(
         <>
@@ -78,7 +105,8 @@ function Employee() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Employee Number</TableHead>
-                                    <TableHead>Employee Name</TableHead>
+                                    <TableHead>First Name</TableHead>
+                                    <TableHead>Last Name</TableHead>
                                     <TableHead>Department</TableHead>
                                     <TableHead>Cost Code</TableHead>
                                     <TableHead>Division</TableHead>
@@ -92,7 +120,8 @@ function Employee() {
                                 {employees.map(employee => (
                                     <TableRow key={employee.id}>
                                         <TableCell>{employee.employee_no}</TableCell>
-                                        <TableCell>{`${employee.first_name} ${employee.last_name}`}</TableCell>
+                                        <TableCell>{employee.first_name}</TableCell>
+                                        <TableCell>{employee.last_name}</TableCell>
                                         <TableCell>{employee.department_name}</TableCell>
                                         <TableCell>{employee.cost_center_code}</TableCell>
                                         <TableCell>{employee.division}</TableCell>
@@ -107,9 +136,15 @@ function Employee() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setEditEmployee(employee);
+                                                        setOpenEditModal(true);
+                                                    }}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenUserRegModal(true)}>Register</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setRegEmployee(employee);
+                                                        setOpenUserRegModal(true);
+                                                    }}>Register</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -147,9 +182,9 @@ function Employee() {
                     </Pagination>
                 </div>
             </div>
-            <AddEmployeeModal open={openAddModal} onClose={() => setOpenAddModal(false)}/>
-            <UserRegistration open={openUserRegModal} onClose={() => setOpenUserRegModal(false)}/>
-            <EditEmployeeModal open={openEditModal} onClose={() => setOpenEditModal(false)}/>
+            {openAddModal && <AddEmployeeModal addEmployee={addEmployee} onClose={() => setOpenAddModal(false)}/>}
+            {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
+            {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
         </>
     );
 }

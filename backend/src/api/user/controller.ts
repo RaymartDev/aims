@@ -5,8 +5,8 @@ import { generateHashedPassword, generateToken } from '../../lib';
 import { createUser, findUserByEmployeeId, findUserByUsername, updateUser } from './service';
 import UserRequest from '../../interfaces/UserRequest';
 import { findDepartmentByName } from '../department/service';
-import { findEmployeeById } from '../employee/service';
-import { findStoreById } from '../store/service';
+import { findEmployeeById, updateEmployeeRegistration } from '../employee/service';
+import { findStoreById, updateStoreRegistration } from '../store/service';
 
 export const register = async (req: UserRequest, res: Response, next: NextFunction) => {
   const { 
@@ -115,6 +115,11 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
       modified_by_id: req.user?.id || 1,
     };
 
+    if (registrationType === 'employee') {
+      await updateEmployeeRegistration(true, employee_id);
+    } else {
+      await updateStoreRegistration(true, store_id);
+    }
     const user = await createUser(newUser);
     res.status(201).json({ user, message: 'User created successfully' });
   } catch (err) {
