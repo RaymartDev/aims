@@ -24,7 +24,7 @@ function Employee() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12;
+    const itemsPerPage = 17;
 
     useEffect(() => {
       const fetchData = async () => {
