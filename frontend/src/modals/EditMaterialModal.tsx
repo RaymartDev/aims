@@ -19,7 +19,6 @@ import {
 import { cn } from "@/lib/utils";
 
 interface EditMaterialModalProps {
-    open: boolean;
     onClose: () => void;
 }
 
@@ -49,7 +48,7 @@ const categories = [
     { value: "projector", label: "Projector" }
     ];
 
-function EditMaterialModal ({ open, onClose }: EditMaterialModalProps) {
+function EditMaterialModal ({ onClose }: EditMaterialModalProps) {
     const [openPopover, setOpenPopover] = React.useState(false);
     const [selectedCategory, setSelectedCategory] = React.useState("");
     const [inputValue, setInputValue] = React.useState("");
@@ -64,8 +63,6 @@ function EditMaterialModal ({ open, onClose }: EditMaterialModalProps) {
         category.label.toLowerCase().includes(inputValue.toLowerCase())
     )
     .slice(0, 3);
-
-    if (!open) return null;
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">

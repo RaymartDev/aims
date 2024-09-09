@@ -105,10 +105,10 @@ export async function listDepartments(page: number, limit: number): Promise<{ de
         name: department.name,
       }));
       
-      return { departmentsFinal, maxPage: totalDepartments };
+      return { departmentsFinal, maxPage: totalPages };
     }
     
-    return { departmentsFinal: [], maxPage: totalDepartments };
+    return { departmentsFinal: [], maxPage: totalPages };
   } catch (error) {
     throw new Error('Database error');
   }

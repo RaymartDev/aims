@@ -69,7 +69,7 @@ function Supplier() {
               const response = await axios.get(`${getVersion()}/supplier/list?limit=${itemsPerPage}&page=${currentPage}`);
               if (response.status >= 200 && response.status < 300) {
                 setSuppliers(response.data.suppliers); // Update state with employee data
-                setMaxPage(response.data.misc.totalPages);
+                setMaxPage(response.data.misc.maxPage);
             }
             } catch (e) {
               console.error(e);

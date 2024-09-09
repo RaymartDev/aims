@@ -104,10 +104,10 @@ export async function listCompanies(page: number, limit: number): Promise<{ comp
         id: company.id,
         name: company.name,
       }));
-      return { companiesFinal, maxPage: totalCompanies };
+      return { companiesFinal, maxPage: totalPages };
     }
     
-    return { companiesFinal: [], maxPage: totalCompanies };
+    return { companiesFinal: [], maxPage: totalPages };
   } catch (error) {
     throw new Error('Database error');
   }

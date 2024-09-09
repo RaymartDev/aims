@@ -18,6 +18,7 @@ function Company() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [companies, setCompanies] = useState<CompanyType[]>([])
+    const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
@@ -27,20 +28,30 @@ function Company() {
         setCurrentPage(page);
     };
 
+    const updateCompany = (id: number, company: CompanyType | null) => {
+        if (company) {
+            const index = companies.findIndex(company => company.id === id);
+            if (index !== -1) {
+                companies[index] = company;
+                setEditCompany(null);
+            }
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
           try {
             const response = await axios.get(`${getVersion()}/company/list?limit=${itemsPerPage}&page=${currentPage}`);
             if (response.status >= 200 && response.status < 300) {
               setCompanies(response.data.companies); // Update state with employee data
-              setMaxPage(response.data.misc.totalPages);
+              setMaxPage(response.data.misc.maxPage);
           }
           } catch (e) {
             console.error(e);
           }
          };
         fetchData(); // Call the fetch function
-    }, [itemsPerPage, currentPage, maxPage]);
+    }, [itemsPerPage, currentPage]);
 
     const addCompany = (company: CompanyType) => {
         if (company) {
@@ -95,7 +106,10 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={()=> setEditModal(true)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={()=> {
+                                                    setEditCompany(company);
+                                                    setEditModal(true);
+                                                }}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -134,7 +148,7 @@ function Company() {
                 </Pagination>
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
-            {editModal && <EditCompanyModal onClose={() => setEditModal(false)}/>}
+            {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
         </div>
     );
 }
