@@ -5,12 +5,9 @@ export default interface Employee {
     last_name: string;
     division: string;
     employee_no: string;
-    department_id: number;
+    department_name: string;
     cost_center_code: string;
-    company_id: number;
+    company_name: string;
     date_hired: Date;
-    effective_on: Date;
-    modified_on: Date;
-    date_entry: Date;
-    modified_by_id: number;
+    registered_status: boolean;
 }

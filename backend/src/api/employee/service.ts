@@ -69,7 +69,21 @@ export async function searchEmployeeByEmployeeNo(employee_no: string): Promise<E
   }
 }
 
-export async function listEmployees(page: number, limit: number): Promise<Employee[]> {
+interface EmployeeType {
+  id: number;
+  first_name: string;
+  last_name: string;
+  division: string;
+  employee_no: string;
+  department_name: string;
+  cost_center_code: string;
+  company_name: string;
+  date_hired: Date;
+  registered_status: boolean;
+}
+
+
+export async function listEmployees(page: number, limit: number): Promise<EmployeeType[]> {
   try {
     // Get total count for pagination
     const totalEmployees = await prisma.employee.count();
@@ -85,15 +99,43 @@ export async function listEmployees(page: number, limit: number): Promise<Employ
       page = 1;
     }
 
-    const employees: Employee[] = await prisma.employee.findMany({
+    const employees = await prisma.employee.findMany({
       skip: (page - 1) * limit,
       take: limit,
       orderBy: {
         employee_no: 'asc',
       },
+      include: {
+        department: {
+          select: {
+            name: true,
+          },
+        },
+        company: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
-    
-    return employees;
+
+    if (employees && employees.length > 0) {
+      const employeesFinal: EmployeeType[] = employees.map((employee) => ({
+        id: employee.id,
+        first_name: employee.first_name,
+        last_name: employee.last_name,
+        division: employee.division,
+        cost_center_code: employee.cost_center_code,
+        employee_no: employee.employee_no,
+        department_name: employee.department?.name,
+        company_name: employee.company?.name,
+        date_hired: employee.date_hired,
+        registered_status: employee.registered,
+      }));
+      
+      return employeesFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }

@@ -10,19 +10,15 @@ import Store from "./pages/Store";
 import Supplier from "./pages/Supplier";
 import Release from "./pages/Release";
 import Return from "./pages/Return";
-import ReleaseReport from "./pages/ReleaseReport";
-import ReturnReport from "./pages/ReturnReport";
 import Company from "./pages/Company";
 import Department from "./pages/Department";
 import ChangePassword from "./pages/ChangePassword";
-import PrintReturn from "./pages/PrintReturn";
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/download" element={<PrintReturn />} />
         <Route path="/login" element={<Login />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
@@ -37,9 +33,6 @@ function App() {
           {/* Order */}
           <Route path="/release" element={<Release />} />
           <Route path="/acknowledgement" element={<Return />} />
-          {/* Transactions */}
-          <Route path="/release-report" element={<ReleaseReport />} />
-          <Route path="/return-report" element={<ReturnReport />} />
           {/* Misc */}
           <Route path="/company" element={<Company />} />
           <Route path="/department" element={<Department />} />

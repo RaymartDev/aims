@@ -24,6 +24,7 @@ model Employee {
   modified_on DateTime @updatedAt
   date_entry DateTime @default(now())
   admin Boolean @default(false)
+  registered Boolean @default(false)
   modified_by_id Int? 
   modified_by User? @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   users User[]
@@ -36,6 +37,7 @@ model Store {
   name String
   cost_center_code String
   address String
+  registered Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt

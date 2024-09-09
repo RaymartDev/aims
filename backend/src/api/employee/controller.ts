@@ -47,7 +47,6 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
       date_hired,
       department_id: findDepartment.id,
       division,
-      registered: 0,
       modified_by_id: req.user?.id || 1,
     });
     
@@ -113,16 +112,16 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     next(err);
   }
 };
-
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
     if (isNaN(page) || page < 1) {
       page = 1;
     }
 
-    const employees: Employee[] = await listEmployees(page, 10);
-    if (employees) {
+    const employees = await listEmployees(page, limit);
+    if (employees) { 
       res.status(200).json({ employees, message: 'Successfully retrieved employees' });
     }
   } catch (err) {

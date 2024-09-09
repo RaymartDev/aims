@@ -16,11 +16,8 @@ const employeeSlice = createSlice({
                 state[index] = action.payload;
             }
         },
-        findEmployee: (state, action: PayloadAction<number>) => {
-            return state.filter(employee => employee.id === action.payload);
-        },
     }
 })
 
-export const { addEmployee, updateEmployee, findEmployee } = employeeSlice.actions;
+export const { addEmployee, updateEmployee } = employeeSlice.actions;
 export default employeeSlice.reducer;
