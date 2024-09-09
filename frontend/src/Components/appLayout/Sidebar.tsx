@@ -22,6 +22,7 @@ import {
   ArrowRightLeft,
   ClipboardPaste,
   ClipboardCopy,
+  KeyRound,
   BoxesIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -36,16 +37,16 @@ import { logout } from "@/slices/userSlice";
 import { toast } from "react-toastify";
 
 function Sidebar() {
-  const [openItem, setOpenItem] =  useState<string | undefined>(undefined);
+  const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const dispatch = useAppDispatch();
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    toast.success('Successfully logged out');
+    toast.success("Successfully logged out");
     setTimeout(() => {
       dispatch(logout());
     }, 700);
-  }
+  };
 
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
@@ -419,17 +420,24 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <h1 className="mx-14 font-bold">Change Password</h1>
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <KeyRound />
+                      <span>Change Password</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </li>
         </ul>
-      </nav> 
-      <Button onClick={(e) => handleLogout(e)} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream">
-        <LogOut /><span className="sm:hidden xl:inline">Logout</span>
-      </Button>    
+      </nav>
+      <Button
+        onClick={(e) => handleLogout(e)}
+        className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream"
+      >
+        <LogOut />
+        <span className="sm:hidden xl:inline">Logout</span>
+      </Button>
     </div>
   );
 }
