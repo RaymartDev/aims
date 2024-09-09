@@ -7,12 +7,15 @@ import { MoreHorizontal, Pencil, Plus, Search, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
 import EditCompanyModal from "@/modals/EditCompanyModal";
 import type CompanyType from "@/interface/company";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "@/store/store";
+import { logout } from "@/slices/userSlice";
 
 function Company() {
     const [openModal, setOpenModal] = useState(false);
@@ -23,6 +26,7 @@ function Company() {
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
+    const dispatch = useAppDispatch();
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -38,20 +42,30 @@ function Company() {
         }
     }
 
+    const fetchData = useCallback(async () => {
+        try {
+          const response = await axios.get(`${getVersion()}/company/list?limit=${itemsPerPage}&page=${currentPage}`);
+          if (response.status >= 200 && response.status < 300) {
+            setCompanies(response.data.material_categories); // Update state with employee data
+            setMaxPage(response.data.misc.maxPage);
+        }
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+              if ((err?.response?.status || 0) === 440) {
+                  toast.error(err.response?.data?.message || 'Session Expired');
+                  setTimeout(() => {
+                      dispatch(logout());
+                  }, 700);
+              } else {
+                  toast.error(err.response?.data?.message || 'Something went wrong');
+              }
+          }
+        }
+       }, [itemsPerPage, currentPage, dispatch]);
+
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get(`${getVersion()}/company/list?limit=${itemsPerPage}&page=${currentPage}`);
-            if (response.status >= 200 && response.status < 300) {
-              setCompanies(response.data.companies); // Update state with employee data
-              setMaxPage(response.data.misc.maxPage);
-          }
-          } catch (e) {
-            console.error(e);
-          }
-         };
-        fetchData(); // Call the fetch function
-    }, [itemsPerPage, currentPage]);
+        fetchData();
+    }, [fetchData])
 
     const addCompany = (company: CompanyType) => {
         if (company) {

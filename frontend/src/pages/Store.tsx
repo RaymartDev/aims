@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
@@ -14,6 +14,9 @@ import type StoreType from "@/interface/store";
 import UserRegistrationStore from "@/modals/UserRegistrationStore";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "@/store/store";
+import { logout } from "@/slices/userSlice";
 
 function Store() {
     const [openAddModal, setOpenAddModal] = useState(false);
@@ -26,21 +29,32 @@ function Store() {
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const itemsPerPage = 17;
+    const dispatch = useAppDispatch();
+
+    const fetchData = useCallback(async () => {
+        try {
+          const response = await axios.get(`${getVersion()}/store/list?limit=${itemsPerPage}&page=${currentPage}`);
+          if (response.status >= 200 && response.status < 300) {
+            setStores(response.data.material_categories); // Update state with employee data
+            setMaxPage(response.data.misc.maxPage);
+        }
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+              if ((err?.response?.status || 0) === 440) {
+                  toast.error(err.response?.data?.message || 'Session Expired');
+                  setTimeout(() => {
+                      dispatch(logout());
+                  }, 700);
+              } else {
+                  toast.error(err.response?.data?.message || 'Something went wrong');
+              }
+          }
+        }
+       }, [itemsPerPage, currentPage, dispatch]);
 
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get(`${getVersion()}/store/list?limit=${itemsPerPage}&page=${currentPage}`);
-            if (response.status >= 200 && response.status < 300) {
-              setStores(response.data.stores); // Update state with employee data
-              setMaxPage(response.data.misc.totalPages);
-          }
-          } catch (e) {
-            console.error(e);
-          }
-         };
-          fetchData(); // Call the fetch function
-        }, [itemsPerPage, currentPage]);
+        fetchData();
+    }, [fetchData])
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
