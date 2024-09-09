@@ -16,11 +16,8 @@ const storeSlice = createSlice({
                 state[index] = action.payload;
             }
         },
-        findStore: (state, action: PayloadAction<number>) => {
-            return state.filter(store => store.id === action.payload);
-        },
     }
 })
 
-export const { addStore, updateStore, findStore } = storeSlice.actions;
+export const { addStore, updateStore } = storeSlice.actions;
 export default storeSlice.reducer;
