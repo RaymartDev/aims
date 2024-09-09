@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
+import EditCompanyModal from "@/modals/EditCompanyModal";
 
 const company = [
     { id: 1,  companyName: "TechNova Solutions", status: "Active" },
@@ -33,6 +34,7 @@ const company = [
 
 function Company() {
     const [openModal, setOpenModal] = useState(false);
+    const [editModal, setEditOpenModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 70;
@@ -121,7 +123,7 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={()=> setEditOpenModal(true)}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -160,6 +162,8 @@ function Company() {
                 </Pagination>
             </div>
             <AddCompanyModal open={openModal} onClose={() => setOpenModal(false)}/>
+            <EditCompanyModal open={editModal} onClose={() => setEditOpenModal(false)}/>
+
         </div>
     );
 }
