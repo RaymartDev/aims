@@ -122,7 +122,11 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const employees = await listEmployees(page, limit);
     if (employees) { 
-      res.status(200).json({ employees, message: 'Successfully retrieved employees' });
+      res.status(200).json({ employees: employees.employeesFinal, message: 'Successfully retrieved employees', misc: {
+        page,
+        limit,
+        totalPages: employees.totalPages,
+      } });
     }
   } catch (err) {
     next(err);

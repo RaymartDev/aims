@@ -83,7 +83,7 @@ interface EmployeeType {
 }
 
 
-export async function listEmployees(page: number, limit: number): Promise<EmployeeType[]> {
+export async function listEmployees(page: number, limit: number): Promise<{ employeesFinal: EmployeeType[], totalPages: number }> {
   try {
     // Get total count for pagination
     const totalEmployees = await prisma.employee.count();
@@ -133,9 +133,9 @@ export async function listEmployees(page: number, limit: number): Promise<Employ
         registered_status: employee.registered,
       }));
       
-      return employeesFinal;
+      return { employeesFinal, totalPages };
     }
-    return [];
+    return { employeesFinal: [], totalPages };
   } catch (error) {
     throw new Error('Database error');
   }
