@@ -11,7 +11,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
 import type MaterialType from "@/interface/material";
-import { formatDateAsString, getVersion } from "@/lib/utils";
+import { formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import axios from "axios";
 
 function Materials() {
@@ -93,7 +93,7 @@ function Materials() {
                                     <TableHead>Material Code</TableHead>
                                     <TableHead>Description</TableHead>
                                     <TableHead>Item Code</TableHead>
-                                    <TableHead>Unit</TableHead>
+                                    <TableHead>Category</TableHead>
                                     <TableHead>Material Type</TableHead>
                                     <TableHead>Cost</TableHead>
                                     <TableHead>Date Entry</TableHead>
@@ -108,7 +108,7 @@ function Materials() {
                                         <TableCell>{material.item_code}</TableCell>
                                         <TableCell>{material.category}</TableCell>
                                         <TableCell>{material.material_type}</TableCell>
-                                        <TableCell>{material.unit_cost}</TableCell>
+                                        <TableCell>{formatCurrency(material.unit_cost)}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {

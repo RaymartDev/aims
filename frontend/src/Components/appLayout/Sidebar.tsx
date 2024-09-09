@@ -422,7 +422,7 @@ function Sidebar() {
                   >
                     <div className="mx-14 font-bold flex justify-center items-center space-x-2">
                       <KeyRound />
-                      <span>Change Password</span>
+                      <span>Password</span>
                     </div>
                   </NavLink>
                 </AccordionContent>

@@ -20,3 +20,14 @@ export const formatDateAsString = (date: Date) => {
   
   return `${month}/${day}/${year}`;
 }
+
+export const formatCurrency = (amount: number): string => {
+  // Ensure amount is a number and format it to include commas
+  const formattedAmount = amount.toLocaleString('en-US', { 
+    minimumFractionDigits: 2, 
+    maximumFractionDigits: 2 
+  });
+
+  // Return the formatted string with peso symbol
+  return `₱ ${formattedAmount}`;
+}
