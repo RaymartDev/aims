@@ -3,12 +3,10 @@ import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
 
 interface EditDepartmentModalProps {
-  open: boolean;
   onClose: () => void;
 }
 
-function EditDepartmentModal({ open, onClose }: EditDepartmentModalProps) {
-  if (!open) return null;
+function EditDepartmentModal({ onClose }: EditDepartmentModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
