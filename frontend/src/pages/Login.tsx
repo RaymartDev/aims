@@ -25,7 +25,7 @@ import {
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { getVersion } from "@/lib/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/slices/userSlice";
@@ -43,6 +43,7 @@ function Login() {
   const user = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [isLogInDisabled, setIsLogInDisabled] = useState(false);
   useEffect(() => {
     if (user.isLoggedIn) {
       navigate('/');
@@ -68,6 +69,7 @@ function Login() {
   };
 
   const onSubmit = async (data: { username: string; password: string }) => {
+    setIsLogInDisabled(true);
     try {
       await form.trigger();
       if (form.formState.isValid) {
@@ -89,6 +91,7 @@ function Login() {
               }
             ));
           }, 700);
+          setIsLogInDisabled(false);
         }
       }
     } catch (error) {
@@ -98,6 +101,7 @@ function Login() {
         toast.error('Something went wrong')
         console.error("Form submission error:", error);
       }
+      setIsLogInDisabled(false);
     }
   };
 
@@ -162,7 +166,7 @@ function Login() {
               )}
             />
             <div className="flex justify-center items-center">
-              <Button type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6" onClick={() => onSubmit}>
+              <Button disabled={isLogInDisabled} type="submit" className="bg-[#FF7700] hover:bg-[#353535] text-xl w-[85%] rounded-full font-bold tracking-wider py-6" onClick={() => onSubmit}>
                 Login
               </Button>
             </div>
