@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useState } from "react";
 import KFC from "../../images/KFC_LOGO.png";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -35,18 +38,31 @@ import {
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
 
 function Sidebar() {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    toast.success("Successfully logged out");
-    setTimeout(() => {
-      dispatch(logout());
-    }, 700);
+    try {
+      const response = await axios.get(`${getVersion()}/user/logout`);
+      if (response.status >= 200 && response.status < 300) {
+        toast.success("Successfully logged out");
+        setTimeout(() => {
+          dispatch(logout());
+        }, 700);
+      }
+    }  catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+      } else {
+        toast.error('An unexpected error occurred');
+      }
+    }
   };
 
   return (

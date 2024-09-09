@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { removeCookie } from "@/lib/utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
@@ -63,7 +62,6 @@ const userSlice = createSlice({
     },
     logout: (_state) => {
       localStorage.removeItem('savedState');
-      removeCookie('token');
       return { ...getInitialState() };
     }
   }
