@@ -171,7 +171,7 @@ model Material {
   cost Int
   maximum_stock Int
   unit_of_measure String
-  item_specification String
+  category String
   serial_number String
   date_entry DateTime
   effective_from DateTime @default(now())
