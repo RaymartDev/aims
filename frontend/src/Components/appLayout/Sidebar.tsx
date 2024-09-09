@@ -22,6 +22,7 @@ import {
   ArrowRightLeft,
   ClipboardPaste,
   ClipboardCopy,
+  BoxesIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import {
@@ -115,7 +116,26 @@ function Sidebar() {
                     </div>
                   </NavLink>
                 </AccordionContent>
-                <AccordionContent className="my-0 py-0">
+              </AccordionItem>
+            </Accordion>
+          </li>
+
+          {/* Materials */}
+          <li>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
+              <AccordionItem value="materials">
+                <AccordionTrigger className="mx-5 h-12">
+                  <div className="flex space-x-2 font-extrabold">
+                    <BoxesIcon />
+                    <span className="sm:hidden xl:inline">Materials</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="my-0 py-0 border-b">
                   <NavLink
                     to="/materials"
                     className={({ isActive }) =>
@@ -125,15 +145,45 @@ function Sidebar() {
                     }
                   >
                     <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Archive />
+                      <span>Products</span>
+                    </div>
+                  </NavLink>
+                </AccordionContent>
+                <AccordionContent className="my-0 py-0 border-b">
+                  <NavLink
+                    to="/category"
+                    className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-12 ${
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
+                      }`
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Truck />
+                      <span>Category</span>
+                    </div>
+                  </NavLink>
+                </AccordionContent>
+                <AccordionContent className="my-0 py-0">
+                  <NavLink
+                    to="/types"
+                    className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-12 ${
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
+                      }`
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
                       <Boxes />
-                      <span>Materials</span>
+                      <span>Types</span>
                     </div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </li>
-
+          
           {/* Users */}
           <li>
             <Accordion

@@ -27,13 +27,13 @@ function Materials() {
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-full relative">
                     <div>
-                        <h1 className="text-2xl font-bold">Materials</h1>
-                        <p className="text-sm font-semibold text-[#9E9E9E]">Warehouse / Materials</p>
+                        <h1 className="text-2xl font-bold">Products</h1>
+                        <p className="text-sm font-semibold text-[#9E9E9E]">Warehouse / Products</p>
                     </div>
                     <div className="flex justify-center mt-10">
                         <div className="flex flex-row justify-between w-full">
                             <div className="w-fit flex items-center justify-start ">
-                                <h1 className=" text-fontHeading font-bold">All Materials</h1>
+                                <h1 className=" text-fontHeading font-bold">All Products</h1>
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12 ">
@@ -44,7 +44,7 @@ function Materials() {
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-40" 
                                     onClick={() => setOpenAddModal(true)}>
-                                    <Plus size={20}/><span className="text-sm">Add Materials</span>
+                                    <Plus size={20}/><span className="text-sm">Add Product</span>
                                 </Button>
                             </div>    
                         </div>
