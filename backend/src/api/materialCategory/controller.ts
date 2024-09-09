@@ -1,0 +1,93 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import UserRequest from '../../interfaces/UserRequest';
+import { Response, NextFunction } from 'express';
+import { findMaterialCategoryById, findMaterialCategoryByName, insertMaterialCategory, listMaterialCategories, searchMaterialCategoryByName, updateMaterialCategory } from './service';
+
+export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const findMaterialCategory = await findMaterialCategoryByName(req.body.description || '');
+    if (findMaterialCategory) {
+      return res.status(401).json({ material_category: findMaterialCategory, message: 'Material Category with that description already exists' });
+    }
+
+    const newMaterialCategory = await insertMaterialCategory({ modified_by_id: req.user?.id || 1, ...req.body });
+    if (newMaterialCategory) {
+      res.status(200).json({ material_category: newMaterialCategory, message: 'Successfully created material category' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material Category ID is required!' });
+    }
+    const material_category = await findMaterialCategoryById(parseInt(id));
+    if (!material_category) {
+      return res.status(400).json({ message: 'Material Category not found' });
+    }
+
+    res.status(200).json( { material_category, message: 'Successfully found material category' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const update = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material Category ID is required!' });
+    }
+
+    const findMaterialCategory = await findMaterialCategoryById(parseInt(id));
+    if (!findMaterialCategory) {
+      return res.status(400).json({ message: 'Material Category not found' });
+    }
+
+    const newMaterialCategory = await updateMaterialCategory({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
+    if (newMaterialCategory) {
+      res.status(200).json({ material_category: newMaterialCategory, message: 'Successfully updated material category' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { desc } = req.query;
+
+    if (!desc || typeof desc !== 'string') {
+      return res.status(400).json({ error: 'Desc query parameter is required and must be a string' });
+    }
+    const materialCategories = await searchMaterialCategoryByName(desc as string);
+    res.status(200).json({ material_categories: materialCategories, message: 'Successfully found material categories' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 17;
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+
+    const materialCategories = await listMaterialCategories(page, limit);
+    if (materialCategories) {
+      res.status(200).json({ material_categories: materialCategories.materialCategoriesFinal, message: 'Successfully retrieved material categories', misc: {
+        page,
+        limit,
+        maxPage: materialCategories.maxPage,
+      } });
+    }
+  } catch (err) {
+    next(err);
+  }
+};

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useEffect, useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
@@ -8,7 +11,8 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
 import type MaterialType from "@/interface/material";
-import { formatDateAsString } from "@/lib/utils";
+import { formatDateAsString, getVersion } from "@/lib/utils";
+import axios from "axios";
 
 function Materials() {
     const [openAddModal, setOpenAddModal] = useState(false);
@@ -17,10 +21,43 @@ function Materials() {
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
+    const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
+    const itemsPerPage = 17;
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    const updateMaterial = (id: number, material: MaterialType | null) => {
+        if (material) {
+            const index = materials.findIndex(material => material.id === id);
+            if (index !== -1) {
+                materials[index] = material;
+                setEditMaterial(null);
+            }
+        }
+    }
+
+    const addMaterial = (material: MaterialType | null) => {
+        if (material) {
+            setMaterials(prevMaterials => [...prevMaterials, material]);
+        }
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`${getVersion()}/material/list?limit=${itemsPerPage}&page=${currentPage}`);
+            if (response.status >= 200 && response.status < 300) {
+              setMaterials(response.data.materials); // Update state with employee data
+              setMaxPage(response.data.misc.maxPage);
+          }
+          } catch (e) {
+            console.error(e);
+          }
+         };
+        fetchData(); // Call the fetch function
+    }, [itemsPerPage, currentPage]);
 
     return(
         <>
@@ -72,9 +109,12 @@ function Materials() {
                                         <TableCell>{material.category}</TableCell>
                                         <TableCell>{material.material_type}</TableCell>
                                         <TableCell>{material.unit_cost}</TableCell>
-                                        <TableCell>{formatDateAsString(material.date_entry)}</TableCell>
+                                        <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
                                         <TableCell align="center">
-                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setOpenEditModal(true)}><Pencil/>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setEditMaterial(material);
+                                                setOpenEditModal(true);
+                                            }}><Pencil/>
                                             </Button>
                                             <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
                                             <DropdownMenu>
@@ -122,8 +162,8 @@ function Materials() {
                     </Pagination>
                 </div>
             </div>
-            {openAddModal && <AddMaterialModal onClose={() => setOpenAddModal(false)}/>}
-            {openEditModal && <EditMaterialModal onClose={() => setOpenEditModal(false)}/>}
+            {openAddModal && <AddMaterialModal addMaterial={addMaterial} onClose={() => setOpenAddModal(false)}/>}
+            {openEditModal && <EditMaterialModal updateMaterial={updateMaterial} material={editMaterial} onClose={() => setOpenEditModal(false)}/>}
         </>
     );
 }

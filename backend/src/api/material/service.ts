@@ -30,7 +30,7 @@ export async function updateMaterial(material: any, id: number): Promise<Materia
 
 export async function findMaterialById(id: number): Promise<Material | null> {
   try {
-    const material = await prisma.material.findFirst({
+    const material = await prisma.material.findUnique({
       where: { id },
     });
     return material;
@@ -71,7 +71,21 @@ export async function searchMaterialByName(name: string): Promise<Material[]> {
   }
 }
 
-export async function listMaterials(page: number, limit: number): Promise<Material[]> {
+interface MaterialType {
+  id: number;
+  item_description: string;
+  brand_model: string;
+  unit_cost: number;
+  category: string;
+  material_code: string;
+  item_code: string;
+  material_con: string;
+  material_type: string;
+  uom: string;
+  date_entry: Date;
+}
+
+export async function listMaterials(page: number, limit: number): Promise<{ materialsFinal: MaterialType[], maxPage: number }> {
   try {
     // Get total count for pagination
     const totalMaterials = await prisma.material.count();
@@ -87,15 +101,36 @@ export async function listMaterials(page: number, limit: number): Promise<Materi
       page = 1;
     }
 
-    const materials: Material[] = await prisma.material.findMany({
+    const materials = await prisma.material.findMany({
       skip: (page - 1) * limit,
       take: limit,
       orderBy: {
         description: 'asc',
       },
+      include: {
+        type: true,
+        category: true,
+      },
     });
+
+    if (materials && materials.length > 0) {
+      const materialsFinal = materials.map((material) => ({
+        id: material.id,
+        item_description: material.description,
+        brand_model: material.brand_model,
+        unit_cost: material.cost,
+        category: material.category.description,
+        material_code: material.material_code,
+        item_code: material.item_code,
+        material_con: material.material_required_yn,
+        material_type: material.type.description,
+        uom: material.unit_of_measure,
+        date_entry: new Date(material.date_entry),
+      }));
+      return { materialsFinal, maxPage: totalPages || 1 };
+    }
     
-    return materials;
+    return { materialsFinal: [], maxPage: totalPages || 1 };
   } catch (error) {
     throw new Error('Database error');
   }

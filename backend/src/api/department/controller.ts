@@ -13,7 +13,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
 
     const newDepartment = await insertDepartment({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newDepartment) {
-      res.status(200).json({ company: newDepartment, message: 'Successfully created department' });
+      res.status(200).json({ department: newDepartment, message: 'Successfully created department' });
     }
   } catch (err) {
     next(err);
@@ -51,7 +51,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
     const newDepartment = await updateDepartment({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newDepartment) {
-      res.status(200).json({ company: newDepartment, message: 'Successfully updated department' });
+      res.status(200).json({ department: newDepartment, message: 'Successfully updated department' });
     }
   } catch (err) {
     next(err);

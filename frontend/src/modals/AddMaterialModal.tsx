@@ -1,4 +1,10 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import {
@@ -23,55 +29,203 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/Components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, getVersion } from "@/lib/utils";
+import MaterialType from "@/interface/material";
+import type CategoryType from "@/interface/category";
+import type TypeInterface from "@/interface/types";
+import axios, { CancelTokenSource } from "axios";
+import { toast } from "react-toastify";
 
 interface AddMaterialModalProps {
   onClose: () => void;
+  addMaterial: (material: MaterialType | null) => void;
 }
 
-const categories = [
-  { value: "cpu", label: "CPU" },
-  { value: "laptop", label: "Laptop" },
-  { value: "ac_adapter", label: "AC Adapter" },
-  { value: "printer", label: "Printer" },
-  { value: "pos_terminal", label: "POS Terminal" },
-  { value: "cash_drawer", label: "Cash Drawer" },
-  { value: "monitor", label: "Monitor" },
-  { value: "keyboard", label: "Keyboard" },
-  { value: "mouse", label: "Mouse" },
-  { value: "power_cord", label: "Power Cord" },
-  { value: "router", label: "Router" },
-  { value: "camera", label: "Camera" },
-  { value: "ssd_hdd", label: "SSD/HDD" },
-  { value: "enclosure", label: "Enclosure" },
-  { value: "fuse_box", label: "Fuse Box" },
-  { value: "antenna", label: "Antenna" },
-  { value: "avr_dvr", label: "AVR/DVR" },
-  { value: "cable", label: "Cable" },
-  { value: "battery", label: "Battery" },
-  { value: "cartridge", label: "Cartridge" },
-  { value: "motherboard", label: "Motherboard" },
-  { value: "touch_panel", label: "Touch Panel" },
-  { value: "projector", label: "Projector" },
-];
+function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
+  const [categoryPopOver, setCategoryPopOver] = useState<{searchTerm: string, isOpen: boolean, results: CategoryType[], selected: string}>({
+    searchTerm: '',
+    isOpen: false,
+    results: [],
+    selected: '',
+  });
 
-function AddMaterialModal({ onClose }: AddMaterialModalProps) {
-  const [openPopover, setOpenPopover] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] = React.useState("");
-  const [inputValue, setInputValue] = React.useState("");
+  const [typePopOver, setTypePopOver] = useState<{searchTerm: string, isOpen: boolean, results: TypeInterface[], selected: string}>({
+    searchTerm: '',
+    isOpen: false,
+    results: [],
+    selected: '',
+  });
 
-  const handleSelect = (currentValue: string) => {
-    setSelectedCategory(currentValue === selectedCategory ? "" : currentValue);
-    setOpenPopover(false);
+  const [desc, setDesc] = useState('');
+  const [model, setModel] = useState('');
+  const [unitCost, setUnitCost] = useState(0);
+  const [materialCode, setMaterialCode] = useState('');
+  const [itemCode, setItemCode] = useState('');
+  const [materialCon, setMaterialCon] = useState('');
+  const [uom, setUOM] = useState('');
+  const [dateEntry, setDateEntry] = useState('');
+
+  const clearData = () => {
+    setCategoryPopOver({searchTerm: '',
+      isOpen: false,
+      results: [],
+      selected: ''})
+    setTypePopOver({searchTerm: '',
+        isOpen: false,
+        results: [],
+        selected: ''})
+    setDesc('');
+    setModel('')
+    setUnitCost(0);
+    setMaterialCode('');
+    setItemCode('');
+    setMaterialCon('n');
+    setUOM('');
+    setDateEntry('');
+  }
+
+  const debounce = (func: Function, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: unknown[]) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
   };
 
-  const filteredCategories = categories
-    .filter((category) =>
-      category.label.toLowerCase().includes(inputValue.toLowerCase())
-    )
-    .slice(0, 3);
+  const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
 
-  if (!open) return null;
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${getVersion()}/material`, {
+        description: desc,
+        brand_model: model,
+        cost: unitCost,
+        category: categoryPopOver.selected,
+        material_code: materialCode,
+        item_code: itemCode,
+        material_required_yn: materialCon,
+        type: typePopOver.selected,
+        unit_of_measure: uom,
+        date_entry: new Date(dateEntry),
+      });
+
+      if (response.status >= 200 && response.status < 300) {
+        toast.success(response.data?.message || 'Successfully created material');
+        addMaterial({
+          id: response.data?.id || 1,
+          item_description: desc,
+          brand_model: model,
+          unit_cost: unitCost,
+          category: categoryPopOver.selected,
+          material_code: materialCode,
+          item_code: itemCode,
+          material_con: materialCon,
+          material_type: typePopOver.selected,
+          uom,
+          date_entry: new Date(dateEntry),
+        })
+        clearData();
+        onClose();
+      }
+    }  catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+        } else {
+          toast.error('Something went wrong')
+      }
+    }
+  }
+
+  const fetchData = useCallback(
+    debounce(async (term: string) => {
+      if (term) {
+        try {
+          // Cancel previous request if it exists
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+          }
+
+          // Create a new CancelTokenSource
+          const source = axios.CancelToken.source();
+          setCancelTokenSource(source);
+
+          const response = await axios.get(`${getVersion()}/material-category/search?desc=${term}`, {
+            cancelToken: source.token,
+            timeout: 5000,
+          });
+          setCategoryPopOver((prevState) => ({
+            ...prevState,
+            results: response.data.material_categories, // Assuming 'response.data' is an array of CategoryType
+          }));
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request canceled:', error.message);
+          } else {
+            console.error('Error fetching search results:', error);
+          }
+        }
+      } else {
+        setCategoryPopOver((prevState) => ({
+          ...prevState,
+          results: [], // Clear results if no search term
+        }));
+      }
+    }, 500), // Adjust debounce delay as needed (500ms)
+    []
+  );
+
+  const fetchDataType = useCallback(
+    debounce(async (term: string) => {
+      if (term) {
+        try {
+          // Cancel previous request if it exists
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+          }
+
+          // Create a new CancelTokenSource
+          const source = axios.CancelToken.source();
+          setCancelTokenSource(source);
+
+          const response = await axios.get(`${getVersion()}/material-type/search?desc=${term}`, {
+            cancelToken: source.token,
+            timeout: 5000,
+          });
+          setTypePopOver((prevState) => ({
+            ...prevState,
+            results: response.data.materialTypes, // Assuming 'response.data' is an array of CategoryType
+          }));
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request canceled:', error.message);
+          } else {
+            console.error('Error fetching search results:', error);
+          }
+        }
+      } else {
+        setTypePopOver((prevState) => ({
+          ...prevState,
+          results: [], // Clear results if no search term
+        }));
+      }
+    }, 500), // Adjust debounce delay as needed (500ms)
+    []
+  );
+
+  useEffect(() => {
+    if (categoryPopOver.searchTerm) {
+      fetchData(categoryPopOver.searchTerm);
+    }
+  }, [categoryPopOver.searchTerm, fetchData]);
+
+  useEffect(() => {
+    if (typePopOver.searchTerm) {
+      fetchDataType(typePopOver.searchTerm);
+    }
+  }, [typePopOver.searchTerm, fetchDataType]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 p-4">
@@ -80,7 +234,10 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
           <h1 className="font-extrabold text-xl">Add Material</h1>
           <Button
             className="text-black bg-transparent hover:bg-transparent p-0"
-            onClick={onClose}
+            onClick={() => {
+              clearData();
+              onClose();
+            }}
           >
             <X size={30} />
           </Button>
@@ -90,14 +247,14 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
             <p className="text-sm text-[#697386]">
               Item Description <span className=" text-red-500">*</span>
             </p>
-            <Input className="focus:border-none border-black"></Input>
+            <Input value={desc} onChange={(e) => setDesc(e.target.value)} className="focus:border-none border-black"></Input>
           </div>
           <div className="flex flex-row w-full space-x-2">
             <div className="space-y-1 w-full">
               <p className="text-sm text-[#697386]">
                 Brand Model <span className=" text-red-500">*</span>
               </p>
-              <Input className="focus:border-none border-black"></Input>
+              <Input value={model} onChange={(e) => setModel(e.target.value)} className="focus:border-none border-black"></Input>
             </div>
           </div>
           <div className="flex flex-row w-full space-x-2">
@@ -106,6 +263,8 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
                 Unit Cost <span className=" text-red-500">*</span>
               </p>
               <Input
+                value={unitCost}
+                onChange={(e) => setUnitCost(parseInt(e.target.value))}
                 className="focus:border-none border-black"
                 type="number"
               ></Input>
@@ -114,19 +273,15 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
               <p className="text-sm text-[#697386]">
                 Category <span className=" text-red-500">*</span>{" "}
               </p>
-              <Popover open={openPopover} onOpenChange={setOpenPopover}>
+              <Popover open={categoryPopOver.isOpen} onOpenChange={(isOpen) => setCategoryPopOver((prevState) => ({ ...prevState, isOpen }))}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     role="combobox"
-                    aria-expanded={openPopover}
+                    aria-expanded={categoryPopOver.isOpen}
                     className="w-full justify-between border-black"
                   >
-                    {selectedCategory
-                      ? categories.find(
-                          (category) => category.value === selectedCategory
-                        )?.label
-                      : "Select Category"}
+                    {categoryPopOver.selected || "Select Category"}
                     <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -134,28 +289,28 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
                   <Command>
                     <CommandInput
                       placeholder="Search Category"
-                      value={inputValue}
-                      onValueChange={setInputValue}
+                      value={categoryPopOver.searchTerm}
+                      onValueChange={(searchTerm) => setCategoryPopOver((prevState) => ({ ...prevState, searchTerm }))}
                     />
                     <CommandList>
                       <CommandEmpty>No category found.</CommandEmpty>
-                      {filteredCategories.length > 0 && (
+                      {categoryPopOver.results.length > 0 && (
                         <CommandGroup>
-                          {filteredCategories.map((category) => (
+                          {categoryPopOver.results.map((category) => (
                             <CommandItem
-                              key={category.value}
-                              value={category.value}
-                              onSelect={() => handleSelect(category.value)}
+                              key={category.id}
+                              value={category.description}
+                              onSelect={(selected) => setCategoryPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  selectedCategory === category.value
+                                  categoryPopOver.selected === category.description
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {category.label}
+                              {category.description}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -172,15 +327,16 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
                 Material Code <span className=" text-red-500">*</span>
               </p>
               <Input
+                value={materialCode}
+                onChange={(e) => setMaterialCode(e.target.value)}
                 className="focus:border-none border-black"
-                type="number"
               ></Input>
             </div>
             <div className="space-y-1 w-full">
               <p className="text-sm text-[#697386]">
                 Item Code <span className=" text-red-500">*</span>
               </p>
-              <Input className="focus:border-none border-black"></Input>
+              <Input value={itemCode} onChange={(e) => setItemCode(e.target.value)} className="focus:border-none border-black"></Input>
             </div>
           </div>
           <div className="flex flex-row w-full space-x-2">
@@ -188,14 +344,14 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
               <p className="text-sm text-[#697386]">
                 Material Con <span className=" text-red-500">*</span>
               </p>
-              <Select>
+              <Select onValueChange={(value) => setMaterialCon(value)}>
                 <SelectTrigger className="border-black focus:border-none">
                   <SelectValue placeholder="Select Material Con" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="req">Required</SelectItem>
-                    <SelectItem value="n/a">N/A</SelectItem>
+                    <SelectItem value="y">Required</SelectItem>
+                    <SelectItem value="n">N/A</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -204,24 +360,52 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
               <p className="text-sm text-[#697386]">
                 Material Type <span className=" text-red-500">*</span>
               </p>
-              <Select>
-                <SelectTrigger className="border-black focus:border-none">
-                  <SelectValue placeholder="Select Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="ou">Original Unit</SelectItem>
-                    <SelectItem value="billing">Billing</SelectItem>
-                    <SelectItem value="du">Demo Unit</SelectItem>
-                    <SelectItem value="su">Service Unit</SelectItem>
-                    <SelectItem value="fl">For Loading</SelectItem>
-                    <SelectItem value="fr">For Repair</SelectItem>
-                    <SelectItem value="rep">Repaired</SelectItem>
-                    <SelectItem value="pu">Pull Out</SelectItem>
-                    <SelectItem value="pt">P. Transfer</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <Popover open={typePopOver.isOpen} onOpenChange={(isOpen) => setTypePopOver((prevState) => ({ ...prevState, isOpen }))}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={typePopOver.isOpen}
+                    className="w-full justify-between border-black"
+                  >
+                    {typePopOver.selected || "Select Type"}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search Type"
+                      value={typePopOver.searchTerm}
+                      onValueChange={(searchTerm) => setTypePopOver((prevState) => ({ ...prevState, searchTerm }))}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No type found.</CommandEmpty>
+                      {typePopOver.results.length > 0 && (
+                        <CommandGroup>
+                          {typePopOver.results.map((type) => (
+                            <CommandItem
+                              key={type.id}
+                              value={type.description}
+                              onSelect={(selected) => setTypePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  typePopOver.selected === type.description
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {type.description}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      )}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
           <div className="flex flex-row w-full space-x-2">
@@ -229,13 +413,15 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
               <p className="text-sm text-[#697386]">
                 UOM Type <span className=" text-red-500">*</span>
               </p>
-              <Input className="focus:border-none border-black"></Input>
+              <Input value={uom} onChange={(e) => setUOM(e.target.value)} className="focus:border-none border-black"></Input>
             </div>
             <div className="space-y-1 w-full">
               <p className="text-sm text-[#697386]">
                 Date Entry <span className=" text-red-500">*</span>
               </p>
               <Input
+                value={dateEntry}
+                onChange={(e) => setDateEntry(e.target.value)}
                 type="Date"
                 className="focus:border-none border-black"
               ></Input>
@@ -245,11 +431,14 @@ function AddMaterialModal({ onClose }: AddMaterialModalProps) {
         <div className="space-x-2 mt-5 flex justify-end">
           <Button
             className="bg-hoverCream text-fontHeading font-semibold hover:text-white"
-            onClick={onClose}
+            onClick={() => {
+              clearData();
+              onClose();
+            }}
           >
             <span>Cancel</span>
           </Button>
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">
+          <Button onClick={(e) => handleSave(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white">
             <span>Save</span>
           </Button>
         </div>

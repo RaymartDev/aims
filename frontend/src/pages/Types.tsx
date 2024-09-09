@@ -10,25 +10,41 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
 // import EditTypeModal from "@/modals/EditTypeModal";
-import type TypeType from "@/interface/types";
+import type TypeInterface from "@/interface/types";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
+import EditTypeModal from "@/modals/EditTypeModal";
 
 function Types() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
-    const [types, setTypes] = useState<TypeType[]>([])
-    const [editType, setEditType] = useState<TypeType | null>(null);
+    const [types, setTypes] = useState<TypeInterface[]>([])
+    const [editType, setEditType] = useState<TypeInterface | null>(null);
     const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`${getVersion()}/material-type/list?limit=${itemsPerPage}&page=${currentPage}`);
+            if (response.status >= 200 && response.status < 300) {
+              setTypes(response.data.materialTypes); // Update state with employee data
+              setMaxPage(response.data.misc.maxPage);
+          }
+          } catch (e) {
+            console.error(e);
+          }
+         };
+        fetchData(); // Call the fetch function
+    }, [itemsPerPage, currentPage]);
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const updateType = (id: number, type: TypeType | null) => {
+    const updateType = (id: number, type: TypeInterface | null) => {
         if (type) {
             const index = types.findIndex(type => type.id === id);
             if (index !== -1) {
@@ -38,7 +54,7 @@ function Types() {
         }
     }
 
-    const addType = (type: TypeType) => {
+    const addType = (type: TypeInterface | null) => {
         if (type) {
             setTypes(prevTypes => [...prevTypes, type]);
         }
@@ -49,7 +65,7 @@ function Types() {
             <div className="flex flex-col h-full relative">
                 <div className="flex flex-col">
                     <h1 className="text-2xl font-bold">Types</h1>
-                    <p className="text-sm font-semibold text-[#9E9E9E]">Miscellaneous / Types</p>
+                    <p className="text-sm font-semibold text-[#9E9E9E]">Product Types</p>
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-row justify-between w-full">
@@ -132,8 +148,8 @@ function Types() {
                     </PaginationContent>
                 </Pagination>
             </div>
-            {openModal && <AddTypeModal  onClose={() => setOpenModal(false)}/>}
-            {/* {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>} */}
+            {openModal && <AddTypeModal addType={addType} onClose={() => setOpenModal(false)}/>}
+            {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
         </div>
     );
 }

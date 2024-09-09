@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import type TypeType from "@/interface/types";
+import type TypeInterface from "@/interface/types";
 import { getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
@@ -13,21 +13,26 @@ import { toast } from "react-toastify";
 
 interface AddTypesModalProps {
   onClose: () => void;
+  addType: (type: TypeInterface | null) => void;
 }
 
-function AddTypesModal({ onClose }: AddTypesModalProps) {
-  const [name, setName] = useState('');
+function AddTypesModal({ addType, onClose }: AddTypesModalProps) {
+  const [description, setDescription] = useState('');
 
   const handleSaveType = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${getVersion()}/types`, {
-        name,
+      const response = await axios.post(`${getVersion()}/material-type`, {
+        description,
       });
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully created type');
+        addType({
+          id: response.data?.id || 1,
+          description,
+        });
         onClose();
-        setName('');
+        setDescription('');
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -45,7 +50,10 @@ function AddTypesModal({ onClose }: AddTypesModalProps) {
           <h1 className="font-extrabold text-xl">Add Type</h1>
           <Button
             className="text-black bg-transparent hover:bg-transparent p-0"
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              setDescription('');
+            }}
           >
             <X size={30} />
           </Button>
@@ -55,13 +63,16 @@ function AddTypesModal({ onClose }: AddTypesModalProps) {
             <p className="text-sm text-[#697386]">
               Type Description <span className=" text-red-500">*</span>
             </p>
-            <Input value={name} onChange={(e) => setName(e.target.value)} className="focus:border-none border-black"></Input>
+            <Input value={description} onChange={(e) => setDescription(e.target.value)} className="focus:border-none border-black"></Input>
           </div>
         </div>
         <div className="space-x-2 mt-5 flex justify-end">
           <Button
             className="bg-hoverCream text-fontHeading font-semibold hover:text-white"
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              setDescription('');
+            }}
           >
             <span>Cancel</span>
           </Button>

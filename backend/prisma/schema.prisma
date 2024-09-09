@@ -82,6 +82,8 @@ model User {
   users_delivery Delivery[] @relation("UserDelivery")
   shipped_by_release Release[] @relation("ShippedByRelease")
   received_by_release Release[] @relation("ReceivedByRelease")
+  material_categories Material_Category[] @relation("MaterialCategoryModifiedBy")
+  material_types Material_Type[] @relation("MaterialTypeModifiedBy")
 }
 
 // TODO store, user
@@ -164,15 +166,14 @@ model Material {
   material_code String
   description String
   item_code String
-  unit String
   brand_model String
   material_required_yn String @db.Char(1)
-  material_type String
+  type_id Int
+  type Material_Type @relation(fields: [type_id], references: [id], onDelete: Cascade)
   cost Int
-  maximum_stock Int
   unit_of_measure String
-  category String
-  serial_number String
+  category_id Int
+  category Material_Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   date_entry DateTime
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
@@ -246,4 +247,30 @@ model Release {
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by User? @relation("ReleaseModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Material_Category {
+  id         Int       @id @default(autoincrement())
+  description       String
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?  @default(1)
+  modified_by User? @relation("MaterialCategoryModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  materials Material[]
+
+  @@index([description])
+}
+
+model Material_Type {
+  id         Int       @id @default(autoincrement())
+  description       String
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?  @default(1)
+  modified_by User? @relation("MaterialTypeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  materials Material[]
+
+  @@index([description])
 }

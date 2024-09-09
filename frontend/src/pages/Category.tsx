@@ -13,6 +13,7 @@ import AddCategoryModal from "@/modals/AddCategoryModal";
 import type CategoryType from "@/interface/category";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
+import EditCategoryModal from "@/modals/EditCategoryModal";
 
 function Category() {
     const [openModal, setOpenModal] = useState(false);
@@ -28,6 +29,21 @@ function Category() {
         setCurrentPage(page);
     };
 
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`${getVersion()}/material-category/list?limit=${itemsPerPage}&page=${currentPage}`);
+            if (response.status >= 200 && response.status < 300) {
+              setCategories(response.data.material_categories); // Update state with employee data
+              setMaxPage(response.data.misc.maxPage);
+          }
+          } catch (e) {
+            console.error(e);
+          }
+         };
+        fetchData(); // Call the fetch function
+    }, [itemsPerPage, currentPage]);
+
     const updateCategory = (id: number, category: CategoryType | null) => {
         if (category) {
             const index = categories.findIndex(category => category.id === id);
@@ -38,7 +54,7 @@ function Category() {
         }
     }
 
-    const addCategory = (category: CategoryType) => {
+    const addCategory = (category: CategoryType | null) => {
         if (category) {
             setCategories(prevCategories => [...prevCategories, category]);
         }
@@ -49,7 +65,7 @@ function Category() {
             <div className="flex flex-col h-full relative">
                 <div className="flex flex-col">
                     <h1 className="text-2xl font-bold">Category</h1>
-                    <p className="text-sm font-semibold text-[#9E9E9E]">Miscellaneous / Category</p>
+                    <p className="text-sm font-semibold text-[#9E9E9E]">Product Categories</p>
                 </div>
                 <div className="flex justify-center mt-10">
                     <div className="flex flex-row justify-between w-full">
@@ -132,8 +148,8 @@ function Category() {
                     </PaginationContent>
                 </Pagination>
             </div>
-            {openModal && <AddCategoryModal  onClose={() => setOpenModal(false)}/>}
-            {/* {editModal && <EditCategoryModal updateCategory={updateCategory} category={editCategory} onClose={() => setEditModal(false)}/>} */}
+            {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
+            {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
         </div>
     );
 }

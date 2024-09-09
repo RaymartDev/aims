@@ -6,6 +6,8 @@ import supplier from './supplier';
 import company from './company';
 import material from './material';
 import department from './department';
+import materialCategory from './materialCategory';
+import materialType from './materialType';
 
 const router = express.Router();
 
@@ -16,5 +18,7 @@ router.use('/supplier', supplier);
 router.use('/company', company);
 router.use('/department', department);
 router.use('/material', material);
+router.use('/material-type', materialType);
+router.use('/material-category', materialCategory);
 
 export default router;

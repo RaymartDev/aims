@@ -3,16 +3,35 @@ import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { Material } from '@prisma/client';
 import { findMaterialById, findMaterialByName, insertMaterial, listMaterials, searchMaterialByName, updateMaterial } from './service';
+import { findMaterialCategoryByName } from '../materialCategory/service';
+import { findMaterialTypeByName } from '../materialType/service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const findMaterial = await findMaterialByName(req.body.department || '');
+    const findMaterial = await findMaterialByName(req.body.description || '');
     if (findMaterial) {
       return res.status(400).json({ message: 'Material with that description already exists' });
     }
-    const newMaterial = await insertMaterial({ modified_by_id: req.user?.id || 1, ...req.body });
+    const { category, type, ...restOfBody } = req.body;
+    const updateData: Record<string, any> = {
+      modified_by_id: req.user?.id || 1, // Always include the user ID
+    };
+
+    if (!category || !type) {
+      return res.status(400).json({ message: 'Material category or type is not specified' });
+    }
+
+    const findCategory = await findMaterialCategoryByName(category);
+    const findType = await findMaterialTypeByName(type);
+
+    updateData.category_id = findCategory?.id || 1;
+    updateData.type_id = findType?.id || 1;
+
+    Object.assign(updateData, restOfBody);
+
+    const newMaterial = await insertMaterial({ ...updateData });
     if (newMaterial) {
-      res.status(200).json({ department: newMaterial, message: 'Successfully created material' });
+      res.status(200).json({ material: newMaterial, message: 'Successfully created material' });
     }
   } catch (err) {
     next(err);
@@ -46,7 +65,24 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material could not be found!' });
     }
 
-    const newMaterial = await updateMaterial({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
+    const { category, type, ...restOfBody } = req.body;
+    const updateData: Record<string, any> = {
+      modified_by_id: req.user?.id || 1, // Always include the user ID
+    };
+
+    if (!category || !type) {
+      return res.status(400).json({ message: 'Material category or type is not specified' });
+    }
+
+    const findCategory = await findMaterialCategoryByName(category);
+    const findType = await findMaterialTypeByName(type);
+
+    updateData.category_id = findCategory?.id || 1;
+    updateData.type_id = findType?.id || 1;
+
+    Object.assign(updateData, restOfBody);
+
+    const newMaterial = await updateMaterial({ ...updateData }, parseInt(id));
     if (newMaterial) {
       res.status(200).json({ department: newMaterial, message: 'Successfully updated material' });
     }
@@ -76,13 +112,18 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 17;
     if (isNaN(page) || page < 1) {
       page = 1;
     }
 
-    const materials: Material[] = await listMaterials(page, 10);
+    const materials = await listMaterials(page, limit);
     if (materials) {
-      res.status(200).json({ materials, message: 'Successfully retrieved materials' });
+      res.status(200).json({ materials: materials.materialsFinal, message: 'Successfully retrieved materials', misc: {
+        page,
+        limit,
+        maxPage: materials.maxPage,
+      } });
     }
   } catch (err) {
     next(err);
