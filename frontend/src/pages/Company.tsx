@@ -9,12 +9,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
+import EditCompanyModal from "@/modals/EditCompanyModal";
 import type CompanyType from "@/interface/company";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
 
 function Company() {
     const [openModal, setOpenModal] = useState(false);
+    const [editModal, setEditModal] = useState(false);
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
@@ -93,7 +95,7 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={()=> setEditModal(true)}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -132,6 +134,7 @@ function Company() {
                 </Pagination>
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
+            {editModal && <EditCompanyModal onClose={() => setEditModal(false)}/>}
         </div>
     );
 }

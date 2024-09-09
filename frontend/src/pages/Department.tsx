@@ -9,12 +9,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
+import EditDepartmentModal from "@/modals/EditDepartmentModal";
 import type DepartmentType from "@/interface/department";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
 
 function Department() {
     const [openModal, setOpenModal] = useState(false);
+    const [editModal, setEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -93,7 +95,7 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setEditModal(true)}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -132,6 +134,7 @@ function Department() {
                 </Pagination>
             </div>
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
+            {editModal && <EditDepartmentModal onClose={() => setEditModal(false)}/>}
         </div>
     );
 }
