@@ -14,6 +14,8 @@ import Company from "./pages/Company";
 import Department from "./pages/Department";
 import ChangePassword from "./pages/ChangePassword";
 import Downloadpdf from "./pages/Downloadpdf";
+import Category from "./pages/Category";
+import Types from "./pages/Types";
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -27,7 +29,10 @@ function App() {
           {/* Warehouse */}
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/deliveries" element={<Deliveries />} />
+          {/*Materials*/}
           <Route path="/materials" element={<Materials />} />
+          <Route path="/category" element={<Category/>}/>.
+          <Route path="/types" element={<Types/>}/>
           {/* User */}
           <Route path="/employee" element={<Employee />} />
           <Route path="/store" element={<Store />} />

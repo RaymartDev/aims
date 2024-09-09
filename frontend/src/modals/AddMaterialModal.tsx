@@ -26,7 +26,6 @@ import {
 import { cn } from "@/lib/utils";
 
 interface AddMaterialModalProps {
-  open: boolean;
   onClose: () => void;
 }
 
@@ -56,7 +55,7 @@ const categories = [
   { value: "projector", label: "Projector" },
 ];
 
-function AddMaterialModal({ open, onClose }: AddMaterialModalProps) {
+function AddMaterialModal({ onClose }: AddMaterialModalProps) {
   const [openPopover, setOpenPopover] = React.useState(false);
   const [selectedCategory, setSelectedCategory] = React.useState("");
   const [inputValue, setInputValue] = React.useState("");
