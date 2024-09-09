@@ -13,12 +13,14 @@ import Return from "./pages/Return";
 import Company from "./pages/Company";
 import Department from "./pages/Department";
 import ChangePassword from "./pages/ChangePassword";
+import Downloadpdf from "./pages/Downloadpdf";
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/download" element={<Downloadpdf/>}/>
         <Route path="/login" element={<Login />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />

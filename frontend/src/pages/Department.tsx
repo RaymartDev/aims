@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
+import EditDepartmentModal from "@/modals/EditDepartmentModal";
 
 const data = [
     { id: 1,  department: "IT Department", status: "Active" },
@@ -32,6 +33,7 @@ const data = [
 
 function Department() {
     const [openModal, setOpenModal] = useState(false);
+    const [editModal, setEditOpenmodal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     const headerHeight = 70;
@@ -120,7 +122,7 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setEditOpenmodal(true)}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -159,6 +161,7 @@ function Department() {
                 </Pagination>
             </div>
             <AddDepartmentModal open={openModal} onClose={() => setOpenModal(false)}/>
+            <EditDepartmentModal open={editModal} onClose={() => setEditOpenmodal(false)}/>
         </div>
     );
 }

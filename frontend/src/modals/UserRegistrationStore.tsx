@@ -23,6 +23,14 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
     const [division, setDivision] = useState('');
     const [employeeNo, setEmployeeNo] = useState('');
 
+    const clearData = () => {
+        setUsername('');
+        setPassword('');
+        setDepartment('');
+        setDivision('');
+        setEmployeeNo('');
+    }
+
     const handleRegister = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         try {
@@ -44,6 +52,7 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
                 registerStore(store?.id || 1);    
             }
             onClose();
+            clearData();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');
@@ -97,7 +106,10 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => {
+                        onClose();
+                        clearData();
+                    }}><span>Cancel</span></Button>
                     <Button onClick={(e) => handleRegister(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>

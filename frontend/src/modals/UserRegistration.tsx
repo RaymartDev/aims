@@ -11,14 +11,23 @@ import { getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 interface UserRegistrationProps {
-    onClose: () => void;
-    employee: EmployeeType | null;
-    registerEmployee: (id: number) => void;
+  onClose: () => void;
+  employee: EmployeeType | null;
+  registerEmployee: (id: number) => void;
 }
 
-function UserRegistration ({ employee, onClose, registerEmployee }: UserRegistrationProps) {
-    const[username, setUsername] = useState('');
-    const[password, setPassword] = useState('');
+function UserRegistration({
+  employee,
+  onClose,
+  registerEmployee,
+}: UserRegistrationProps) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const clearData = () => {
+    setUsername('');
+    setPassword('');
+  }
 
     const handleRegister = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -41,6 +50,7 @@ function UserRegistration ({ employee, onClose, registerEmployee }: UserRegistra
                 registerEmployee(employee?.id || 1);    
             }
             onClose();
+            clearData();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');
@@ -102,4 +112,4 @@ function UserRegistration ({ employee, onClose, registerEmployee }: UserRegistra
     );
 }
 
-export default UserRegistration
+export default UserRegistration;

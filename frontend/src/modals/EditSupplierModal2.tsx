@@ -1,15 +1,75 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import type SupplierType from "@/interface/supplier";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 interface EditSupplierModal2Props {
-    open: boolean;
     onClose: () => void;
     onBack: () => void;
+    editSupplier: SupplierType | null;
+    getEditDataByKey: (key: string) => string;
+    handleEditDetailChange: (target: string, value: string) => void;
+    clearEditData: () => void;
+    updateSupplier: (id: number, supplier: SupplierType | null) => void;
 }
 
-function EditSupplierModal2 ({ open, onClose, onBack }: EditSupplierModal2Props) {
-    if (!open) return null;
+function EditSupplierModal2 ({ onClose, onBack, getEditDataByKey, handleEditDetailChange, editSupplier, clearEditData, updateSupplier }: EditSupplierModal2Props) {
+
+    const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put(`${getVersion()}/supplier/update/${editSupplier?.id || 1}`, {
+                supplier_code: getEditDataByKey('supplierCode'),
+                company_name: getEditDataByKey('companyName'),
+                address: getEditDataByKey('address'),
+                contract_term: getEditDataByKey('contractTerm'),
+                tin_number: getEditDataByKey('tinNumber'),
+                contact_person: getEditDataByKey('contactPerson'),
+                business_tel: getEditDataByKey('businessTel'),
+                email_address: getEditDataByKey('emailAddress'),
+                telefax_number: getEditDataByKey('teleFaxNumber'),
+                zip_code: getEditDataByKey('zipCode'),
+                mobile_number: getEditDataByKey('mobileNumber'),
+                city_town: getEditDataByKey('cityTown'),
+                province: getEditDataByKey('province'),
+                remarks: getEditDataByKey('remarks')
+            });
+            if (response.status >= 200 && response.status < 300) { 
+                toast.success(response.data?.message || 'Successfully updated supplier');
+                onClose();
+                updateSupplier(editSupplier?.id || 1, {
+                    id: editSupplier?.id || 1,
+                    supplier_code: getEditDataByKey('supplierCode'),
+                    company_name: getEditDataByKey('companyName'),
+                    address: getEditDataByKey('address'),
+                    contract_term: getEditDataByKey('contractTerm'),
+                    tin_number: getEditDataByKey('tinNumber'),
+                    contact_person: getEditDataByKey('contactPerson'),
+                    email: getEditDataByKey('email'),
+                    mobile_number: getEditDataByKey('mobileNumber'),
+                    business_number: getEditDataByKey('businessTel'),
+                    teleFax: getEditDataByKey('teleFaxNumber'),
+                    cityTown: getEditDataByKey('cityTown'),
+                    province: getEditDataByKey('province'),
+                    zip: getEditDataByKey('zipCode'),
+                    remarks: getEditDataByKey('remarks'),
+                })
+                clearEditData();
+            }
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                toast.error(err.response?.data?.message || 'Something went wrong');
+              } else {
+                toast.error('Something went wrong')
+              }
+        }
+    }
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -21,52 +81,52 @@ function EditSupplierModal2 ({ open, onClose, onBack }: EditSupplierModal2Props)
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Contact Person</p>
-                        <Input className="focus:border-none border-black"></Input>
+                        <Input value={getEditDataByKey('contactPerson')} onChange={(e) => handleEditDetailChange('contactPerson', e.target.value)} className="focus:border-none border-black"></Input>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-2/3">
                             <p className="text-sm text-[#697386]">Email Address</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('emailAddress')} onChange={(e) => handleEditDetailChange('emailAddress', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-1/3">
                             <p className="text-sm text-[#697386]">Mobile Number</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('mobileNumber')} onChange={(e) => handleEditDetailChange('mobileNumber', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div  className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Business Telephone</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('businessTel')} onChange={(e) => handleEditDetailChange('businessTel', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Telefax Number</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('teleFaxNumber')} onChange={(e) => handleEditDetailChange('teleFaxNumber', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div  className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">City/Town</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('cityTown')} onChange={(e) => handleEditDetailChange('cityTown', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Province</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('province')} onChange={(e) => handleEditDetailChange('province', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div  className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-1/4">
                             <p className="text-sm text-[#697386]">Zip Code</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('zipCode')} onChange={(e) => handleEditDetailChange('zipCode', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-3/4">
                             <p className="text-sm text-[#697386]">Remarks</p>
-                            <Input className="focus:border-none border-black"></Input>
+                            <Input value={getEditDataByKey('remarks')} onChange={(e) => handleEditDetailChange('remarks', e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onBack}><span>Back</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
+                    <Button onClick={(e) => handleUpdate(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
         </div>

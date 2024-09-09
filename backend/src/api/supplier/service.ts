@@ -41,6 +41,20 @@ export async function updateSupplier(supplier: any, id: number): Promise<Supplie
   }
 }
 
+export async function updateSupplierContact(supplier_contact: any, id: number): Promise<Supplier_Contact_Details | null> {
+  try {
+    const updatedSupplierContact = await prisma.supplier_Contact_Details.update({
+      data: {
+        ...supplier_contact,
+      },
+      where: { id },
+    });
+    return updatedSupplierContact;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findSupplierById(id: number): Promise<Supplier | null> {
   try {
     const supplier = await prisma.supplier.findFirst({
@@ -82,7 +96,25 @@ export async function searchSupplierByName(supplier_code: string): Promise<Suppl
   }
 }
 
-export async function listSuppliers(page: number, limit: number): Promise<Supplier[]> {
+interface SupplierType {
+  id: number;
+  supplier_code: string;
+  company_name: string;
+  address: string;
+  contract_term: string;
+  tin_number: string;
+  contact_person: string;
+  email: string;
+  mobile_number: string;
+  business_number: string;
+  teleFax: string;
+  cityTown: string;
+  province: string;
+  zip: string;
+  remarks: string;
+}
+
+export async function listSuppliers(page: number, limit: number): Promise<{ suppliersFinal: SupplierType[], maxPage: number }> {
   try {
     // Get total count for pagination
     const totalSuppliers = await prisma.supplier.count();
@@ -98,15 +130,44 @@ export async function listSuppliers(page: number, limit: number): Promise<Suppli
       page = 1;
     }
 
-    const suppliers: Supplier[] = await prisma.supplier.findMany({
+    const suppliers = await prisma.supplier.findMany({
       skip: (page - 1) * limit,
       take: limit,
       orderBy: {
         supplier_code: 'asc',
       },
+      include: {
+        contact_details: true,
+        company: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
+
+    if (suppliers && suppliers.length > 0) {
+      const suppliersFinal = suppliers.map((supplier) => ({
+        id: supplier.id,
+        supplier_code: supplier.supplier_code,
+        company_name: supplier.company.name,
+        address: supplier.address,
+        contract_term: supplier.contract_term,
+        tin_number: supplier.tin_number,
+        contact_person: supplier.contact_details.contact_person,
+        email: supplier.contact_details.email_address,
+        mobile_number: supplier.contact_details.mobile_number,
+        business_number: supplier.contact_details.business_tel,
+        teleFax: supplier.contact_details.telefax_number,
+        cityTown: supplier.contact_details.city_town,
+        province: supplier.contact_details.province,
+        zip: supplier.contact_details.zip_code,
+        remarks: supplier.contact_details.remarks,
+      }));
+      return { suppliersFinal, maxPage: totalPages };
+    }
     
-    return suppliers;
+    return { suppliersFinal: [], maxPage: 1 };
   } catch (error) {
     throw new Error('Database error');
   }

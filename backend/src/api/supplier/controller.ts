@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, listSuppliers, searchSupplierByName, updateSupplier } from './service';
+import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, listSuppliers, searchSupplierByName, updateSupplier, updateSupplierContact } from './service';
 import { findCompanyByName } from '../company/service';
 import { Supplier } from '@prisma/client';
 
@@ -9,7 +9,6 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
   try {
     const { 
       supplier_code,
-      status_code,
       company,
       address,
       contract_term,
@@ -35,8 +34,6 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Company not found!' });
     }
 
-    const effectiveTo = status_code === 2 ? new Date() : new Date('2099-12-01');
-
     const newSupplierDetails = await insertSupplierContact({
       contact_person,
       email_address,
@@ -53,7 +50,6 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     if (newSupplierDetails) {
       const newSupplier = await insertSupplier({ 
         supplier_code,
-        effective_to: effectiveTo,
         company_id: findCompany.id,
         address,
         contract_term,
@@ -99,9 +95,39 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Supplier not found!' });
     }
 
-    const newSupplier = await updateSupplier({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
+    const updateData: Record<string, any> = {
+      modified_by_id: req.user?.id || 1, // Always include the user ID
+    };
+
+    if (req.body.company_name) {
+      const findCompany = await findCompanyByName(req.body.company_name);
+      if (!findCompany) {
+        return res.status(400).json({ message: 'Company not found' });
+      }
+      updateData.company_id = findCompany.id;
+    }
+    updateData.address = req.body.address || '';
+    updateData.contract_term = req.body.contract_term || '';
+    updateData.tin_number = req.body.tin_number || '';
+
+    const newSupplier = await updateSupplier({ ...updateData }, parseInt(id));
+
+    const updateContact: Record<string, any> = {
+      modified_by_id: req.user?.id || 1, // Always include the user ID
+    };
+    updateContact.contact_person = req.body.contact_person || '';
+    updateContact.business_tel = req.body.business_tel || '';
+    updateContact.email_address = req.body.email_address || '';
+    updateContact.telefax_number = req.body.telefax_number || '';
+    updateContact.zip_code = req.body.zip_code || '';
+    updateContact.mobile_number = req.body.mobile_number || '';
+    updateContact.city_town = req.body.city_town || '';
+    updateContact.province = req.body.province || '';
+    updateContact.remarks = req.body.remarks || '';
+
+    const newSupplierContact = await updateSupplierContact({ ...updateContact }, newSupplier?.contact_id || 1);
     if (newSupplier) {
-      res.status(200).json({ supplier: newSupplier, message: 'Successfully updated supplier' });
+      res.status(200).json({ supplier: newSupplier, supplierContact: newSupplierContact, message: 'Successfully updated supplier' });
     }
   } catch (err) {
     next(err);
@@ -128,13 +154,18 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
     if (isNaN(page) || page < 1) {
       page = 1;
     }
 
-    const suppliers: Supplier[] = await listSuppliers(page, 10);
+    const suppliers = await listSuppliers(page, limit);
     if (suppliers) {
-      res.status(200).json({ suppliers, message: 'Successfully retrieved suppliers' });
+      res.status(200).json({ suppliers: suppliers.suppliersFinal, message: 'Successfully retrieved suppliers', misc: {
+        page,
+        limit,
+        maxPage: suppliers.maxPage,
+      } });
     }
   } catch (err) {
     next(err);
