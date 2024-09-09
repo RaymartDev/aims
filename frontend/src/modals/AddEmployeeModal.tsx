@@ -192,6 +192,63 @@ function AddEmployeeModal({ addEmployee, onClose }: AddEmployeeModalProps) {
                 className="focus:border-none border-black"
               ></Input>
             </div>
+
+            <div className="space-y-1 w-3/4">
+              <p className="text-sm text-[#697386]">
+                Company Name <span className=" text-red-500">*</span>{" "}
+              </p>
+              <Popover open={openPopover} onOpenChange={setOpenPopover}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={openPopover}
+                    className="w-full justify-between border-black"
+                  >
+                    {selectedCompany
+                      ? company.find(
+                          (company) => company.value === selectedCompany
+                        )?.label
+                      : "Select Category"}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search Category"
+                      value={inputValue}
+                      onValueChange={setInputValue}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No category found.</CommandEmpty>
+                      {filteredCategories.length > 0 && (
+                        <CommandGroup>
+                          {filteredCategories.map((company) => (
+                            <CommandItem
+                              key={company.value}
+                              value={company.value}
+                              onSelect={() => handleSelect(company.value)}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedCompany === company.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {company.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      )}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+
             <div className="space-y-1 w-1/3">
               <p className="text-sm text-[#697386]">Date Hired</p>
               <Input
