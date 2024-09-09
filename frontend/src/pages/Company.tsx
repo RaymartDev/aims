@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
@@ -6,73 +9,42 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
-
-const company = [
-    { id: 1,  companyName: "TechNova Solutions", status: "Active" },
-    { id: 2,  companyName: "InnoWave Corp", status: "Inactive" },
-    { id: 3,  companyName: "FusionWorks Ltd.", status: "Active" },
-    { id: 4,  companyName: "Pioneer Ventures", status: "Inactive" },
-    { id: 5,  companyName: "Skyline Innovations", status: "Active" },
-    { id: 6,  companyName: "Quantum Dynamics", status: "Inactive" },
-    { id: 7,  companyName: "Vertex Technologies", status: "Active" },
-    { id: 8,  companyName: "Apex Industries", status: "Inactive" },
-    { id: 9,  companyName: "NexGen Enterprises", status: "Active" },
-    { id: 10, companyName: "Blue Horizon Inc.", status: "Inactive" },
-    { id: 11, companyName: "StellarTech", status: "Active" },
-    { id: 12, companyName: "FuturePath Systems", status: "Inactive" },
-    { id: 13, companyName: "OmniTech Solutions", status: "Active" },
-    { id: 14, companyName: "Visionary Labs", status: "Inactive" },
-    { id: 15, companyName: "Synergy Global", status: "Active" },
-    { id: 16, companyName: "EcoVision Technologies", status: "Inactive" },
-    { id: 17, companyName: "UrbanGrid", status: "Active" },
-    { id: 18, companyName: "AstraEdge", status: "Inactive" },
-    { id: 19, companyName: "Zenith Solutions", status: "Active" },
-    { id: 20, companyName: "PrimeWave", status: "Inactive" }
-];
-
+import type CompanyType from "@/interface/company";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
 
 function Company() {
     const [openModal, setOpenModal] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
-
-    const headerHeight = 70;
-    const itemHeight = 50;
-
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight <= 0) return 0;
-        return Math.floor(availableHeight / itemHeight);
-    };
-
+    const [companies, setCompanies] = useState<CompanyType[]>([])
+    const itemsPerPage = 17;
+    const [searchQuery, setSearchQuery] = useState('');
+    const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
-
-    useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
     useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`${getVersion()}/company/list?limit=${itemsPerPage}&page=${currentPage}`);
+            if (response.status >= 200 && response.status < 300) {
+              setCompanies(response.data.companies); // Update state with employee data
+              setMaxPage(response.data.misc.totalPages);
+          }
+          } catch (e) {
+            console.error(e);
+          }
+         };
+        fetchData(); // Call the fetch function
+    }, [itemsPerPage, currentPage, maxPage]);
 
-    const filteredCompany = company.filter(company =>
-        company.companyName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const indexOfLastCompany = currentPage * itemsPerPage;
-    const indexOfFirstCompany = indexOfLastCompany - itemsPerPage;
-    const currentCompany = filteredCompany.slice(indexOfFirstCompany, indexOfLastCompany);
-
-    const totalPages = Math.ceil(filteredCompany.length  / itemsPerPage);
+    const addCompany = (company: CompanyType) => {
+        if (company) {
+            setCompanies(prevCompanies => [...prevCompanies, company]);
+        }
+    }
 
     return(
         <div className="flex flex-col h-full">
@@ -99,7 +71,7 @@ function Company() {
                         </div>    
                     </div>
                 </div>
-                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -109,10 +81,10 @@ function Company() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {currentCompany.map(company => (
+                            {companies.map(company => (
                                 <TableRow key={company.id}>
-                                    <TableCell>{company.companyName}</TableCell>
-                                    <TableCell>{company.status}</TableCell>
+                                    <TableCell>{company.name}</TableCell>
+                                    <TableCell>Active</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
@@ -140,7 +112,7 @@ function Company() {
                                 <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
                             </PaginationItem>
                         )}
-                        {Array.from({ length: totalPages }, (_, index) => (
+                        {Array.from({ length: maxPage }, (_, index) => (
                             <PaginationItem key={index}>
                                 <PaginationLink
                                     href="#"
@@ -151,7 +123,7 @@ function Company() {
                                 </PaginationLink>
                             </PaginationItem>
                         ))}
-                        {currentPage < totalPages && (
+                        {currentPage < maxPage && (
                             <PaginationItem>
                                 <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
                             </PaginationItem>
@@ -159,7 +131,7 @@ function Company() {
                     </PaginationContent>
                 </Pagination>
             </div>
-            <AddCompanyModal open={openModal} onClose={() => setOpenModal(false)}/>
+            {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
         </div>
     );
 }

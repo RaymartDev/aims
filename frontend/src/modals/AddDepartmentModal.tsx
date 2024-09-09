@@ -1,14 +1,47 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import type DepartmentType from "@/interface/department";
+import { useState } from "react";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 interface AddDepartmentModalProps {
-  open: boolean;
   onClose: () => void;
+  addDepartment: (department: DepartmentType | null) => void;
 }
 
-function AddDepartmentModal({ open, onClose }: AddDepartmentModalProps) {
-  if (!open) return null;
+function AddDepartmentModal({ onClose, addDepartment }: AddDepartmentModalProps) {
+  const [name, setName] = useState('');
+
+  const handleSaveDepartment = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${getVersion()}/department`, {
+        name,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        toast.success(response.data?.message || 'Successfully added department');
+        setName('');
+        addDepartment({
+          id: response.data?.department?.id || 1,
+          name
+        })
+        onClose();
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+        } else {
+          toast.error('Something went wrong')
+      }
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -27,17 +60,20 @@ function AddDepartmentModal({ open, onClose }: AddDepartmentModalProps) {
             <p className="text-sm text-[#697386]">
               Department <span className=" text-red-500">*</span>
             </p>
-            <Input className="focus:border-none border-black"></Input>
+            <Input value={name} onChange={(e) => setName(e.target.value)} className="focus:border-none border-black"></Input>
           </div>
         </div>
         <div className="space-x-2 mt-5 flex justify-end">
           <Button
             className="bg-hoverCream text-fontHeading font-semibold hover:text-white"
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              setName('');
+            }}
           >
             <span>Cancel</span>
           </Button>
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">
+          <Button onClick={(e) => handleSaveDepartment(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white">
             <span>Save</span>
           </Button>
         </div>

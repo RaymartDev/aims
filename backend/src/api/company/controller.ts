@@ -6,7 +6,7 @@ import { Company } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const findCompany = await findCompanyByName(req.body.company);
+    const findCompany = await findCompanyByName(req.body.name);
     if (findCompany) {
       return res.status(200).json({ message: 'Company with that name already exists' });
     }
@@ -77,13 +77,18 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 17;
     if (isNaN(page) || page < 1) {
       page = 1;
     }
 
-    const companies: Company[] = await listCompanies(page, 10);
+    const companies = await listCompanies(page, limit);
     if (companies) {
-      res.status(200).json({ companies, message: 'Successfully retrieved companies' });
+      res.status(200).json({ companies: companies.companiesFinal, message: 'Successfully retrieved companies', misc: {
+        page,
+        limit,
+        maxPage: companies.maxPage,
+      } });
     }
   } catch (err) {
     next(err);

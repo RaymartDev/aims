@@ -4,7 +4,8 @@ import employee from './employee';
 import store from './store';
 import supplier from './supplier';
 import company from './company';
-import department from './material';
+import material from './material';
+import department from './department';
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use('/store', store);
 router.use('/supplier', supplier);
 router.use('/company', company);
 router.use('/department', department);
+router.use('/material', material);
 
 export default router;

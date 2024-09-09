@@ -6,9 +6,9 @@ import { findDepartmentById, findDepartmentByName, insertDepartment, listDepartm
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const findDepartment = await findDepartmentByName(req.body.company);
+    const findDepartment = await findDepartmentByName(req.body.name);
     if (findDepartment) {
-      return res.status(200).json({ message: 'Company with that name already exists' });
+      return res.status(200).json({ message: 'Department with that name already exists' });
     }
 
     const newDepartment = await insertDepartment({ modified_by_id: req.user?.id || 1, ...req.body });
@@ -77,13 +77,18 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     let page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    let limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 17;
     if (isNaN(page) || page < 1) {
       page = 1;
     }
 
-    const departments: Department[] = await listDepartments(page, 10);
+    const departments = await listDepartments(page, limit);
     if (departments) {
-      res.status(200).json({ departments, message: 'Successfully retrieved departments' });
+      res.status(200).json({ departments: departments.departmentsFinal, message: 'Successfully retrieved departments', misc: {
+        page,
+        limit,
+        maxPage: departments.maxPage,
+      } });
     }
   } catch (err) {
     next(err);

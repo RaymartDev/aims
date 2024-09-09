@@ -71,7 +71,12 @@ export async function searchCompanyByName(name: string): Promise<Company[]> {
   }
 }
 
-export async function listCompanies(page: number, limit: number): Promise<Company[]> {
+interface CompanyType {
+  id: number;
+  name: string;
+}
+
+export async function listCompanies(page: number, limit: number): Promise<{ companiesFinal: CompanyType[], maxPage: number }> {
   try {
     // Get total count for pagination
     const totalCompanies = await prisma.company.count();
@@ -94,8 +99,15 @@ export async function listCompanies(page: number, limit: number): Promise<Compan
         name: 'asc',
       },
     });
+    if (companies && companies.length > 0) {
+      const companiesFinal = companies.map((company) => ({
+        id: company.id,
+        name: company.name,
+      }));
+      return { companiesFinal, maxPage: totalCompanies };
+    }
     
-    return companies;
+    return { companiesFinal: [], maxPage: totalCompanies };
   } catch (error) {
     throw new Error('Database error');
   }
