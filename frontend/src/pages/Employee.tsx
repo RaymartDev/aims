@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { MoreHorizontal, Plus, Search } from "lucide-react";
+import { MoreHorizontal, Plus, Search, Pencil, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger  } from "@/Components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
@@ -128,7 +128,13 @@ function Employee() {
                                         <TableCell>{employee.company_name}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(employee.date_hired))}</TableCell>
                                         <TableCell>{employee.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
-                                        <TableCell>
+                                        <TableCell align="center">
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setEditEmployee(employee);
+                                                setOpenEditModal(true);
+                                            }}><Pencil/>
+                                            </Button>
+                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -136,10 +142,6 @@ function Employee() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => {
-                                                        setEditEmployee(employee);
-                                                        setOpenEditModal(true);
-                                                    }}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);

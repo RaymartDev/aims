@@ -3,7 +3,7 @@ import { Button } from "@/Components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
 import { Input } from "@/Components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import { MoreHorizontal, Plus, Search } from "lucide-react";
+import { MoreHorizontal, Pencil, Plus, Search, Trash } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddSupplierModal from "@/modals/AddSupplierModal";
 import AddSupplierModal2 from "@/modals/AddSupplierModal2";
@@ -150,15 +150,17 @@ function Supplier() {
                                         <TableCell>{suppliers.businessNumber}</TableCell>
                                         <TableCell>{suppliers.mobileNumber}</TableCell>
                                         <TableCell>{suppliers.dateHired}</TableCell>
-                                        <TableCell>
+                                        <TableCell align="center">
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setOpenEditModal(true)}><Pencil/>
+                                            </Button>
+                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
                                                         <MoreHorizontal/>
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => setOpenEditModal(true)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuContent >
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>

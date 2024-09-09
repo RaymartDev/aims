@@ -6,7 +6,7 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import { MoreHorizontal, Plus, Search } from "lucide-react";
+import { MoreHorizontal, Pencil, Plus, Search, Trash } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddStoreModal from "@/modals/AddStoreModal";
 import EditStoreModal from "@/modals/EditStoreModal";
@@ -122,7 +122,13 @@ function Store() {
                                         <TableCell>{store.cost_center_code}</TableCell>
                                         <TableCell>{store.address}</TableCell>
                                         <TableCell>{store.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
-                                        <TableCell>
+                                        <TableCell align="center">
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setEditStore(store);
+                                                setOpenEditModal(true);
+                                            }}><Pencil/>
+                                            </Button>
+                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -130,10 +136,6 @@ function Store() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => {
-                                                        setEditStore(store);
-                                                        setOpenEditModal(true);
-                                                    }}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => {
                                                         setRegStore(store);
