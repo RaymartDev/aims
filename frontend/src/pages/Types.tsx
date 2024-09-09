@@ -11,10 +11,8 @@ import { useCallback, useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
 // import EditTypeModal from "@/modals/EditTypeModal";
 import type TypeInterface from "@/interface/types";
-import axios from "axios";
-import { getVersion } from "@/lib/utils";
+import { fetchData, getVersion } from "@/lib/utils";
 import EditTypeModal from "@/modals/EditTypeModal";
-import { toast } from "react-toastify";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 
@@ -29,30 +27,22 @@ function Types() {
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
 
-    const fetchData = useCallback(async () => {
-        try {
-          const response = await axios.get(`${getVersion()}/material-type/list?limit=${itemsPerPage}&page=${currentPage}`);
-          if (response.status >= 200 && response.status < 300) {
-            setTypes(response.data.material_categories); // Update state with employee data
-            setMaxPage(response.data.misc.maxPage);
-        }
-        } catch (err) {
-          if (axios.isAxiosError(err)) {
-              if ((err?.response?.status || 0) === 440) {
-                  toast.error(err.response?.data?.message || 'Session Expired');
-                  setTimeout(() => {
-                      dispatch(logout());
-                  }, 700);
-              } else {
-                  toast.error(err.response?.data?.message || 'Something went wrong');
-              }
-          }
-        }
-       }, [itemsPerPage, currentPage, dispatch]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData])
+    const loadTypes = useCallback(() => {
+        fetchData({
+          url: `${getVersion()}/material-type/list`,
+          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          onSuccess: (data) => {
+            setTypes(data.materialTypes);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadTypes();
+      }, [loadTypes]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);

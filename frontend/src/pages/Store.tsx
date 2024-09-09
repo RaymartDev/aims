@@ -12,9 +12,7 @@ import AddStoreModal from "@/modals/AddStoreModal";
 import EditStoreModal from "@/modals/EditStoreModal";
 import type StoreType from "@/interface/store";
 import UserRegistrationStore from "@/modals/UserRegistrationStore";
-import axios from "axios";
-import { getVersion } from "@/lib/utils";
-import { toast } from "react-toastify";
+import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 
@@ -31,30 +29,22 @@ function Store() {
     const itemsPerPage = 17;
     const dispatch = useAppDispatch();
 
-    const fetchData = useCallback(async () => {
-        try {
-          const response = await axios.get(`${getVersion()}/store/list?limit=${itemsPerPage}&page=${currentPage}`);
-          if (response.status >= 200 && response.status < 300) {
-            setStores(response.data.material_categories); // Update state with employee data
-            setMaxPage(response.data.misc.maxPage);
-        }
-        } catch (err) {
-          if (axios.isAxiosError(err)) {
-              if ((err?.response?.status || 0) === 440) {
-                  toast.error(err.response?.data?.message || 'Session Expired');
-                  setTimeout(() => {
-                      dispatch(logout());
-                  }, 700);
-              } else {
-                  toast.error(err.response?.data?.message || 'Something went wrong');
-              }
-          }
-        }
-       }, [itemsPerPage, currentPage, dispatch]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData])
+    const loadStores = useCallback(() => {
+        fetchData({
+          url: `${getVersion()}/store/list`,
+          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          onSuccess: (data) => {
+            setStores(data.stores);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadStores();
+      }, [loadStores]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);

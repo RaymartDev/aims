@@ -9,12 +9,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddCategoryModal from "@/modals/AddCategoryModal";
-// import EditCategoryModal from "@/modals/EditCategoryModal";
 import type CategoryType from "@/interface/category";
-import axios from "axios";
-import { getVersion } from "@/lib/utils";
+import { fetchData, getVersion } from "@/lib/utils";
 import EditCategoryModal from "@/modals/EditCategoryModal";
-import { toast } from "react-toastify";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 
@@ -33,30 +30,22 @@ function Category() {
         setCurrentPage(page);
     };
 
-    const fetchData = useCallback(async () => {
-        try {
-          const response = await axios.get(`${getVersion()}/material-category/list?limit=${itemsPerPage}&page=${currentPage}`);
-          if (response.status >= 200 && response.status < 300) {
-            setCategories(response.data.material_categories); // Update state with employee data
-            setMaxPage(response.data.misc.maxPage);
-        }
-        } catch (err) {
-          if (axios.isAxiosError(err)) {
-              if ((err?.response?.status || 0) === 440) {
-                  toast.error(err.response?.data?.message || 'Session Expired');
-                  setTimeout(() => {
-                      dispatch(logout());
-                  }, 700);
-              } else {
-                  toast.error(err.response?.data?.message || 'Something went wrong');
-              }
-          }
-        }
-       }, [itemsPerPage, currentPage, dispatch]);
-
-    useEffect(() => {
-        fetchData(); // Call the fetch function
-    }, [fetchData]);
+    const loadCategories = useCallback(() => {
+        fetchData({
+          url: `${getVersion()}/material-category/list`,
+          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          onSuccess: (data) => {
+            setCategories(data.material_categories);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadCategories();
+      }, [loadCategories]);
 
     const updateCategory = (id: number, category: CategoryType | null) => {
         if (category) {

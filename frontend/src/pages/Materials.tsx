@@ -11,9 +11,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
 import type MaterialType from "@/interface/material";
-import { formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 
@@ -48,30 +46,22 @@ function Materials() {
         }
     }
 
-    const fetchData = useCallback(async () => {
-        try {
-          const response = await axios.get(`${getVersion()}/material/list?limit=${itemsPerPage}&page=${currentPage}`);
-          if (response.status >= 200 && response.status < 300) {
-            setMaterials(response.data.material_categories); // Update state with employee data
-            setMaxPage(response.data.misc.maxPage);
-        }
-        } catch (err) {
-          if (axios.isAxiosError(err)) {
-              if ((err?.response?.status || 0) === 440) {
-                  toast.error(err.response?.data?.message || 'Session Expired');
-                  setTimeout(() => {
-                      dispatch(logout());
-                  }, 700);
-              } else {
-                  toast.error(err.response?.data?.message || 'Something went wrong');
-              }
-          }
-        }
-       }, [itemsPerPage, currentPage, dispatch]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData])
+    const loadMaterials = useCallback(() => {
+        fetchData({
+          url: `${getVersion()}/material/list`,
+          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          onSuccess: (data) => {
+            setMaterials(data.materials);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadMaterials();
+      }, [loadMaterials]);
 
     return(
         <>

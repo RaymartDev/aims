@@ -11,9 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
 import EditCompanyModal from "@/modals/EditCompanyModal";
 import type CompanyType from "@/interface/company";
-import axios from "axios";
-import { getVersion } from "@/lib/utils";
-import { toast } from "react-toastify";
+import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 
@@ -42,30 +40,22 @@ function Company() {
         }
     }
 
-    const fetchData = useCallback(async () => {
-        try {
-          const response = await axios.get(`${getVersion()}/company/list?limit=${itemsPerPage}&page=${currentPage}`);
-          if (response.status >= 200 && response.status < 300) {
-            setCompanies(response.data.material_categories); // Update state with employee data
-            setMaxPage(response.data.misc.maxPage);
-        }
-        } catch (err) {
-          if (axios.isAxiosError(err)) {
-              if ((err?.response?.status || 0) === 440) {
-                  toast.error(err.response?.data?.message || 'Session Expired');
-                  setTimeout(() => {
-                      dispatch(logout());
-                  }, 700);
-              } else {
-                  toast.error(err.response?.data?.message || 'Something went wrong');
-              }
-          }
-        }
-       }, [itemsPerPage, currentPage, dispatch]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData])
+    const loadCompanies = useCallback(() => {
+        fetchData({
+          url: `${getVersion()}/company/list`,
+          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          onSuccess: (data) => {
+            setCompanies(data.companies);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadCompanies();
+      }, [loadCompanies]);
 
     const addCompany = (company: CompanyType) => {
         if (company) {

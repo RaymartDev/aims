@@ -1,4 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import axios, { AxiosError } from "axios";
 import { type ClassValue, clsx } from "clsx"
+import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -30,4 +35,45 @@ export const formatCurrency = (amount: number): string => {
 
   // Return the formatted string with peso symbol
   return `₱ ${formattedAmount}`;
+}
+
+interface FetchDataParams {
+  url: string;
+  query?: Record<string, unknown>; // Renamed from `params` to `query`
+  onSuccess: (data: any) => void;
+  onError?: (error: AxiosError) => void;
+  dispatch?: (action: unknown) => void;
+  logout?: () => void;
+}
+
+export async function fetchData({
+  url,
+  query,
+  onSuccess,
+  dispatch,
+  logout
+}: FetchDataParams) {
+  try {
+    const response = await axios.get(url, {
+      params: query // Use `params` for query parameters
+    });
+    if (response.status >= 200 && response.status < 300) {
+      onSuccess(response.data);
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      if (err.response?.status === 440) {
+        toast.error(err.response?.data?.message || 'Session Expired');
+        setTimeout(() => {
+          if (dispatch && logout) {
+            dispatch(logout());
+          }
+        }, 700);
+      } else {
+        toast.error(err.response?.data?.message || 'Something went wrong');
+      }
+    } else {
+      toast.error('An unexpected error occurred');
+    }
+  }
 }
