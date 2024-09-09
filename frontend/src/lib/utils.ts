@@ -62,7 +62,7 @@ export async function fetchData({
     }
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      if (err.response?.status === 440) {
+      if ((err.response?.status || 0) >= 440) {
         toast.error(err.response?.data?.message || 'Session Expired');
         setTimeout(() => {
           if (dispatch && logout) {
