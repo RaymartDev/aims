@@ -17,6 +17,7 @@ import { getVersion } from "@/lib/utils";
 function Department() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [editDepartment, setEditDepartment] = useState<DepartmentType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,14 +30,24 @@ function Department() {
             const response = await axios.get(`${getVersion()}/department/list?limit=${itemsPerPage}&page=${currentPage}`);
             if (response.status >= 200 && response.status < 300) {
               setDepartments(response.data.departments); // Update state with employee data
-              setMaxPage(response.data.misc.totalPages);
+              setMaxPage(response.data.misc.maxPage);
           }
           } catch (e) {
             console.error(e);
           }
          };
         fetchData(); // Call the fetch function
-    }, [itemsPerPage, currentPage, maxPage]);
+    }, [itemsPerPage, currentPage]);
+
+    const updateDepartment = (id: number, department: DepartmentType | null) => {
+        if (department) {
+            const index = departments.findIndex(department => department.id === id);
+            if (index !== -1) {
+                departments[index] = department;
+                setEditDepartment(null);
+            }
+        }
+    }
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -83,9 +94,9 @@ function Department() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {departments.map(data => (
-                                <TableRow key={data.id}>
-                                    <TableCell>{data.name}</TableCell>
+                            {departments.map(department => (
+                                <TableRow key={department.id}>
+                                    <TableCell>{department.name}</TableCell>
                                     <TableCell>Active</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
@@ -95,7 +106,10 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => setEditModal(true)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => {
+                                                    setEditDepartment(department);
+                                                    setEditModal(true);
+                                                }}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -134,7 +148,7 @@ function Department() {
                 </Pagination>
             </div>
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
-            {editModal && <EditDepartmentModal onClose={() => setEditModal(false)}/>}
+            {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
         </div>
     );
 }

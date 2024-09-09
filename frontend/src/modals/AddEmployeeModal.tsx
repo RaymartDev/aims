@@ -81,7 +81,10 @@ function AddEmployeeModal ({ addEmployee, onClose }: AddEmployeeModalProps) {
             <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full border-b-2 border-black">
                     <h1 className="font-extrabold text-xl">Add Employee</h1>
-                    <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
+                    <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={() => {
+                        onClose();
+                        clearData();
+                    }}><X size={30}/></Button>
                 </div>
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="flex flex-row w-full space-x-2">
