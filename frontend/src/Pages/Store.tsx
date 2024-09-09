@@ -99,7 +99,7 @@ function Store() {
                                         onChange={(e) => setSearchQuery(e.target.value)}/>
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>   
-                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" 
+                                <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-40" 
                                     onClick={() => setOpenAddModal(true)}>
                                     <Plus size={20}/><span className="text-sm">Add Store</span>
                                 </Button>

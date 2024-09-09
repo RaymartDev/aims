@@ -1,56 +1,59 @@
-import { useState } from 'react';
-import KFC from '../../images/KFC_LOGO.png';
-import { NavLink } from 'react-router-dom';
-import { BarChart, 
-  Warehouse, 
-  UsersRound, 
-  Settings, 
-  LogOut, 
-  Truck, 
-  Boxes, 
-  UserRound, 
-  Store, 
-  Container, 
-  UserRoundCog, 
-  Building2, 
-  Briefcase, 
-  Archive, 
-  ArrowRightLeft, 
-  Package, 
-  ReceiptText, 
-  Undo2
-} from 'lucide-react';
-import { Button } from '../ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
-import { useAppDispatch } from '@/store/store';
-import { logout } from '@/slices/userSlice';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import KFC from "../../images/KFC_LOGO.png";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  BarChart,
+  Warehouse,
+  UsersRound,
+  Settings,
+  LogOut,
+  Truck,
+  Boxes,
+  UserRound,
+  Store,
+  Container,
+  UserRoundCog,
+  Building2,
+  Briefcase,
+  Archive,
+  Package,
+  ReceiptText,
+  Undo2,
+  ArrowRightLeft,
+  ClipboardPaste,
+  ClipboardCopy,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 function Sidebar() {
   const [openItem, setOpenItem] =  useState<string | undefined>(undefined);
-  const dispatch = useAppDispatch();
-  const handleLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    toast.success('Successfully logged out');
-    setTimeout(() => {
-      dispatch(logout());
-    }, 700);
-  }
+  const navigate = useNavigate();
 
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
       <div className="flex p-6 space-x-2">
         <img src={KFC} className="h-12 block xl:hidden" />
-        <h1 className="text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden xl:block">Asset Inventory</h1>
+        <h1 className="text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden xl:block">
+          Asset Inventory
+        </h1>
       </div>
       <nav className="mt-10">
         <ul>
           <li>
-            <NavLink to="/" className={({ isActive }) =>
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
                 `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-12 transition duration-200 font-extrabold space-x-2  ${
-                  isActive ? 'bg-hoverCream': 'hover:bg-hoverCream' 
+                  isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                 }`
-              }>
+              }
+            >
               <BarChart />
               <h1 className="sm:hidden xl:inline">Dashboard</h1>
             </NavLink>
@@ -58,40 +61,63 @@ function Sidebar() {
 
           {/* Inventory */}
           <li>
-          <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
               <AccordionItem value="inventory">
-                <AccordionTrigger className='mx-5 h-12'>
-                  <div className='flex space-x-2 font-extrabold'>
+                <AccordionTrigger className="mx-5 h-12">
+                  <div className="flex space-x-2 font-extrabold">
                     <Warehouse />
                     <span className="sm:hidden xl:inline">Warehouse</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/inventory" className={({ isActive }) =>
+                  <NavLink
+                    to="/inventory"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Archive /><span>Inventory</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Archive />
+                      <span>Inventory</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/deliveries" className={({ isActive }) =>
+                  <NavLink
+                    to="/deliveries"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Truck /><span>Deliveries</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Truck />
+                      <span>Deliveries</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0">
-                    <NavLink to="/materials" className={({ isActive }) =>
-                        `flex items-center transition duration-200 h-12 ${
-                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                        }`
-                      }>
-                      <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Boxes /><span>Materials</span></div>
-                    </NavLink>
+                  <NavLink
+                    to="/materials"
+                    className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-12 ${
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
+                      }`
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Boxes />
+                      <span>Materials</span>
+                    </div>
+                  </NavLink>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -99,40 +125,63 @@ function Sidebar() {
 
           {/* Users */}
           <li>
-            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
               <AccordionItem value="users">
-                <AccordionTrigger className='mx-5 h-12'>
-                  <div className='flex space-x-2 font-extrabold'>
+                <AccordionTrigger className="mx-5 h-12">
+                  <div className="flex space-x-2 font-extrabold">
                     <UsersRound />
                     <span className="sm:hidden xl:inline">Users</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/employee" className={({ isActive }) =>
+                  <NavLink
+                    to="/employee"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><UserRound/><span>Employee</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <UserRound />
+                      <span>Employee</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/store" className={({ isActive }) =>
+                  <NavLink
+                    to="/store"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Store /><span>Store</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Store />
+                      <span>Store</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0">
-                    <NavLink to="/supplier" className={({ isActive }) =>
-                        `flex items-center transition duration-200 h-12 ${
-                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                        }`
-                      }>
-                      <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Container /><span>Supplier</span></div>
-                    </NavLink>
+                  <NavLink
+                    to="/supplier"
+                    className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-12 ${
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
+                      }`
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Container />
+                      <span>Supplier</span>
+                    </div>
+                  </NavLink>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -140,39 +189,96 @@ function Sidebar() {
 
           {/* Order */}
           <li>
-            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
               <AccordionItem value="order">
-                <AccordionTrigger className='mx-5 h-12'>
-                  <div className='flex space-x-2 font-extrabold'>
+                <AccordionTrigger className="mx-5 h-12">
+                  <div className="flex space-x-2 font-extrabold">
                     <Package />
                     <span className="sm:hidden xl:inline">Order</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/transactions" className={({ isActive }) =>
+                  <NavLink
+                    to="/release"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ArrowRightLeft/><span>Transactions</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <ReceiptText />
+                      <span>Release</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/release" className={({ isActive }) =>
+                  <NavLink
+                    to="/acknowledgement"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><ReceiptText /><span>Release</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Undo2 />
+                      <span>Return</span>
+                    </div>
+                  </NavLink>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </li>
+
+          {/* Transactions */}
+          <li>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
+              <AccordionItem value="transactions">
+                <AccordionTrigger className="mx-5 h-12">
+                  <div className="flex space-x-2 font-extrabold">
+                    <ArrowRightLeft />
+                    <span className="sm:hidden xl:inline">Transactions</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="my-0 py-0 border-b">
+                  <NavLink
+                    to="/release-report"
+                    className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-12 ${
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
+                      }`
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <ClipboardPaste />
+                      <span>Release Report</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/acknowledgement" className={({ isActive }) =>
+                  <NavLink
+                    to="/return-report"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Undo2/><span>Return</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <ClipboardCopy />
+                      <span>Return Report</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>
@@ -181,30 +287,47 @@ function Sidebar() {
 
           {/* Misc */}
           <li>
-            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
               <AccordionItem value="misc">
-                <AccordionTrigger className='mx-5 h-12'>
-                  <div className='flex space-x-2 font-extrabold'>
+                <AccordionTrigger className="mx-5 h-12">
+                  <div className="flex space-x-2 font-extrabold">
                     <UserRoundCog />
                     <span className="sm:hidden xl:inline">Miscellaneous</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/company" className={({ isActive }) =>
+                  <NavLink
+                    to="/company"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Building2/><span>Company</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Building2 />
+                      <span>Company</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
-                    <NavLink to="/department" className={({ isActive }) =>
+                  <NavLink
+                    to="/department"
+                    className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
-                        isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
                       }`
-                    }>
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2"><Briefcase /><span>Department</span></div>
+                    }
+                  >
+                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
+                      <Briefcase />
+                      <span>Department</span>
+                    </div>
                   </NavLink>
                 </AccordionContent>
               </AccordionItem>
@@ -213,29 +336,37 @@ function Sidebar() {
 
           {/* Settings */}
           <li>
-            <Accordion type="single" collapsible value={openItem} onValueChange={(value) => setOpenItem(value)}>
-                <AccordionItem value="settings">
-                  <AccordionTrigger className='mx-5'>
-                    <div className='flex space-x-2 font-extrabold'>
-                      <Settings />
-                      <span className="sm:hidden xl:inline">Settings</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="my-0 py-0 border-b">
-                      <NavLink to="/changepassword" className={({ isActive }) =>
-                        `flex items-center transition duration-200 h-14 ${
-                          isActive ? 'bg-hoverCream' : 'hover:bg-hoverCream'
-                        }`
-                      }>
-                      <h1 className="mx-14 font-bold">Change Password</h1>
-                    </NavLink>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+            <Accordion
+              type="single"
+              collapsible
+              value={openItem}
+              onValueChange={(value) => setOpenItem(value)}
+            >
+              <AccordionItem value="settings">
+                <AccordionTrigger className="mx-5">
+                  <div className="flex space-x-2 font-extrabold">
+                    <Settings />
+                    <span className="sm:hidden xl:inline">Settings</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="my-0 py-0 border-b">
+                  <NavLink
+                    to="/changepassword"
+                    className={({ isActive }) =>
+                      `flex items-center transition duration-200 h-14 ${
+                        isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
+                      }`
+                    }
+                  >
+                    <h1 className="mx-14 font-bold">Change Password</h1>
+                  </NavLink>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </li>
         </ul>
       </nav> 
-      <Button onClick={(e) => handleLogout(e)} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream">
+      <Button onClick={() => navigate("/login")} className="absolute flex justify-start bottom-5 h-12 w-full rounded-none bg-white text-[#1A1C20] font-bold space-x-2 hover:bg-hoverCream">
         <LogOut /><span className="sm:hidden xl:inline">Logout</span>
       </Button>    
     </div>

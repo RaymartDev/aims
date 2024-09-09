@@ -2,6 +2,8 @@ import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
+import { Label } from "@/Components/ui/label";
 import SelectItemModal from "@/modals/SelectItemModal";
 import AssetEntryModal from "@/modals/AssetEntryModal";
 import { Plus, Trash } from "lucide-react";
@@ -28,6 +30,7 @@ const itemList = [
 function DeliveryReceipt() {
   const [openModal, setOpenModal] = useState(false);
   const [openAssetModal, setOpenAssetModal] = useState(false) 
+  const [selectedOption, setSelectedOption] = useState("employee");
 
   const headerHeight = 72;
 
@@ -55,30 +58,53 @@ function DeliveryReceipt() {
 
   return (
     <>
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full w-full">
         <div className="flex flex-col w-full">
           <h1 className="text-2xl font-bold">Release</h1>
           <p className="text-sm font-semibold text-[#9E9E9E]">Order / Release</p>
         </div>
-        <div className="flex w-full justify-between gap-8 2xl:gap-20 pt-10">
-          <div className="flex gap-6">
-            <div className="flex flex-col justify-end">
-              <p className="text-sm">Reference Number</p>
-              <Input className="focus:border-none w-64" />
+        <div className="flex flex-col w-full justify-between space-y-5 pt-10">
+          <div className="flex flex-col w-1/2">
+            <p className="text-lg font-semibold">Reference Number</p>
+            <Input className="border-none w-full h-16 text-4xl text-red-700" disabled value={10012021}/>
+          </div>
+          <div className="flex flex-row space-x-5 mt-5">
+              <div className="flex">
+                  <RadioGroup 
+                      value={selectedOption} 
+                      onValueChange={(value) => setSelectedOption(value)} 
+                      className="flex flex-row"
+                  >
+                      <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="employee" id="employee"/>
+                          <Label htmlFor="employee">Employee</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="store" id="store"/>
+                          <Label htmlFor="store">Store</Label>
+                      </div>
+                  </RadioGroup>
+              </div>
+          </div> 
+          <div className="flex justify-between w-full">
+            <div className="flex space-x-5 w-1/2">
+              <div className="flex flex-col justify-end space-y-2 w-1/2">
+                <p className="text-sm">Requestor Name</p>
+                <Input className="focus:border-none w-full" />
+              </div>
+              <div className="flex flex-col justify-end space-y-2 w-1/2">
+                <Label htmlFor="firstField">
+                    {selectedOption === 'employee' ? 'Employee Number' : 'Cost Center Number'}
+                </Label>
+                <Input className="focus:border-none w-full" />
+              </div>
             </div>
-            <div className="flex flex-col justify-end">
-              <p className="text-sm">Requestor Name</p>
-              <Input className="focus:border-none w-64" />
-            </div>
-            <div className="flex flex-col justify-end">
-              <p className="text-sm">Cost Center Code</p>
-              <Input className="focus:border-none w-64" />
+            <div className="flex justify-end items-end gap-4">
+              <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36"><Plus size={20}/><span className="text-sm">Scan Item</span></Button>
+              <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Item</span></Button>
             </div>
           </div>
-          <div className="flex justify-end gap-4 pt-10">
-            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold"><Plus size={20}/><span className="text-sm">Scan Item</span></Button>
-            <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold" onClick={() => setOpenModal(true)}><Plus size={20}/><span className="text-sm">Add Item</span></Button>
-          </div>
+          
         </div>
         <div className="overflow-y-auto mt-5" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
             <Table>
@@ -114,8 +140,8 @@ function DeliveryReceipt() {
             </Table>
         </div>
         <div className="space-x-2 flex items-end mt-5">
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => setOpenAssetModal(true)}>Asset</Button>
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">Print</Button>
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36" onClick={() => setOpenAssetModal(true)}>Asset</Button>
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36">Print</Button>
         </div>
       </div>
       
