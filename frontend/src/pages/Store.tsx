@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
@@ -37,46 +37,11 @@ function Store() {
     {/*const [openUserRegModal, setOpenUserRegModal] = useState(false);*/}
     const [openEditModal, setOpenEditModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-
-    const headerHeight = 72;
-    const itemHeight = 50;
-
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight < 0) return 0;
-        return Math.floor(availableHeight / itemHeight);
-    };
-
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
-
-    useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
-
-    const filteredStores = stores.filter(stores =>
-        stores.storeName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const indexOfLastStore = currentPage * itemsPerPage;
-    const indexOfFirstStore = indexOfLastStore - itemsPerPage;
-    const currentStore= filteredStores.slice(indexOfFirstStore, indexOfLastStore);
-
-    const totalPages = Math.ceil(filteredStores.length / itemsPerPage);
-
 
     return(
         <>
@@ -105,7 +70,7 @@ function Store() {
                             </div>    
                         </div>
                     </div>
-                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${72 + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -118,13 +83,13 @@ function Store() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {currentStore.map(stores => (
-                                    <TableRow key={stores.id}>
-                                        <TableCell>{stores.companyName}</TableCell>
-                                        <TableCell>{stores.storeName}</TableCell>
-                                        <TableCell>{stores.costCenter}</TableCell>
-                                        <TableCell>{stores.address}</TableCell>
-                                        <TableCell>{stores.status}</TableCell>
+                                {stores.map(store => (
+                                    <TableRow key={store.id}>
+                                        <TableCell>{store.companyName}</TableCell>
+                                        <TableCell>{store.storeName}</TableCell>
+                                        <TableCell>{store.costCenter}</TableCell>
+                                        <TableCell>{store.address}</TableCell>
+                                        <TableCell>{store.status}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>

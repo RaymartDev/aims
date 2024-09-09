@@ -28,7 +28,7 @@ export function authenticateToken(req: UserRequest, res: Response, next: NextFun
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: 'Access token missing or invalid' });
+    return res.status(440).json({ message: 'Access token missing or invalid' });
   }
 
   try {
@@ -39,6 +39,6 @@ export function authenticateToken(req: UserRequest, res: Response, next: NextFun
     req.user = payload;
     next();
   } catch (err) {
-    res.status(403).json({ message: 'Invalid or expired token', error: process.env.NODE_ENV === 'production' ? ''  : err });
+    res.status(440).json({ message: 'Invalid or expired token', error: process.env.NODE_ENV === 'production' ? ''  : err });
   }
 }

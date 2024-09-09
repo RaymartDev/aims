@@ -141,7 +141,7 @@ function Employee() {
                                                         setOpenEditModal(true);
                                                     }}>Edit</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => {
+                                                    <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);
                                                         setOpenUserRegModal(true);
                                                     }}>Register</DropdownMenuItem>
