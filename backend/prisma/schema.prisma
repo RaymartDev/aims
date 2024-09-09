@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id Int @id @default(autoincrement())
+  first_name String @default("")
+  last_name String @default("")
+  division String @default("")
+  employee_no String @default("")
+  department  Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
+  department_id Int @default(1)
+  cost_center_code String @default("")
+  company     Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company_id   Int @default(1)
+  date_hired DateTime @default(now())
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  date_entry DateTime @default(now())
+  admin Boolean @default(false)
+  modified_by_id Int? 
+  modified_by User? @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  users User[]
+}
+
+model Store {
+  id Int @id @default(autoincrement())
+  company     Company    @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company_id   Int @default(1)
+  name String
+  cost_center_code String
+  address String
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int? 
+  modified_by User? @relation("StoreModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  users User[]
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  employee_id Int?     // nullable foreign key to Employee
+  store_id    Int?     // nullable foreign key to Store
+  Employee   Employee? @relation(fields: [employee_id], references: [id])
+  Store      Store?   @relation(fields: [store_id], references: [id])
+  role_id Int
+  role UserRole @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  name String
+  username String @unique
+  password String
+  department  Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
+  department_id Int @default(1)
+  cost_center_code String
+  employee_no String
+  division String
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id  Int? @default(1)       // Foreign key to Employee.id
+  modified_by     User?  @relation("UserModifiedBy", fields: [modified_by_id], references: [id])
+  modified_users User[] @relation("UserModifiedBy")
+  modified_employees Employee[] @relation("EmployeeModifiedBy")
+  modified_stores Store[] @relation("StoreModifiedBy")
+  modified_user_roles UserRole[] @relation("UserRoleModifiedBy")
+  modified_departments Department[] @relation("DepartmentModifiedBy")
+  modified_companies Company[] @relation("CompanyModifiedBy")
+  modified_suppliers Supplier[] @relation("SupplierModifiedBy")
+  modified_materials Material[] @relation("MaterialModifiedBy")
+  modified_inventories Inventory[] @relation("InventoryModifiedBy")
+  modified_supplier_contacts Supplier_Contact_Details[] @relation("SupplierContactModifiedBy")
+  modified_deliveries Delivery[] @relation("DeliveryModifiedBy")
+  modified_releases Release[] @relation("ReleaseModifiedBy")
+  requestors_delivery Delivery[] @relation("RequestorDelivery")
+  users_delivery Delivery[] @relation("UserDelivery")
+  shipped_by_release Release[] @relation("ShippedByRelease")
+  received_by_release Release[] @relation("ReceivedByRelease")
+}
+
+// TODO store, user
+
+model UserRole {
+  id          Int       @id @default(autoincrement())
+  name        String
+  users User[]
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int? 
+  modified_by User? @relation("UserRoleModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Department {
+  id         Int       @id @default(autoincrement())
+  name       String
+  users User[]
+  employees  Employee[]
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?  @default(1)
+  modified_by User? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Company {
+  id         Int       @id @default(autoincrement())
+  name       String
+  employees  Employee[]
+  suppliers Supplier[]
+  stores Store[]
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int? @default(1)
+  modified_by    User? @relation("CompanyModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Supplier {
+  id              Int             @id @default(autoincrement())
+  supplier_code   String
+  company         Company         @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company_id      Int
+  address         String
+  contract_term   String
+  tin_number      String
+  contact_id Int
+  contact_details Supplier_Contact_Details @relation(fields: [contact_id], references: [id], onDelete: Cascade)
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("SupplierModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  deliveries Delivery[]
+}
+
+model Supplier_Contact_Details {
+  id              Int             @id @default(autoincrement())
+  contact_person String
+  business_tel String
+  email_address String
+  telefax_number String
+  zip_code String
+  mobile_number String
+  city_town String
+  province String
+  remarks String
+  suppliers Supplier[] @relation
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("SupplierContactModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Material {
+  id Int @id @default(autoincrement())
+  material_code String
+  description String
+  item_code String
+  unit String
+  brand_model String
+  material_required_yn String @db.Char(1)
+  material_type String
+  cost Int
+  maximum_stock Int
+  unit_of_measure String
+  item_specification String
+  serial_number String
+  date_entry DateTime
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("MaterialModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  inventories Inventory[]
+  deliveries Delivery[]
+  release_details Release_Detail[]
+}
+model Inventory {
+  id Int @id @default(autoincrement())
+  material  Material  @relation(fields: [material_id], references: [id], onDelete: Cascade)
+  material_id  Int
+  total_balance Int
+  remaining_balance Int
+  quantity_out Int
+  available Int
+  return Int
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("InventoryModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Delivery {
+  id Int @id @default(autoincrement())
+  supplier Supplier @relation(fields: [supplier_user_id], references: [id], onDelete: Cascade)
+  supplier_user_id Int
+  material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
+  material_id Int
+  remarks String
+  quantity Int
+  requestor User @relation("RequestorDelivery", fields: [requestor_user_id], references: [id], onDelete: Cascade)
+  requestor_user_id Int
+  user User @relation("UserDelivery", fields: [user_id], references: [id], onDelete: Cascade)
+  user_id Int
+  date_entry DateTime
+  end_warranty DateTime
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("DeliveryModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Release_Detail {
+  release_number Int
+  material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
+  material_id Int 
+  quantity Int
+  remarks String
+  release Release?  @relation(fields: [release_number], references: [release_number])
+  @@id([release_number, material_id])
+}
+
+model Release {
+  id Int @id @default(autoincrement())
+  release_detail Release_Detail[]
+  release_number Int @unique
+  shipped_by User @relation("ShippedByRelease", fields: [shipped_by_id], references: [id], onDelete: Cascade)
+  shipped_by_id Int
+  received_by User @relation("ReceivedByRelease", fields: [received_by_id], references: [id], onDelete: Cascade)
+  received_by_id Int
+  received_date DateTime
+  status String
+  remarks String
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("ReleaseModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
