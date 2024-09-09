@@ -71,7 +71,12 @@ export async function searchDepartmentByName(name: string): Promise<Department[]
   }
 }
 
-export async function listDepartments(page: number, limit: number): Promise<Department[]> {
+interface DepartmentType {
+  id: number;
+  name: string;
+}
+
+export async function listDepartments(page: number, limit: number): Promise<{ departmentsFinal: DepartmentType[], maxPage: number }> {
   try {
     // Get total count for pagination
     const totalDepartments = await prisma.department.count();
@@ -94,8 +99,16 @@ export async function listDepartments(page: number, limit: number): Promise<Depa
         name: 'asc',
       },
     });
+    if (departments && departments.length > 0) {
+      const departmentsFinal = departments.map((department) => ({
+        id: department.id,
+        name: department.name,
+      }));
+      
+      return { departmentsFinal, maxPage: totalDepartments };
+    }
     
-    return departments;
+    return { departmentsFinal: [], maxPage: totalDepartments };
   } catch (error) {
     throw new Error('Database error');
   }

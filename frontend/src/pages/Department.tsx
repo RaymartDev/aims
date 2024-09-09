@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { MoreHorizontal, Plus, Search } from "lucide-react";
@@ -7,73 +10,43 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
 import EditDepartmentModal from "@/modals/EditDepartmentModal";
-
-const data = [
-    { id: 1,  department: "IT Department", status: "Active" },
-    { id: 2,  department: "Human Resources", status: "Inactive" },
-    { id: 3,  department: "Marketing", status: "Active" },
-    { id: 4,  department: "Sales", status: "Inactive" },
-    { id: 5,  department: "Finance", status: "Active" },
-    { id: 6,  department: "Research and Development", status: "Inactive" },
-    { id: 7,  department: "Customer Support", status: "Active" },
-    { id: 8,  department: "Legal", status: "Inactive" },
-    { id: 9,  department: "Operations", status: "Active" },
-    { id: 10, department: "Engineering", status: "Inactive" },
-    { id: 11, department: "Product Management", status: "Active" },
-    { id: 12, department: "Quality Assurance", status: "Inactive" },
-    { id: 13, department: "Administration", status: "Active" },
-    { id: 14, department: "Purchasing", status: "Inactive" },
-    { id: 15, department: "Logistics", status: "Active" },
-    { id: 16, department: "Public Relations", status: "Inactive" },
-    { id: 17, department: "Corporate Strategy", status: "Active" },
-    { id: 18, department: "Training and Development", status: "Inactive" },
-    { id: 19, department: "Business Development", status: "Active" },
-    { id: 20, department: "Health and Safety", status: "Inactive" }
-];
+import type DepartmentType from "@/interface/department";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
 
 function Department() {
     const [openModal, setOpenModal] = useState(false);
-    const [editModal, setEditOpenmodal] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
-
-    const headerHeight = 70;
-    const itemHeight = 50;
-
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight <= 0) return 0;
-        return Math.floor(availableHeight / itemHeight);
-    };
-
+    const [editModal, setEditModal] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [departments, setDepartments] = useState<DepartmentType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
+    const [maxPage, setMaxPage] = useState(1);
+    const itemsPerPage = 17;
 
     useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`${getVersion()}/department/list?limit=${itemsPerPage}&page=${currentPage}`);
+            if (response.status >= 200 && response.status < 300) {
+              setDepartments(response.data.departments); // Update state with employee data
+              setMaxPage(response.data.misc.totalPages);
+          }
+          } catch (e) {
+            console.error(e);
+          }
+         };
+        fetchData(); // Call the fetch function
+    }, [itemsPerPage, currentPage, maxPage]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchQuery]);
-
-    const filteredDepartment = data.filter(data =>
-        data.department.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const indexOfLastDepartment = currentPage * itemsPerPage;
-    const indexOfFirstDepartment = indexOfLastDepartment - itemsPerPage;
-    const currentDepartment = filteredDepartment.slice(indexOfFirstDepartment, indexOfLastDepartment);
-
-    const totalPages = Math.ceil(filteredDepartment.length  / itemsPerPage);
+    const addDepartment = (department: DepartmentType | null) => {
+        if (department) {
+            setDepartments(prevDepartments => [...prevDepartments, department]);
+        }
+    };
 
     return(
         <div className="flex flex-col h-full">
@@ -100,7 +73,7 @@ function Department() {
                         </div>    
                     </div>
                 </div>
-                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -110,10 +83,10 @@ function Department() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {currentDepartment.map(data => (
+                            {departments.map(data => (
                                 <TableRow key={data.id}>
-                                    <TableCell>{data.department}</TableCell>
-                                    <TableCell>{data.status}</TableCell>
+                                    <TableCell>{data.name}</TableCell>
+                                    <TableCell>Active</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
@@ -122,7 +95,7 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => setEditOpenmodal(true)}>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setEditModal(true)}>Edit</DropdownMenuItem>
                                                 <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -141,7 +114,7 @@ function Department() {
                                 <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
                             </PaginationItem>
                         )}
-                        {Array.from({ length: totalPages }, (_, index) => (
+                        {Array.from({ length: maxPage }, (_, index) => (
                             <PaginationItem key={index}>
                                 <PaginationLink
                                     href="#"
@@ -152,7 +125,7 @@ function Department() {
                                 </PaginationLink>
                             </PaginationItem>
                         ))}
-                        {currentPage < totalPages && (
+                        {currentPage < maxPage && (
                             <PaginationItem>
                                 <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
                             </PaginationItem>
@@ -160,8 +133,8 @@ function Department() {
                     </PaginationContent>
                 </Pagination>
             </div>
-            <AddDepartmentModal open={openModal} onClose={() => setOpenModal(false)}/>
-            <EditDepartmentModal open={editModal} onClose={() => setEditOpenmodal(false)}/>
+            {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
+            {editModal && <EditDepartmentModal onClose={() => setEditModal(false)}/>}
         </div>
     );
 }
