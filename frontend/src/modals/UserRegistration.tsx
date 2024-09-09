@@ -11,19 +11,23 @@ import { getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 interface UserRegistrationProps {
-    onClose: () => void;
-    employee: EmployeeType | null;
-    registerEmployee: (id: number) => void;
+  onClose: () => void;
+  employee: EmployeeType | null;
+  registerEmployee: (id: number) => void;
 }
 
-function UserRegistration ({ employee, onClose, registerEmployee }: UserRegistrationProps) {
-    const[username, setUsername] = useState('');
-    const[password, setPassword] = useState('');
+function UserRegistration({
+  employee,
+  onClose,
+  registerEmployee,
+}: UserRegistrationProps) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-    const clearData = () => {
-        setUsername('');
-        setPassword('');
-    }
+  const clearData = () => {
+    setUsername('');
+    setPassword('');
+  }
 
     const handleRegister = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
@@ -100,10 +104,7 @@ function UserRegistration ({ employee, onClose, registerEmployee }: UserRegistra
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => {
-                        onClose();
-                        clearData();
-                    }}><span>Cancel</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
                     <Button onClick={(e) => handleRegister(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                 </div>
             </div>
@@ -111,4 +112,4 @@ function UserRegistration ({ employee, onClose, registerEmployee }: UserRegistra
     );
 }
 
-export default UserRegistration
+export default UserRegistration;

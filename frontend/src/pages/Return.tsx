@@ -249,7 +249,9 @@ function AcknowledgementReceipt() {
             <div className="flex flex-col w-2/3 space-y-5">
               <div className="flex space-x-5">
                 <div className="space-y-2 w-1/2">
-                  <p className="text-sm">DR Number</p>
+                  <p className="text-sm">
+                    DR Number <span className=" text-red-500">*</span>
+                  </p>
                   <Input
                     className="focus:border-none"
                     value={selectedDR}
@@ -257,7 +259,9 @@ function AcknowledgementReceipt() {
                   />
                 </div>
                 <div className="space-y-2 w-1/2">
-                  <p className="text-sm">Tagged Item As</p>
+                  <p className="text-sm">
+                    Tagged Item As <span className=" text-red-500">*</span>
+                  </p>
                   <Select>
                     <SelectTrigger className="focus:border-none">
                       <SelectValue placeholder="Select Type" />
@@ -278,12 +282,16 @@ function AcknowledgementReceipt() {
                 </div>
               </div>
               <div className="space-y-2">
-                <p className="text-sm">Reason Transfer</p>
+                <p className="text-sm">
+                  Reason Transfer <span className=" text-red-500">*</span>
+                </p>
                 <Input className="focus:border-none" />
               </div>
             </div>
             <div className="flex flex-col w-full space-y-2">
-              <p className="text-sm">Remarks</p>
+              <p className="text-sm">
+                Remarks <span className=" text-red-500">*</span>
+              </p>
               <Textarea className="focus:border-none max-h-28 min-h-28" />
             </div>
           </div>
@@ -302,7 +310,9 @@ function AcknowledgementReceipt() {
         </div>
         <div className="flex flex-row w-3/4 space-x-5 mt-3">
           <div className="space-y-2 w-1/3">
-            <p className="text-sm">Name</p>
+            <p className="text-sm">
+              Name <span className=" text-red-500">*</span>
+            </p>
             <Input
               className="focus:border-none"
               value={selectedName}
@@ -312,7 +322,8 @@ function AcknowledgementReceipt() {
           </div>
           <div className="space-y-2 w-1/3">
             <p className="text-sm">
-              {selectedType === "store" ? "Cost Center Code" : "Employee ID"}
+              {selectedType === "store" ? "Cost Center Code" : "Employee ID"}{" "}
+              <span className=" text-red-500">*</span>
             </p>
             <Input
               className="focus:border-none text-black"
