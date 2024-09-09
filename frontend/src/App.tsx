@@ -16,6 +16,7 @@ import Company from "./pages/Company";
 import Department from "./pages/Department";
 import ChangePassword from "./pages/ChangePassword";
 import PrintReturn from "./pages/PrintReturn";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
