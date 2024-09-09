@@ -6,7 +6,7 @@ import { Button } from "@/Components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu";
 import { Input } from "@/Components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import { MoreHorizontal, Pencil, Plus, Search, Trash } from "lucide-react";
+import { MoreHorizontal, Plus, Search } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddSupplierModal from "@/modals/AddSupplierModal";
 import AddSupplierModal2 from "@/modals/AddSupplierModal2";
