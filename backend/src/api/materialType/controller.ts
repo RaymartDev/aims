@@ -48,6 +48,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material Type not found' });
     }
 
+    const findMaterialTypeDesc = await findMaterialTypeByName(req.body.description);
+    if (findMaterialTypeDesc) {
+      return res.status(400).json({ message: 'Type with that description already exists!' });
+    }
+
     const newMaterialType = await updateMaterialType({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialType) {
       res.status(200).json({ materialType: newMaterialType, message: 'Successfully updated department' });

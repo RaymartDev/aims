@@ -48,6 +48,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material Category not found' });
     }
 
+    const findMaterialCatName = await findMaterialCategoryByName(req.body.description);
+    if (findMaterialCatName) {
+      return res.status(400).json({ message: 'Category with that description already exists!' });
+    }
+
     const newMaterialCategory = await updateMaterialCategory({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialCategory) {
       res.status(200).json({ material_category: newMaterialCategory, message: 'Successfully updated material category' });

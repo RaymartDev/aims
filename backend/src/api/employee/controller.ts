@@ -87,6 +87,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Employee not found!' });
     }
 
+    const findEmployeeNo = await findEmployeeByEmployeeNo(req.body.employee_no);
+    if (findEmployeeNo) {
+      return res.status(400).json({ message: 'Employee number already exists!' });
+    }
+
     const { department_name, company_name, ...restOfBody } = req.body;
 
     // Create an update dictionary

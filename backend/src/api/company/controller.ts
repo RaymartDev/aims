@@ -49,6 +49,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Company not found' });
     }
 
+    const findCompanyName = await findCompanyByName(req.body.name || '');
+    if (findCompanyName) {
+      return res.status(400).json({ message: 'Company name already exists!' });
+    }
+
     const newCompany = await updateCompany({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newCompany) {
       res.status(200).json({ company: newCompany, message: 'Successfully updated company' });

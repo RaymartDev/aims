@@ -69,6 +69,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Store not found!' });
     }
 
+    const findStoreName = await findStoreByCostCode(req.body.cost_center_code);
+    if (findStoreName) {
+      return res.status(400).json({ message: 'Store with that cost center code already exists!' });
+    }
+
     const updateData: Record<string, any> = {
       modified_by_id: req.user?.id || 1, // Always include the user ID
     };

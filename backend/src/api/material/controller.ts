@@ -65,6 +65,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material could not be found!' });
     }
 
+    const findSku = await findMaterialBySku(req.body.material_code, req.body.item_code);
+    if (findSku) {
+      return res.status(400).json({ message: 'Material with that item and material code already exists!' });
+    }
+
     const { category, type, ...restOfBody } = req.body;
     const updateData: Record<string, any> = {
       modified_by_id: req.user?.id || 1, // Always include the user ID

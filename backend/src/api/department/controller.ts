@@ -49,6 +49,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Department not found' });
     }
 
+    const findDepartmentName = await findDepartmentByName(req.body.name);
+    if (findDepartmentName) {
+      return res.status(400).json({ message: 'Department name already exists!' });
+    }
+
     const newDepartment = await updateDepartment({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newDepartment) {
       res.status(200).json({ department: newDepartment, message: 'Successfully updated department' });

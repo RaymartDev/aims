@@ -95,6 +95,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Supplier not found!' });
     }
 
+    const findSupplierCode = await findSupplierByCode(req.body.supplier_code);
+    if (findSupplierCode) {
+      return res.status(400).json({ message: 'Supplier with that supplier code already exists!' });
+    }
+
     const updateData: Record<string, any> = {
       modified_by_id: req.user?.id || 1, // Always include the user ID
     };
