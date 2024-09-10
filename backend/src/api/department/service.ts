@@ -39,6 +39,17 @@ export async function findDepartmentById(id: number): Promise<Department | null>
   }
 }
 
+export async function deleteDepartmentById(id: number): Promise<Department | null> {
+  try {
+    const department = await prisma.department.delete({
+      where: { id },
+    });
+    return department;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findDepartmentByName(name: string): Promise<Department | null> {
   try {
     const dept = await prisma.department.findFirst({

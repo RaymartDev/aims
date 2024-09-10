@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, listSuppliers, searchSupplierByName, updateSupplier, updateSupplierContact } from './service';
+import { deleteSupplierById, findSupplierByCode, findSupplierById, insertSupplier, insertSupplierContact, listSuppliers, searchSupplierByName, updateSupplier, updateSupplierContact } from './service';
 import { findCompanyByName } from '../company/service';
 import { Supplier } from '@prisma/client';
 
@@ -172,6 +172,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         maxPage: suppliers.maxPage || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Supplier ID is required!' });
+    }
+
+    const findSupplier = await findSupplierById(parseInt(id));
+    if (!findSupplier) {
+      return res.status(400).json({ message: 'Supplier not found' });
+    }
+
+    const supplierToDelete = await deleteSupplierById(parseInt(id));
+    if (supplierToDelete) {
+      return res.status(200).json({ supplier: supplierToDelete, message: 'Successfully deleted supplier' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Supplier ID is required!' });
+    }
+
+    const findSupplier = await findSupplierById(parseInt(id));
+    if (!findSupplier) {
+      return res.status(400).json({ message: 'Supplier not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findSupplier.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated supplier';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated supplier';
+    }
+
+    const newSupplier = await updateSupplier({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ supplier: newSupplier, message });
   } catch (err) {
     next(err);
   }

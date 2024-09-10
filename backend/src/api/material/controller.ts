@@ -2,7 +2,7 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { Material } from '@prisma/client';
-import { findMaterialById, findMaterialBySku, insertMaterial, listMaterials, searchMaterialByName, updateMaterial } from './service';
+import { deleteMaterialById, findMaterialById, findMaterialBySku, insertMaterial, listMaterials, searchMaterialByName, updateMaterial } from './service';
 import { findMaterialCategoryByName } from '../materialCategory/service';
 import { findMaterialTypeByName } from '../materialType/service';
 
@@ -130,6 +130,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         maxPage: materials.maxPage || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material ID is required!' });
+    }
+
+    const findMaterial = await findMaterialById(parseInt(id));
+    if (!findMaterial) {
+      return res.status(400).json({ message: 'Material not found' });
+    }
+
+    const materialToDelete = await deleteMaterialById(parseInt(id));
+    if (materialToDelete) {
+      return res.status(200).json({ material: materialToDelete, message: 'Successfully deleted material' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material ID is required!' });
+    }
+
+    const findMaterial = await findMaterialById(parseInt(id));
+    if (!findMaterial) {
+      return res.status(400).json({ message: 'Material not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findMaterial.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated material';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated material';
+    }
+
+    const newMaterial = await updateMaterial({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ material: newMaterial, message });
   } catch (err) {
     next(err);
   }

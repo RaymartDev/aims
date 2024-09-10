@@ -39,6 +39,17 @@ export async function findEmployeeById(id: number): Promise<Employee | null> {
   }
 }
 
+export async function deleteEmployeeById(id: number): Promise<Employee | null> {
+  try {
+    const employee = await prisma.employee.delete({
+      where: { id },
+    });
+    return employee;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findEmployeeByEmployeeNo(employee_no: string): Promise<Employee | null> {
   try {
     const employee = await prisma.employee.findFirst({

@@ -66,6 +66,17 @@ export async function findSupplierById(id: number): Promise<Supplier | null> {
   }
 }
 
+export async function deleteSupplierById(id: number): Promise<Supplier | null> {
+  try {
+    const supplier = await prisma.supplier.delete({
+      where: { id },
+    });
+    return supplier;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findSupplierByCode(supplier_code: string): Promise<Supplier | null> {
   try {
     const supplier = await prisma.supplier.findFirst({

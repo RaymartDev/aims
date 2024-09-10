@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findCompanyById, findCompanyByName, insertCompany, listCompanies, searchCompanyByName, updateCompany } from './service';
+import { deleteCompanyById, findCompanyById, findCompanyByName, insertCompany, listCompanies, searchCompanyByName, updateCompany } from './service';
 import { Company } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -32,6 +32,62 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     res.status(200).json( { company, message: 'Successfully found company' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Company ID is required!' });
+    }
+
+    const findCompany = await findCompanyById(parseInt(id));
+    if (!findCompany) {
+      return res.status(400).json({ message: 'Company not found' });
+    }
+
+    const companyToDelete = await deleteCompanyById(parseInt(id));
+    if (companyToDelete) {
+      return res.status(200).json({ company: companyToDelete, message: 'Successfully deleted company' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Company ID is required!' });
+    }
+
+    const findCompany = await findCompanyById(parseInt(id));
+    if (!findCompany) {
+      return res.status(400).json({ message: 'Company not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findCompany.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated company';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated company';
+    }
+
+    const newCompany = await updateCompany({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ company: newCompany, message });
   } catch (err) {
     next(err);
   }

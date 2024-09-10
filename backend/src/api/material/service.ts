@@ -39,6 +39,17 @@ export async function findMaterialById(id: number): Promise<Material | null> {
   }
 }
 
+export async function deleteMaterialById(id: number): Promise<Material | null> {
+  try {
+    const material = await prisma.material.delete({
+      where: { id },
+    });
+    return material;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findMaterialBySku(material_code: string, item_code: string): Promise<Material | null> {
   try {
     const material = await prisma.material.findFirst({

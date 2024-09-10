@@ -53,6 +53,17 @@ export async function findStoreById(id: number): Promise<Store | null> {
   }
 }
 
+export async function deleteStoreById(id: number): Promise<Store | null> {
+  try {
+    const store = await prisma.store.delete({
+      where: { id },
+    });
+    return store;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findStoreByCostCode(cost_center_code: string): Promise<Store | null> {
   try {
     const store = await prisma.store.findFirst({

@@ -28,6 +28,17 @@ export async function updateCompany(company: any, id: number): Promise<Company |
   }
 }
 
+export async function deleteCompanyById(id: number): Promise<Company | null> {
+  try {
+    const company = await prisma.company.delete({
+      where: { id },
+    });
+    return company;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findCompanyById(id: number): Promise<Company | null> {
   try {
     const company = await prisma.company.findFirst({

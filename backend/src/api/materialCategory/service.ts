@@ -39,6 +39,17 @@ export async function findMaterialCategoryById(id: number): Promise<Material_Cat
   }
 }
 
+export async function deleteMaterialCategoryById(id: number): Promise<Material_Category | null> {
+  try {
+    const materialCategory = await prisma.material_Category.delete({
+      where: { id },
+    });
+    return materialCategory;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findMaterialCategoryByName(description: string): Promise<Material_Category | null> {
   try {
     const materialCategory = await prisma.material_Category.findFirst({
