@@ -128,7 +128,7 @@ function EditMaterialModal ({ onClose, material, updateMaterial }: EditMaterialM
         };
       };
     
-      const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
+    const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
     const fetchData = useCallback(
         debounce(async (term: string) => {
           if (term) {

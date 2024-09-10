@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
+import ViewMaterialModal from "@/modals/ViewMaterialModal";
 import type MaterialType from "@/interface/material";
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -18,8 +19,10 @@ import { logout } from "@/slices/userSlice";
 function Materials() {
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openViewModal, setOpenViewModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
+    const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
@@ -128,6 +131,10 @@ function Materials() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent >
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewMaterial(material);
+                                                        setOpenViewModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -168,6 +175,12 @@ function Materials() {
             </div>
             {openAddModal && <AddMaterialModal addMaterial={addMaterial} onClose={() => setOpenAddModal(false)}/>}
             {openEditModal && <EditMaterialModal updateMaterial={updateMaterial} material={editMaterial} onClose={() => setOpenEditModal(false)}/>}
+            {openViewModal && <ViewMaterialModal 
+                material={viewMaterial} 
+                onClose={() => {
+                    setViewMaterial(null);
+                    setOpenViewModal(false);
+            }}/>}
         </>
     );
 }

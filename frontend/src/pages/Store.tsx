@@ -10,6 +10,7 @@ import { MoreHorizontal, Pencil, Plus, Search, Trash } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import AddStoreModal from "@/modals/AddStoreModal";
 import EditStoreModal from "@/modals/EditStoreModal";
+import ViewStoreModal from "@/modals/ViewStoreModal"
 import type StoreType from "@/interface/store";
 import UserRegistrationStore from "@/modals/UserRegistrationStore";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -21,6 +22,8 @@ function Store() {
     const [openUserRegModal, setOpenUserRegModal] = useState(false)
     const [stores, setStores] = useState<StoreType[]>([]);
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openViewModal, setOpenViewModal] = useState(false);
+    const [viewStore, setViewStore] = useState<StoreType | null>(null);
     const [editStore, setEditStore] = useState<StoreType | null>(null);
     const [regStore, setRegStore] = useState<StoreType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -140,7 +143,10 @@ function Store() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
-                                                    <DropdownMenuItem>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewStore(store);
+                                                        setOpenViewModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => {
                                                         setRegStore(store);
@@ -186,6 +192,12 @@ function Store() {
             {openAddModal && <AddStoreModal addStore={addStore} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistrationStore registerStore={registerStore} store={regStore} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditStoreModal updateStore={updateStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
+            {openViewModal && <ViewStoreModal 
+                store={viewStore}
+                onClose={() => {
+                    setViewStore(null);
+                    setOpenViewModal(false);
+            }}/>}
         </>
     );
 }

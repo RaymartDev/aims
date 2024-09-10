@@ -4,43 +4,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { X } from "lucide-react";
 import type EmployeeType from "@/interface/employee";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { getVersion } from "@/lib/utils";
-import { toast } from "react-toastify";
+import { X } from "lucide-react";
 
 interface ViewEmployeeModalProps {
-    employeeId: number;
     onClose: () => void;
+    employee: EmployeeType | null;
 }
 
-function ViewEmployeeModal ({ employeeId, onClose }: ViewEmployeeModalProps) {
-    const [employee, setEmployee] = useState<EmployeeType | null>(null);
-
-    useEffect(() => {
-        const fetchEmployee = async () => {
-            try {
-                const response = await axios.get(`${getVersion()}/employee/${employeeId}`);
-                if (response.status >= 200 && response.status < 300) {
-                    setEmployee(response.data.employee);
-                } else {
-                    toast.error('Failed to fetch employee details');
-                }
-            } catch (err) {
-                if (axios.isAxiosError(err)) {
-                    toast.error(err.response?.data?.message || 'Something went wrong');
-                } else {
-                    toast.error('Something went wrong');
-                }
-            }
-        };
-
-        fetchEmployee().catch(err => {
-            console.error('Error fetching employee:', err);
-        });
-    }, [employeeId]);
+function ViewEmployeeModal ({ onClose, employee }: ViewEmployeeModalProps) {
+    
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">

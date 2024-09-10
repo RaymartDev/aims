@@ -17,6 +17,8 @@ import Downloadpdf from "./pages/Downloadpdf";
 import Category from "./pages/Category";
 import Types from "./pages/Types";
 import 'react-toastify/dist/ReactToastify.css';
+import ReleaseReport from "./pages/ReleaseReport";
+import ReturnReport from "./pages/ReturnReport";
 
 function App() {
   return (
@@ -40,6 +42,9 @@ function App() {
           {/* Order */}
           <Route path="/release" element={<Release />} />
           <Route path="/acknowledgement" element={<Return />} />
+          {/* Transaction */}
+          <Route path="/releasereport" element={<ReleaseReport />} />
+          <Route path="/returnreport" element={<ReturnReport />} />
           {/* Misc */}
           <Route path="/company" element={<Company />} />
           <Route path="/department" element={<Department />} />

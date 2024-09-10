@@ -12,6 +12,8 @@ import AddSupplierModal from "@/modals/AddSupplierModal";
 import AddSupplierModal2 from "@/modals/AddSupplierModal2";
 import EditSupplierModal from "@/modals/EditSupplierModal";
 import EditSupplierModal2 from "@/modals/EditSupplierModal2";
+import ViewSupplierModal from "@/modals/ViewSupplierModal";
+import ViewSupplierModal2 from "@/modals/ViewSupplierModal2";
 import type SupplierType from "@/interface/supplier";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -25,10 +27,13 @@ function Supplier() {
     const [openNextAddModal, setOpenNextAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openNextEditModal, setOpenNextEditModal] = useState(false);
+    const [openViewModal, setOpenViewModal] = useState(false);
+    const [openNextViewModal, setOpenNextViewModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
     const [maxPage, setMaxPage] = useState(1);
+    const [viewSupplier, setViewSupplier] = useState<SupplierType | null>(null);
     const [formData, setFormData] = useState({
         supplierCode: '',
         companyName: '',
@@ -184,6 +189,16 @@ function Supplier() {
         setOpenEditModal(true);
     };
 
+    const handleNextViewModal = () => {
+        setOpenViewModal(false);
+        setOpenNextViewModal(true);
+    };
+
+    const handleViewBack = () => {
+        setOpenNextViewModal(false);
+        setOpenViewModal(true);
+    };
+
     const handleAddDetailChange = (target: string, value: string) => {
         setFormData({
           ...formData, // Keep existing state
@@ -268,7 +283,10 @@ function Supplier() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent >
-                                                    <DropdownMenuItem>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewSupplier(supplier);
+                                                        setOpenViewModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -333,6 +351,20 @@ function Supplier() {
                 updateSupplier={updateSupplier}
                 handleEditDetailChange={handleEditDetailChange}
                 onBack={handleEditBack}/>}
+            {openViewModal && <ViewSupplierModal 
+                supplier={viewSupplier}
+                onClose={() => {
+                    setViewSupplier(null);
+                    setOpenViewModal(false);
+                }}
+                onNext={handleNextViewModal}/>}
+            {openNextViewModal && <ViewSupplierModal2 
+                supplier={viewSupplier}
+                onClose={() => {
+                    setViewSupplier(null);
+                    setOpenNextViewModal(false);
+                }} 
+                onBack={handleViewBack}/>}
         </>
     );
 }

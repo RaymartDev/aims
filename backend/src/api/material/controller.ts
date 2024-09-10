@@ -2,15 +2,15 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { Material } from '@prisma/client';
-import { findMaterialById, findMaterialByName, insertMaterial, listMaterials, searchMaterialByName, updateMaterial } from './service';
+import { findMaterialById, findMaterialBySku, insertMaterial, listMaterials, searchMaterialByName, updateMaterial } from './service';
 import { findMaterialCategoryByName } from '../materialCategory/service';
 import { findMaterialTypeByName } from '../materialType/service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const findMaterial = await findMaterialByName(req.body.description || '');
+    const findMaterial = await findMaterialBySku(req.body.material_code || '', req.body.item_code || '');
     if (findMaterial) {
-      return res.status(400).json({ message: 'Material with that description already exists' });
+      return res.status(400).json({ message: 'Material with that material and item code already exists' });
     }
     const { category, type, ...restOfBody } = req.body;
     const updateData: Record<string, any> = {
