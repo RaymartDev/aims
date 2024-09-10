@@ -50,18 +50,19 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
           });
           if (response.status >= 200 && response.status < 300) {
             toast.success(response.data?.message || 'Successfully updated employee');
-            updateEmployee(employee?.id || 1, {
-                id: employee?.id || 1,
-                first_name: firstName,
-                last_name: lastName,
-                employee_no: employeeNo,
-                cost_center_code: costCode,
-                company_name: companyName,
-                department_name: departmentName,
-                division,
-                date_hired: response.data?.employee.date_hired,
-                registered_status: response.data?.employee.registered,
-            });
+                updateEmployee(employee?.id || 1, {
+                    id: employee?.id || 1,
+                    first_name: firstName,
+                    last_name: lastName,
+                    employee_no: employeeNo,
+                    cost_center_code: costCode,
+                    company_name: companyName,
+                    department_name: departmentName,
+                    division,
+                    date_hired: response.data?.employee.date_hired,
+                    registered_status: response.data?.employee.registered,
+                    active_status: response.data?.employee.active
+                });
           }
           onClose();
           clearData();
