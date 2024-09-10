@@ -40,21 +40,20 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
     const [lastName, setLastName] = useState(employee?.last_name || '');
     const [employeeNo, setEmployeeNo] = useState(employee?.employee_no || '');
     const [costCode, setCostCode] = useState(employee?.cost_center_code || '');
-    const [departmentName, setDepartmentName] = useState(employee?.department_name || '');
     const [division, setDivision] = useState(employee?.division || '');
 
     const [companyPopOver, setCompanyPopOver] = useState<{searchTerm: string, isOpen: boolean, results: CompanyType[], selected: string}>({
         searchTerm: '',
         isOpen: false,
         results: [],
-        selected: '',
+        selected: employee?.company_name || '',
       });
 
     const [departmentPopOver, setDepartmentPopOver] = useState<{searchTerm: string, isOpen: boolean, results: DepartmentType[], selected: string}>({
         searchTerm: '',
         isOpen: false,
         results: [],
-        selected: '',
+        selected: employee?.department_name || '',
       });
 
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -296,7 +295,52 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Department</p>
-                            <Input value={departmentName} onChange={(e) => setDepartmentName(e.target.value)} className="focus:border-none border-black"></Input>
+                            <Popover open={departmentPopOver.isOpen} onOpenChange={(isOpen) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                                <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={departmentPopOver.isOpen}
+                                    className="w-full justify-between border-black"
+                                >
+                                    {departmentPopOver.selected || 'Select Company'}
+                                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-full p-0">
+                                <Command>
+                                    <CommandInput
+                                    placeholder="Search Company"
+                                    value={departmentPopOver.searchTerm}
+                                    onValueChange={(searchTerm) => setDepartmentPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                                    />
+                                    <CommandList>
+                                    <CommandEmpty>No company found.</CommandEmpty>
+                                    {departmentPopOver.results.length > 0 && (
+                                        <CommandGroup>
+                                        {departmentPopOver.results.map((department) => (
+                                            <CommandItem
+                                            key={department.id}
+                                            value={department.name}
+                                            onSelect={(selected) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                            >
+                                            <Check
+                                                className={cn(
+                                                "mr-2 h-4 w-4",
+                                                departmentPopOver.selected === department.name
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                                )}
+                                            />
+                                            {department.name}
+                                            </CommandItem>
+                                        ))}
+                                        </CommandGroup>
+                                    )}
+                                    </CommandList>
+                                </Command>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Division</p>
