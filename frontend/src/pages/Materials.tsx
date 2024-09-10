@@ -22,6 +22,7 @@ function Materials() {
     const [openViewModal, setOpenViewModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
+    const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
@@ -130,7 +131,10 @@ function Materials() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent >
-                                                    <DropdownMenuItem onClick={() => {setOpenViewModal(true);}}>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewMaterial(material);
+                                                        setOpenViewModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -171,7 +175,12 @@ function Materials() {
             </div>
             {openAddModal && <AddMaterialModal addMaterial={addMaterial} onClose={() => setOpenAddModal(false)}/>}
             {openEditModal && <EditMaterialModal updateMaterial={updateMaterial} material={editMaterial} onClose={() => setOpenEditModal(false)}/>}
-            {openViewModal && <ViewMaterialModal onClose={() => setOpenViewModal(false)}/>}
+            {openViewModal && <ViewMaterialModal 
+                material={viewMaterial} 
+                onClose={() => {
+                    setViewMaterial(null);
+                    setOpenViewModal(false);
+            }}/>}
         </>
     );
 }
