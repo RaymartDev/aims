@@ -31,7 +31,7 @@ import type DepartmentType from "@/interface/department"
 
 interface EditEmployeeModalProps {
     employee: EmployeeType | null;
-    updateEmployee: (id: number, employee: EmployeeType) => void;
+    updateEmployee: (employee: EmployeeType) => void;
     onClose: () => void;
 }
 
@@ -177,7 +177,7 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
           });
           if (response.status >= 200 && response.status < 300) {
             toast.success(response.data?.message || 'Successfully updated employee');
-            updateEmployee(employee?.id || 1, {
+            updateEmployee({
                 id: employee?.id || 1,
                 first_name: firstName,
                 last_name: lastName,

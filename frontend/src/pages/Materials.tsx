@@ -33,15 +33,16 @@ function Materials() {
         setCurrentPage(page);
     };
 
-    const updateMaterial = (id: number, material: MaterialType | null) => {
-        if (material) {
-            const index = materials.findIndex(material => material.id === id);
-            if (index !== -1) {
-                materials[index] = material;
-                setEditMaterial(null);
-            }
+    const updateMaterial = (updatedMaterial: MaterialType | null) => {
+        if (updatedMaterial) {
+            setMaterials(prevMaterials =>
+                prevMaterials.map(material =>
+                    material.id === updatedMaterial.id ? updatedMaterial : material
+                )
+            );
+            setEditMaterial(null);
         }
-    }
+      };
 
     const addMaterial = (material: MaterialType | null) => {
         if (material) {

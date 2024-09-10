@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 
 interface EditCompanyModalProps {
     onClose: () => void;
-    updateCompany: (id: number, company: CompanyType | null) => void;
+    updateCompany: (company: CompanyType | null) => void;
     company: CompanyType | null;
 }
 
@@ -30,7 +30,7 @@ function EditCompanyModal ({ onClose, updateCompany, company }: EditCompanyModal
       
             if (response.status >= 200 && response.status < 300) {
               toast.success(response.data?.message || 'Successfully updated company');
-              updateCompany(company?.id || 1, {
+              updateCompany({
                 id: company?.id || 1,
                 name,
               })

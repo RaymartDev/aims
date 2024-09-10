@@ -31,7 +31,7 @@ import type CompanyType from "@/interface/company"
 interface EditStoreModalProps {
     store: StoreType | null;
     onClose: () => void;
-    updateStore: (id: number, store: StoreType | null) => void;
+    updateStore: (store: StoreType | null) => void;
 }
 
 function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
@@ -120,8 +120,8 @@ function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
                 address: address,
             });
             if (response.status >= 200 && response.status < 300) {
-                toast.success(response.data?.message || 'Successfully added store');
-                updateStore(store?.id || 1, {
+                toast.success(response.data?.message || 'Successfully updated store');
+                updateStore({
                     id: store?.id || 1,
                     company_name: companyName,
                     name,

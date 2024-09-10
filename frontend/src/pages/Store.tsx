@@ -53,17 +53,16 @@ function Store() {
         setCurrentPage(page);
     };
     
-    const updateStore = (id: number, store: StoreType | null) => {
-        if (!store) {
+    const updateStore = (updatedStore: StoreType | null) => {
+        if (updatedStore) {
+            setStores(prevStores =>
+                prevStores.map(store =>
+                    store.id === updatedStore.id ? updatedStore : store
+                )
+            );
             setEditStore(null);
-            return;
         }
-        const index = stores.findIndex(store => store.id === id);
-        if (index !== -1) {
-            stores[index] = store;
-            setEditStore(null);
-        }
-    }
+      };
 
     const registerStore = (id: number) => {
         setStores(prevStores => 

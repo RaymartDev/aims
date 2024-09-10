@@ -37,7 +37,7 @@ function AddSupplierModal ({ onClose, onNext, handleAddDetailChange, getAddDataB
         searchTerm: '',
         isOpen: false,
         results: [],
-        selected: '',
+        selected: getAddDataByKey('companyName'),
       });
 
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -111,6 +111,12 @@ function AddSupplierModal ({ onClose, onNext, handleAddDetailChange, getAddDataB
                         handleAddDetailChange('address', '');
                         handleAddDetailChange('contractTerm', '');
                         handleAddDetailChange('handleAddDetailChange', '');
+                        setCompanyPopOver({
+                            searchTerm: '',
+                            isOpen: false,
+                            results: [],
+                            selected: getAddDataByKey('companyName'),
+                        })
                     }}><X size={30}/></Button>
                 </div>
                 <div className="flex flex-col justify-start mt-5 space-y-2">
@@ -192,8 +198,23 @@ function AddSupplierModal ({ onClose, onNext, handleAddDetailChange, getAddDataB
                         handleAddDetailChange('address', '');
                         handleAddDetailChange('contractTerm', '');
                         handleAddDetailChange('handleAddDetailChange', '');
+                        setCompanyPopOver({
+                            searchTerm: '',
+                            isOpen: false,
+                            results: [],
+                            selected: getAddDataByKey('companyName'),
+                        })
                     }}><span>Cancel</span></Button>
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}><span>Next</span></Button>
+                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => {
+                        handleAddDetailChange('companyName', companyPopOver.selected)
+                        setCompanyPopOver({
+                            searchTerm: '',
+                            isOpen: false,
+                            results: [],
+                            selected: getAddDataByKey('companyName'),
+                        })
+                        onNext();
+                    }}><span>Next</span></Button>
                 </div>
             </div>
         </div>

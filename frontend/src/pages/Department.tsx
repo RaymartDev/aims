@@ -43,15 +43,16 @@ function Department() {
         loadDepartments();
       }, [loadDepartments]);
 
-    const updateDepartment = (id: number, department: DepartmentType | null) => {
-        if (department) {
-            const index = departments.findIndex(department => department.id === id);
-            if (index !== -1) {
-                departments[index] = department;
-                setEditDepartment(null);
-            }
+      const updateDepartment = (updatedDepartment: DepartmentType | null) => {
+        if (updatedDepartment) {
+            setDepartments(prevDepartments =>
+                prevDepartments.map(department =>
+                    department.id === updatedDepartment.id ? updatedDepartment : department
+                )
+            );
+            setEditDepartment(null);
         }
-    }
+      };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);

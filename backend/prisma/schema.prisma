@@ -109,6 +109,7 @@ model Department {
   modified_on DateTime @updatedAt
   modified_by_id Int?  @default(1)
   modified_by User? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  @@index([name])
 }
 
 model Company {
@@ -122,6 +123,7 @@ model Company {
   modified_on DateTime @updatedAt
   modified_by_id Int? @default(1)
   modified_by    User? @relation("CompanyModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  @@index([name])
 }
 
 model Supplier {
