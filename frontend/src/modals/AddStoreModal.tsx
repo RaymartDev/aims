@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import type StoreType from "@/interface/store";
 import { toast } from "react-toastify";
 import axios, { CancelTokenSource } from "axios";
-import { cn, getVersion } from "@/lib/utils";
+import { cn, getActiveStatus, getVersion } from "@/lib/utils";
 import CompanyType from "@/interface/company"
 import {
     Popover,
@@ -123,6 +123,7 @@ function AddStoreModal({ onClose, addStore }: AddStoreModalProps) {
                     cost_center_code: costCode,
                     address,
                     registered_status: false,
+                    active_status: getActiveStatus(response.data?.store),
                 })
             }
             onClose();

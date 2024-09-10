@@ -96,7 +96,7 @@ function Company() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Company Name</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -104,7 +104,7 @@ function Company() {
                             {companies.map(company => (
                                 <TableRow key={company.id}>
                                     <TableCell>{company.name}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{company.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditCompany(company);

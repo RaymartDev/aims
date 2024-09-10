@@ -6,7 +6,7 @@ import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
 import type SupplierType from "@/interface/supplier";
 import axios from "axios";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 interface EditSupplierModal2Props {
@@ -59,6 +59,7 @@ function EditSupplierModal2 ({ onClose, onBack, getEditDataByKey, handleEditDeta
                     province: getEditDataByKey('province'),
                     zip: getEditDataByKey('zipCode'),
                     remarks: getEditDataByKey('remarks'),
+                    active_status: getActiveStatus(response.data?.supplier),
                 })
                 clearEditData();
             }

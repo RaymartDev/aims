@@ -4,7 +4,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type DepartmentType from "@/interface/department";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -31,6 +31,7 @@ function EditDepartmentModal({ onClose, department, updateDepartment }: EditDepa
         updateDepartment({
           id: department?.id || 1,
           name,
+          active_status: getActiveStatus(response.data?.department),
         })
         setName('');
         onClose();

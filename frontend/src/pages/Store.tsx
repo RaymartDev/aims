@@ -118,7 +118,8 @@ function Store() {
                                     <TableHead>Store Name</TableHead>
                                     <TableHead>Cost Center Code</TableHead>
                                     <TableHead>Address</TableHead>
-                                    <TableHead>Status</TableHead>
+                                    <TableHead>Registered Status</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -130,6 +131,7 @@ function Store() {
                                         <TableCell>{store.cost_center_code}</TableCell>
                                         <TableCell>{store.address}</TableCell>
                                         <TableCell>{store.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
+                                        <TableCell>{store.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditStore(store);

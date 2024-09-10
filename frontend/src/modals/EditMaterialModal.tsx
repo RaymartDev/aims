@@ -21,7 +21,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/Components/ui/popover";
-import { cn, getVersion } from "@/lib/utils";
+import { cn, getActiveStatus, getVersion } from "@/lib/utils";
 import type MaterialType from "@/interface/material";
 import type CategoryType from "@/interface/category";
 import type TypeInterface from "@/interface/types";
@@ -105,6 +105,7 @@ function EditMaterialModal ({ onClose, material, updateMaterial }: EditMaterialM
               material_type: typePopOver.selected,
               uom,
               date_entry: material?.date_entry || new Date(),
+              active_status: getActiveStatus(response.data?.material),
             })
             clearData();
             onClose();

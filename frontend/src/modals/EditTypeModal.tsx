@@ -4,7 +4,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type TypeInterface from "@/interface/types";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -31,6 +31,7 @@ function EditTypeModal({ onClose, type, updateType }: EditTypeModalProps) {
         updateType({
           id: type?.id || 1,
           description,
+          active_status: getActiveStatus(response.data?.materialType),
         })
         setDescription('');
         onClose();

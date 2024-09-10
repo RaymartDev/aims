@@ -107,6 +107,7 @@ function Materials() {
                                     <TableHead>Material Type</TableHead>
                                     <TableHead>Cost</TableHead>
                                     <TableHead>Date Entry</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -120,6 +121,7 @@ function Materials() {
                                         <TableCell>{material.material_type}</TableCell>
                                         <TableCell>{formatCurrency(material.unit_cost)}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
+                                        <TableCell>Active</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditMaterial(material);

@@ -9,7 +9,7 @@ import type StoreType from "@/interface/store";
 import { useCallback, useEffect, useState } from "react";
 import axios, { CancelTokenSource } from "axios";
 import { toast } from "react-toastify";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 
 import { Check, ChevronDown } from "lucide-react";
 import {
@@ -128,6 +128,7 @@ function EditStoreModal({ store, onClose, updateStore }: EditStoreModalProps) {
                     cost_center_code: costCode,
                     address,
                     registered_status: response.data?.registered,
+                    active_status: getActiveStatus(response.data?.store),
                 })
             }
             clearData();

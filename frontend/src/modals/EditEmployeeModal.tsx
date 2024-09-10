@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import type EmployeeType from "@/interface/employee";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import axios, { CancelTokenSource } from "axios";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 import { Check, ChevronDown } from "lucide-react";
@@ -188,6 +188,7 @@ function EditEmployeeModal ({ employee, onClose, updateEmployee }: EditEmployeeM
                 division,
                 date_hired: response.data?.employee.date_hired,
                 registered_status: response.data?.employee.registered,
+                active_status: getActiveStatus(response.data?.employee),
             });
           }
           onClose();

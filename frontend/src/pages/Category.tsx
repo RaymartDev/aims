@@ -96,7 +96,7 @@ function Category() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Category Description</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -104,7 +104,7 @@ function Category() {
                             {categories.map(category => (
                                 <TableRow key={category.id}>
                                     <TableCell>{category.description}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{category.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditCategory(category);

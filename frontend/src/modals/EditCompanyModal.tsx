@@ -6,7 +6,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type CompanyType from "@/interface/company";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -33,6 +33,7 @@ function EditCompanyModal ({ onClose, updateCompany, company }: EditCompanyModal
               updateCompany({
                 id: company?.id || 1,
                 name,
+                active_status: getActiveStatus(response.data?.company),
               })
               setName('');
               onClose();

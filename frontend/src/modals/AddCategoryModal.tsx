@@ -5,7 +5,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type CategoryType from "@/interface/category";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -28,8 +28,9 @@ function AddCategoryModal({ addCategory, onClose }: AddCategoryModalProps) {
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully created category');
         addCategory({
-          id: response.data?.category?.id || 1,
+          id: response.data?.material_category?.id || 1,
           description,
+          active_status: getActiveStatus(response.data?.material_category),
         });
         onClose();
         setDescription('');

@@ -29,7 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/Components/ui/popover";
-import { cn, getVersion } from "@/lib/utils";
+import { cn, getActiveStatus, getVersion } from "@/lib/utils";
 import MaterialType from "@/interface/material";
 import type CategoryType from "@/interface/category";
 import type TypeInterface from "@/interface/types";
@@ -115,7 +115,7 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully created material');
         addMaterial({
-          id: response.data?.id || 1,
+          id: response.data?.material.id || 1,
           item_description: desc,
           brand_model: model,
           unit_cost: unitCost,
@@ -126,6 +126,7 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
           material_type: typePopOver.selected,
           uom,
           date_entry: new Date(dateEntry),
+          active_status: getActiveStatus(response.data?.material),
         })
         clearData();
         onClose();

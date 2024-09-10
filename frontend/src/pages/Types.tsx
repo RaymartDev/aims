@@ -97,7 +97,7 @@ function Types() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Type Description</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -105,7 +105,7 @@ function Types() {
                             {types.map(type => (
                                 <TableRow key={type.id}>
                                     <TableCell>{type.description}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{type.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditType(type);

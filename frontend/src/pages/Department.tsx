@@ -96,7 +96,7 @@ function Department() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Department</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -104,7 +104,7 @@ function Department() {
                             {departments.map(department => (
                                 <TableRow key={department.id}>
                                     <TableCell>{department.name}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{department.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                             setEditDepartment(department);

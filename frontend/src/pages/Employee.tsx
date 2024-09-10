@@ -180,7 +180,7 @@ function Employee() {
                                         <TableCell>{employee.company_name}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(employee.date_hired))}</TableCell>
                                         <TableCell>{employee.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
-                                        <TableCell>Active</TableCell>
+                                        <TableCell>{employee.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditEmployee(employee);

@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import type DepartmentType from "@/interface/department";
 import { useState } from "react";
 import axios from "axios";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 interface AddDepartmentModalProps {
@@ -30,7 +30,8 @@ function AddDepartmentModal({ onClose, addDepartment }: AddDepartmentModalProps)
         setName('');
         addDepartment({
           id: response.data?.department?.id || 1,
-          name
+          name,
+          active_status: getActiveStatus(response.data?.department),
         })
         onClose();
       }

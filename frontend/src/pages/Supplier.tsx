@@ -261,6 +261,7 @@ function Supplier() {
                                     <TableHead>Contact Person</TableHead>
                                     <TableHead>Business Number</TableHead>
                                     <TableHead>Mobile Number</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -272,6 +273,7 @@ function Supplier() {
                                         <TableCell>{supplier.contact_person}</TableCell>
                                         <TableCell>{supplier.business_number}</TableCell>
                                         <TableCell>{supplier.mobile_number}</TableCell>
+                                        <TableCell>{supplier.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditSupplierData(supplier);
