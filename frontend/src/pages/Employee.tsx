@@ -26,7 +26,6 @@ function Employee() {
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
-    const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -79,11 +78,6 @@ function Employee() {
             setEmployees(prevEmployees => [...prevEmployees, employee]);
         }
       };
-
-    const handleViewDetails = (employeeId: number) => {
-        setSelectedEmployeeId(employeeId);
-        setOpenViewModal(true);
-    };
 
     return(
         <>
@@ -154,7 +148,7 @@ function Employee() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
-                                                    <DropdownMenuItem onClick={() => handleViewDetails(employee.id)}>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenViewModal(true)}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);
@@ -200,7 +194,7 @@ function Employee() {
             {openAddModal && <AddEmployeeModal addEmployee={addEmployee} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
-            {openViewModal && selectedEmployeeId !== null && <ViewEmployeeModal employeeId={selectedEmployeeId} onClose={() => setOpenViewModal(false)}/>}
+            {openViewModal && <ViewEmployeeModal onClose={() => setOpenViewModal(false)}/>}
         </>
     );
 }

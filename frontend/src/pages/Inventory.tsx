@@ -371,7 +371,7 @@ function InventoryOverview() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 5000); // 2 seconds delay
+    }, 0); // 2 seconds delay
 
     return () => clearTimeout(timer);
   }, []);
