@@ -332,7 +332,7 @@ function Sidebar() {
                 </AccordionTrigger>
                 <AccordionContent className="my-0 py-0 border-b">
                   <NavLink
-                    to="/release-report"
+                    to="/releasereport"
                     className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
                         isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
@@ -347,7 +347,7 @@ function Sidebar() {
                 </AccordionContent>
                 <AccordionContent className="my-0 py-0 border-b">
                   <NavLink
-                    to="/return-report"
+                    to="/returnreport"
                     className={({ isActive }) =>
                       `flex items-center transition duration-200 h-12 ${
                         isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
