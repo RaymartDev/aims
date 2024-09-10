@@ -1,5 +1,6 @@
 import { Material } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertMaterial(material: any): Promise<Material | null> {
   try {
@@ -151,6 +152,7 @@ export async function listMaterials(page: number, limit: number): Promise<{ mate
         material_type: material.type.description,
         uom: material.unit_of_measure,
         date_entry: new Date(material.date_entry),
+        active_status: activeStatus(material),
       }));
       return { materialsFinal, maxPage: totalPages };
     }

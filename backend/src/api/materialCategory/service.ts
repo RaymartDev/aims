@@ -1,5 +1,6 @@
 import { Material_Category } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertMaterialCategory(material_category: any): Promise<Material_Category | null> {
   try {
@@ -115,6 +116,7 @@ export async function listMaterialCategories(page: number, limit: number): Promi
       const materialCategoriesFinal = materialCategories.map((materialCategory) => ({
         id: materialCategory.id,
         description: materialCategory.description,
+        active_status: activeStatus(materialCategory),
       }));
       
       return { materialCategoriesFinal, maxPage: totalPages };

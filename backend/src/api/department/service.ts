@@ -1,5 +1,6 @@
 import { Department } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertDepartment(department: any): Promise<Department | null> {
   try {
@@ -114,6 +115,7 @@ export async function listDepartments(page: number, limit: number): Promise<{ de
       const departmentsFinal = departments.map((department) => ({
         id: department.id,
         name: department.name,
+        active_status: activeStatus(department),
       }));
       
       return { departmentsFinal, maxPage: totalPages };

@@ -150,7 +150,7 @@ function Store() {
                                                         setViewStore(store);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => {
                                                         setRegStore(store);
                                                         setOpenUserRegModal(true);

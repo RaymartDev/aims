@@ -120,7 +120,7 @@ function Types() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{type.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>

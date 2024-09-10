@@ -140,7 +140,7 @@ function Materials() {
                                                         setViewMaterial(material);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{material.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>

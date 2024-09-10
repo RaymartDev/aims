@@ -119,7 +119,7 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{department.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>

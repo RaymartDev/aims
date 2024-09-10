@@ -199,7 +199,7 @@ function Employee() {
                                                         setViewEmployee(employee);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{employee.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);
                                                         setOpenUserRegModal(true);

@@ -292,7 +292,7 @@ function Supplier() {
                                                         setViewSupplier(supplier);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{supplier.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>

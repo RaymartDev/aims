@@ -119,7 +119,7 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>

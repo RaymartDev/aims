@@ -1,5 +1,6 @@
 import { Company } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertCompany(company: any): Promise<Company | null> {
   try {
@@ -114,6 +115,7 @@ export async function listCompanies(page: number, limit: number): Promise<{ comp
       const companiesFinal = companies.map((company) => ({
         id: company.id,
         name: company.name,
+        active_status: activeStatus(company),
       }));
       return { companiesFinal, maxPage: totalPages };
     }

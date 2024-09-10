@@ -10,4 +10,12 @@ const generateHashedPassword = (password: string): Promise<string> => {
   return bcrypt.hash(password, 10);
 };
 
-export { generateToken, generateHashedPassword };
+const activeStatus = (obj: any) => {
+  const today = new Date();
+  const effectiveTo = new Date(obj.effective_to);
+
+  // Check if the current date is less than or equal to effective_to
+  return today <= effectiveTo;
+};
+
+export { generateToken, generateHashedPassword, activeStatus };

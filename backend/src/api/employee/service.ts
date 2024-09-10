@@ -1,5 +1,6 @@
 import { Employee } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertEmployee(employee: any): Promise<Employee | null> {
   try {
@@ -156,6 +157,7 @@ export async function listEmployees(page: number, limit: number): Promise<{ empl
         company_name: employee.company?.name,
         date_hired: employee.date_hired,
         registered_status: employee.registered,
+        active_status: activeStatus(employee),
       }));
       
       return { employeesFinal, totalPages };
