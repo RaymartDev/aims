@@ -29,6 +29,8 @@ function Employee() {
     const [viewEmployee, setViewEmployee] = useState<EmployeeType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const [filteredEmployees, setFilteredEmployees] = useState<EmployeeType[]>([]);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const itemsPerPage = 17;
@@ -53,6 +55,26 @@ function Employee() {
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredEmployees([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = employees.filter((employee) =>
+                employee.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                employee.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                employee.employee_no.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredEmployees(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, employees]);
+
+    const handleSelectEmployee = (employee: EmployeeType) => {
+        setViewEmployee(employee);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredEmployees([]); // Clear suggestions after selection
     };
 
     const updateEmployee = (id: number, employee: EmployeeType) => {
@@ -95,10 +117,27 @@ function Employee() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12 ">
-                                    <Input type="search" placeholder="Search Employee Number" className="pl-12 border-2 focus:border-none" 
+                                    <Input
+                                        type="search"
+                                        placeholder="Search Employee"
+                                        className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}/>
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    {filteredEmployees.length > 0 && (
+                                        <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                            {filteredEmployees.map((employee) => (
+                                                <div
+                                                    key={employee.id}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => handleSelectEmployee(employee)}
+                                                >
+                                                    {employee.first_name} {employee.last_name} - {employee.employee_no}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-40" 
                                     onClick={() => setOpenAddModal(true)}>
