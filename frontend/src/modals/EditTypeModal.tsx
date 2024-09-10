@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 interface EditTypeModalProps {
   onClose: () => void;
-  updateType: (id: number, type: TypeInterface | null) => void;
+  updateType: (type: TypeInterface | null) => void;
   type: TypeInterface | null;
 }
 
@@ -28,7 +28,7 @@ function EditTypeModal({ onClose, type, updateType }: EditTypeModalProps) {
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully updated material type');
-        updateType(type?.id || 1, {
+        updateType({
           id: type?.id || 1,
           description,
         })

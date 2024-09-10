@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 interface EditCategoryModalProps {
   onClose: () => void;
-  updateCategory: (id: number, category: CategoryType | null) => void;
+  updateCategory: (category: CategoryType | null) => void;
   category: CategoryType | null;
 }
 
@@ -28,7 +28,7 @@ function EditCategoryModal({ onClose, category, updateCategory }: EditCategoryMo
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully updated material category');
-        updateCategory(category?.id || 1, {
+        updateCategory({
           id: category?.id || 1,
           description,
         })
