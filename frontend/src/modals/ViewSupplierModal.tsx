@@ -2,12 +2,14 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
+import type SupplierType from "@/interface/supplier";
 interface ViewSupplierModalProps {
     onClose: () => void;
     onNext: () => void;
+    supplier: SupplierType | null;
 }
 
-function ViewSupplierModal ({ onClose, onNext}: ViewSupplierModalProps) {
+function ViewSupplierModal ({ onClose, onNext, supplier }: ViewSupplierModalProps) {
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -22,25 +24,25 @@ function ViewSupplierModal ({ onClose, onNext}: ViewSupplierModalProps) {
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-1/3">
                             <p className="text-sm text-[#697386]">Supplier Code</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.supplier_code || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-2/3">
                             <p className="text-sm text-[#697386]">Company Name</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.company_name || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Address</p>
-                        <Textarea value={""} className="focus:border-none border-black"></Textarea>
+                        <Textarea value={supplier?.address || ''} readOnly className="focus:border-none border-black"></Textarea>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Contract Term</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.contract_term || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Tin Number</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.tin_number || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                 </div>

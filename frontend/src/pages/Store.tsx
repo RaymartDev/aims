@@ -23,6 +23,7 @@ function Store() {
     const [stores, setStores] = useState<StoreType[]>([]);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
+    const [viewStore, setViewStore] = useState<StoreType | null>(null);
     const [editStore, setEditStore] = useState<StoreType | null>(null);
     const [regStore, setRegStore] = useState<StoreType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -142,7 +143,10 @@ function Store() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
-                                                    <DropdownMenuItem onClick={() => setOpenViewModal(true)}>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewStore(store);
+                                                        setOpenViewModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => {
                                                         setRegStore(store);
@@ -188,7 +192,12 @@ function Store() {
             {openAddModal && <AddStoreModal addStore={addStore} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistrationStore registerStore={registerStore} store={regStore} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditStoreModal updateStore={updateStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
-            {openViewModal && <ViewStoreModal onClose={() => setOpenViewModal(false)}/>}
+            {openViewModal && <ViewStoreModal 
+                store={viewStore}
+                onClose={() => {
+                    setViewStore(null);
+                    setOpenViewModal(false);
+            }}/>}
         </>
     );
 }

@@ -4,13 +4,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
+import type EmployeeType from "@/interface/employee";
 import { X } from "lucide-react";
 
 interface ViewEmployeeModalProps {
     onClose: () => void;
+    employee: EmployeeType | null;
 }
 
-function ViewEmployeeModal ({ onClose }: ViewEmployeeModalProps) {
+function ViewEmployeeModal ({ onClose, employee }: ViewEmployeeModalProps) {
     
 
     return(
@@ -24,37 +26,37 @@ function ViewEmployeeModal ({ onClose }: ViewEmployeeModalProps) {
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">First Name</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.first_name || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Last Name</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.last_name || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Employee Number</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.employee_no || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Cost Center Code</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.cost_center_code || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Company Name</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.company_name || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Department</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.department_name || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Division</p>
-                            <Input value={""} readOnly className="focus:border-none border-black"></Input>
+                            <Input value={employee?.division || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                 </div>

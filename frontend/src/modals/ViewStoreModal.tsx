@@ -4,13 +4,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
+import type StoreType from "@/interface/store";
 import { X } from "lucide-react";
 
 interface ViewStoreModalProps {
     onClose: () => void;
+    store: StoreType | null;
 }
 
-function ViewStoreModal({ onClose }: ViewStoreModalProps) {
+function ViewStoreModal({ onClose, store }: ViewStoreModalProps) {
 
   
     return (
@@ -23,19 +25,19 @@ function ViewStoreModal({ onClose }: ViewStoreModalProps) {
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Company</p>
-                        <Input value={""} className="focus:border-none border-black"></Input>
+                        <Input value={store?.company_name || ''} readOnly className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Store Name</p>
-                        <Input value={""} className="focus:border-none border-black"></Input>
+                        <Input value={store?.name || ''} readOnly className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Cost Center Code</p>
-                        <Input value={""} className="focus:border-none border-black"></Input>
+                        <Input value={store?.cost_center_code || ''} readOnly className="focus:border-none border-black"></Input>
                     </div>
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Address</p>
-                        <Input value={""} className="focus:border-none border-black"></Input>
+                        <Input value={store?.address || ''} readOnly className="focus:border-none border-black"></Input>
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">

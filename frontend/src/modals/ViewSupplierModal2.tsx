@@ -4,13 +4,15 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import type SupplierType from "@/interface/supplier";
 
 interface ViewSupplierModal2Props {
     onClose: () => void;
     onBack: () => void;
+    supplier: SupplierType | null;
 }
 
-function ViewSupplierModal2 ({ onClose, onBack}: ViewSupplierModal2Props) {
+function ViewSupplierModal2 ({ onClose, onBack, supplier }: ViewSupplierModal2Props) {
 
     return(
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -24,46 +26,46 @@ function ViewSupplierModal2 ({ onClose, onBack}: ViewSupplierModal2Props) {
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="space-y-1">
                         <p className="text-sm text-[#697386]">Contact Person</p>
-                        <Input value={""} className="focus:border-none border-black"></Input>
+                        <Input value={supplier?.contact_person || ''} readOnly className="focus:border-none border-black"></Input>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-2/3">
                             <p className="text-sm text-[#697386]">Email Address</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.email || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-1/3">
                             <p className="text-sm text-[#697386]">Mobile Number</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.mobile_number || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div  className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Business Telephone</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.business_number || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Telefax Number</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.teleFax || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div  className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">City/Town</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.cityTown || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Province</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.province || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div  className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-1/4">
                             <p className="text-sm text-[#697386]">Zip Code</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.zip || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                         <div className="space-y-1 w-3/4">
                             <p className="text-sm text-[#697386]">Remarks</p>
-                            <Input value={""} className="focus:border-none border-black"></Input>
+                            <Input value={supplier?.remarks || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                 </div>

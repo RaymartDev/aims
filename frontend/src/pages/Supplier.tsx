@@ -33,6 +33,7 @@ function Supplier() {
     const [currentPage, setCurrentPage] = useState(1);
     const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
     const [maxPage, setMaxPage] = useState(1);
+    const [viewSupplier, setViewSupplier] = useState<SupplierType | null>(null);
     const [formData, setFormData] = useState({
         supplierCode: '',
         companyName: '',
@@ -282,7 +283,10 @@ function Supplier() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent >
-                                                    <DropdownMenuItem onClick={() => setOpenViewModal(true)}>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewSupplier(supplier);
+                                                        setOpenViewModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -348,10 +352,18 @@ function Supplier() {
                 handleEditDetailChange={handleEditDetailChange}
                 onBack={handleEditBack}/>}
             {openViewModal && <ViewSupplierModal 
-                onClose={() => setOpenViewModal(false)}
+                supplier={viewSupplier}
+                onClose={() => {
+                    setViewSupplier(null);
+                    setOpenViewModal(false);
+                }}
                 onNext={handleNextViewModal}/>}
             {openNextViewModal && <ViewSupplierModal2 
-                onClose={() => setOpenNextViewModal(false)} 
+                supplier={viewSupplier}
+                onClose={() => {
+                    setViewSupplier(null);
+                    setOpenNextViewModal(false);
+                }} 
                 onBack={handleViewBack}/>}
         </>
     );
