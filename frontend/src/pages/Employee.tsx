@@ -12,6 +12,7 @@ import AddEmployeeModal from "@/modals/AddEmployeeModal";
 import UserRegistration from "@/modals/UserRegistration";
 import EditEmployeeModal from "@/modals/EditEmployeeModal";
 import ViewEmployeeModal from "@/modals/ViewEmployeeModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type EmployeeType from "@/interface/employee";
 import { fetchData, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -26,6 +27,7 @@ function Employee() {
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [viewEmployee, setViewEmployee] = useState<EmployeeType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -161,7 +163,8 @@ function Employee() {
                                     <TableHead>Division</TableHead>
                                     <TableHead>Company</TableHead>
                                     <TableHead>Date Hired</TableHead>
-                                    <TableHead>Status</TableHead>
+                                    <TableHead>Registered Status</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -177,13 +180,14 @@ function Employee() {
                                         <TableCell>{employee.company_name}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(employee.date_hired))}</TableCell>
                                         <TableCell>{employee.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
+                                        <TableCell>Active</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditEmployee(employee);
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white"onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -240,6 +244,7 @@ function Employee() {
             {openAddModal && <AddEmployeeModal addEmployee={addEmployee} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
             {openViewModal && <ViewEmployeeModal 
                 employee={viewEmployee} 
                 onClose={() => {

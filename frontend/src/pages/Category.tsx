@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddCategoryModal from "@/modals/AddCategoryModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type CategoryType from "@/interface/category";
 import { fetchData, getVersion } from "@/lib/utils";
 import EditCategoryModal from "@/modals/EditCategoryModal";
@@ -19,6 +20,7 @@ function Category() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [categories, setCategories] = useState<CategoryType[]>([])
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
     const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
@@ -109,7 +111,7 @@ function Category() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -156,6 +158,7 @@ function Category() {
             </div>
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }

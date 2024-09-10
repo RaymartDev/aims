@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useCallback, useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
 import EditCompanyModal from "@/modals/EditCompanyModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type CompanyType from "@/interface/company";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -18,6 +19,7 @@ import { logout } from "@/slices/userSlice";
 function Company() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const itemsPerPage = 17;
@@ -109,7 +111,7 @@ function Company() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -156,6 +158,7 @@ function Company() {
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }

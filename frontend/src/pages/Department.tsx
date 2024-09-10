@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useCallback, useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
 import EditDepartmentModal from "@/modals/EditDepartmentModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type DepartmentType from "@/interface/department";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -19,6 +20,7 @@ function Department() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState<DepartmentType | null>(null);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -109,7 +111,7 @@ function Department() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -156,6 +158,7 @@ function Department() {
             </div>
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }

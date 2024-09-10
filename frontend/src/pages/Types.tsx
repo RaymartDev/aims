@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 // import EditTypeModal from "@/modals/EditTypeModal";
 import type TypeInterface from "@/interface/types";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -22,6 +23,7 @@ function Types() {
     const [types, setTypes] = useState<TypeInterface[]>([])
     const [editType, setEditType] = useState<TypeInterface | null>(null);
     const itemsPerPage = 17;
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
@@ -110,7 +112,7 @@ function Types() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -157,6 +159,7 @@ function Types() {
             </div>
             {openModal && <AddTypeModal addType={addType} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }

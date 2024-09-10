@@ -11,6 +11,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
 import ViewMaterialModal from "@/modals/ViewMaterialModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type MaterialType from "@/interface/material";
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -23,6 +24,7 @@ function Materials() {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
@@ -124,7 +126,7 @@ function Materials() {
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -182,6 +184,7 @@ function Materials() {
                     setViewMaterial(null);
                     setOpenViewModal(false);
             }}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </>
     );
 }

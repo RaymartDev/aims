@@ -14,6 +14,7 @@ import EditSupplierModal from "@/modals/EditSupplierModal";
 import EditSupplierModal2 from "@/modals/EditSupplierModal2";
 import ViewSupplierModal from "@/modals/ViewSupplierModal";
 import ViewSupplierModal2 from "@/modals/ViewSupplierModal2";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type SupplierType from "@/interface/supplier";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -28,6 +29,7 @@ function Supplier() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openNextEditModal, setOpenNextEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [openNextViewModal, setOpenNextViewModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -276,7 +278,7 @@ function Supplier() {
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -366,6 +368,7 @@ function Supplier() {
                     setOpenNextViewModal(false);
                 }} 
                 onBack={handleViewBack}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </>
     );
 }
