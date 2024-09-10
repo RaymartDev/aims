@@ -158,15 +158,16 @@ function Supplier() {
         }
     }
 
-    const updateSupplier = (id: number, supplier: SupplierType | null) => {
-        if (supplier) {
-            const index = suppliers.findIndex(supplier => supplier.id === id);
-            if (index !== -1) {
-                suppliers[index] = supplier;
-                setEditSupplier(null);
-            }
+    const updateSupplier = (updatedSupplier: SupplierType | null) => {
+        if (updatedSupplier) {
+            setSuppliers(prevSuppliers =>
+                prevSuppliers.map(supplier =>
+                    supplier.id === updatedSupplier.id ? updatedSupplier : supplier
+                )
+            );
+            setEditSupplier(null);
         }
-    }
+    };
       
 
     const handleNextAddModal = () => {

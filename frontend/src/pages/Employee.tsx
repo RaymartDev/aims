@@ -77,13 +77,16 @@ function Employee() {
         setFilteredEmployees([]); // Clear suggestions after selection
     };
 
-    const updateEmployee = (id: number, employee: EmployeeType) => {
-        const index = employees.findIndex(employee => employee.id === id);
-        if (index !== -1) {
-            employees[index] = employee;
+    const updateEmployee = (updatedEmployee: EmployeeType | null) => {
+        if (updatedEmployee) {
+            setEmployees(prevEmployees =>
+                prevEmployees.map(employee =>
+                    employee.id === updatedEmployee.id ? updatedEmployee : employee
+                )
+            );
             setEditEmployee(null);
         }
-    }
+      };
 
     const registerEmployee = (id: number) => {
         setEmployees(prevEmployees => 

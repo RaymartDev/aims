@@ -84,7 +84,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
     const newMaterial = await updateMaterial({ ...updateData }, parseInt(id));
     if (newMaterial) {
-      res.status(200).json({ department: newMaterial, message: 'Successfully updated material' });
+      res.status(200).json({ material: newMaterial, message: 'Successfully updated material' });
     }
   } catch (err) {
     next(err);

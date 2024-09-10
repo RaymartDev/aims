@@ -32,7 +32,7 @@ import { toast } from "react-toastify";
 interface EditMaterialModalProps {
     onClose: () => void;
     material: MaterialType | null;
-    updateMaterial: (id: number, material: MaterialType | null) => void;
+    updateMaterial: (material: MaterialType | null) => void;
 }
 
 function EditMaterialModal ({ onClose, material, updateMaterial }: EditMaterialModalProps) {
@@ -93,8 +93,8 @@ function EditMaterialModal ({ onClose, material, updateMaterial }: EditMaterialM
     
           if (response.status >= 200 && response.status < 300) {
             toast.success(response.data?.message || 'Successfully updated material');
-            updateMaterial(response.data?.material?.id || 1, {
-              id: response.data?.material?.id  || 1,
+            updateMaterial({
+              id: response.data?.material?.id,
               item_description: desc,
               brand_model: model,
               unit_cost: unitCost,

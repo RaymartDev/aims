@@ -47,15 +47,16 @@ function Category() {
         loadCategories();
       }, [loadCategories]);
 
-    const updateCategory = (id: number, category: CategoryType | null) => {
-        if (category) {
-            const index = categories.findIndex(category => category.id === id);
-            if (index !== -1) {
-                categories[index] = category;
-                setEditCategory(null);
-            }
+      const updateCategory = (updatedCategory: CategoryType | null) => {
+        if (updatedCategory) {
+            setCategories(prevCategories =>
+                prevCategories.map(category =>
+                    category.id === updatedCategory.id ? updatedCategory : category
+                )
+            );
+            setEditCategory(null);
         }
-    }
+      };
 
     const addCategory = (category: CategoryType | null) => {
         if (category) {

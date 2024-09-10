@@ -48,15 +48,16 @@ function Types() {
         setCurrentPage(page);
     };
 
-    const updateType = (id: number, type: TypeInterface | null) => {
-        if (type) {
-            const index = types.findIndex(type => type.id === id);
-            if (index !== -1) {
-                types[index] = type;
-                setEditType(null);
-            }
+    const updateType = (updatedType: TypeInterface | null) => {
+        if (updatedType) {
+            setTypes(prevTypes =>
+                prevTypes.map(type =>
+                    type.id === updatedType.id ? updatedType : type
+                )
+            );
+            setEditType(null);
         }
-    }
+    };
 
     const addType = (type: TypeInterface | null) => {
         if (type) {

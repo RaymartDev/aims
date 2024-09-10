@@ -30,15 +30,16 @@ function Company() {
         setCurrentPage(page);
     };
 
-    const updateCompany = (id: number, company: CompanyType | null) => {
-        if (company) {
-            const index = companies.findIndex(company => company.id === id);
-            if (index !== -1) {
-                companies[index] = company;
-                setEditCompany(null);
-            }
+    const updateCompany = (updatedCompany: CompanyType | null) => {
+        if (updatedCompany) {
+            setCompanies(prevCompanies =>
+                prevCompanies.map(company =>
+                    company.id === updatedCompany.id ? updatedCompany : company
+                )
+            );
+            setEditCompany(null);
         }
-    }
+      };
 
     const loadCompanies = useCallback(() => {
         fetchData({
