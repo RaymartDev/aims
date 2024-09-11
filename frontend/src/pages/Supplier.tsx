@@ -34,6 +34,9 @@ function Supplier() {
     const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
     const [maxPage, setMaxPage] = useState(1);
     const [viewSupplier, setViewSupplier] = useState<SupplierType | null>(null);
+
+    const [filteredSupplier, setFilteredSupplier] = useState<SupplierType[]>([]);
+
     const [formData, setFormData] = useState({
         supplierCode: '',
         companyName: '',
@@ -90,6 +93,25 @@ function Supplier() {
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredSupplier([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = suppliers.filter((supplier) =>
+                supplier.supplier_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                supplier.company_name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredSupplier(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, suppliers]);
+
+    const handleSelectSupplier = (supplier: SupplierType) => {
+        setViewSupplier(supplier);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredSupplier([]); // Clear suggestions after selection
     };
 
     const addSupplier = (supplier: SupplierType | null) => {
@@ -237,10 +259,27 @@ function Supplier() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12">
-                                    <Input type="search" placeholder="Search Supplier Code" className="pl-12 border-2 focus:border-none"
+                                    <Input
+                                        type="search"
+                                        placeholder="Search Supplier Code / Company Name"
+                                        className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}/>
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    {filteredSupplier.length > 0 && (
+                                        <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                            {filteredSupplier.map((supplier) => (
+                                                <div
+                                                    key={supplier.id}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => handleSelectSupplier(supplier)}
+                                                >
+                                                    {supplier.supplier_code} - {supplier.company_name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-40" 
                                     onClick={() => setOpenAddModal(true)}>

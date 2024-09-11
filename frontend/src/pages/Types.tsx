@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
+import ViewTypeModal from "@/modals/ViewTypeModal";
 // import EditTypeModal from "@/modals/EditTypeModal";
 import type TypeInterface from "@/interface/types";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -19,8 +20,13 @@ import { logout } from "@/slices/userSlice";
 function Types() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [openViewModal, setOpenViewModal] = useState(false);
+    const [viewType, setViewType] = useState<TypeInterface | null>(null);
     const [types, setTypes] = useState<TypeInterface[]>([])
     const [editType, setEditType] = useState<TypeInterface | null>(null);
+
+    const [filteredType, setFilteredType] = useState<TypeInterface[]>([]);
+
     const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
@@ -46,6 +52,24 @@ function Types() {
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredType([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = types.filter((type) =>
+                type.description.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredType(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, types]);
+
+    const handleSelectType = (type: TypeInterface) => {
+        setViewType(type);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredType([]); // Clear suggestions after selection
     };
 
     const updateType = (id: number, type: TypeInterface | null) => {
@@ -78,10 +102,27 @@ function Types() {
                         </div>
                         <div className="flex flex-row w-6/12 space-x-2">
                             <div className="relative w-10/12 ">
-                                <Input type="search" placeholder="Search Types" className="pl-12 border-2 focus:border-none" 
+                                <Input
+                                    type="search"
+                                    placeholder="Search Type"
+                                    className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}/>
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                {filteredType.length > 0 && (
+                                    <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                        {filteredType.map((type) => (
+                                            <div
+                                                key={type.id}
+                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                onClick={() => handleSelectType(type)}
+                                            >
+                                                {type.description}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>   
                             <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-48" onClick={() => setOpenModal(true)}>
                                 <Plus size={20}/><span className="text-sm">Add Type</span>
@@ -156,6 +197,7 @@ function Types() {
             </div>
             {openModal && <AddTypeModal addType={addType} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
+            {openViewModal && <ViewTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}}/>}
         </div>
     );
 }

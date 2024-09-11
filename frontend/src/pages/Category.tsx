@@ -9,19 +9,25 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddCategoryModal from "@/modals/AddCategoryModal";
+import EditCategoryModal from "@/modals/EditCategoryModal";
+import ViewCategoryModal from "@/modals/ViewCategoryModal";
 import type CategoryType from "@/interface/category";
 import { fetchData, getVersion } from "@/lib/utils";
-import EditCategoryModal from "@/modals/EditCategoryModal";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 
 function Category() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [openViewModal, setOpenViewModal] = useState(false);
+    const [viewCategory, setViewCategory] = useState<CategoryType | null>(null);
     const [categories, setCategories] = useState<CategoryType[]>([])
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
-    const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
+
+    const [filteredCategory, setFilteredCategory] = useState<CategoryType[]>([]);
+
+    const itemsPerPage = 17;
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
@@ -46,6 +52,24 @@ function Category() {
       useEffect(() => {
         loadCategories();
       }, [loadCategories]);
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredCategory([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = categories.filter((category) =>
+                category.description.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredCategory(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, categories]);
+
+    const handleSelectCategory = (category: CategoryType) => {
+        setViewCategory(category);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredCategory([]); // Clear suggestions after selection
+    };
 
     const updateCategory = (id: number, category: CategoryType | null) => {
         if (category) {
@@ -77,10 +101,27 @@ function Category() {
                         </div>
                         <div className="flex flex-row w-6/12 space-x-2">
                             <div className="relative w-10/12 ">
-                                <Input type="search" placeholder="Search Category" className="pl-12 border-2 focus:border-none" 
+                                <Input
+                                    type="search"
+                                    placeholder="Search Category"
+                                    className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}/>
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                {filteredCategory.length > 0 && (
+                                    <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                        {filteredCategory.map((category) => (
+                                            <div
+                                                key={category.id}
+                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                onClick={() => handleSelectCategory(category)}
+                                            >
+                                                {category.description}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>   
                             <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-48" onClick={() => setOpenModal(true)}>
                                 <Plus size={20}/><span className="text-sm">Add Category</span>
@@ -155,6 +196,7 @@ function Category() {
             </div>
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
+            {openViewModal && <ViewCategoryModal category={viewCategory} onClose={() => {setOpenViewModal(false); setViewCategory(null);}}/>}
         </div>
     );
 }

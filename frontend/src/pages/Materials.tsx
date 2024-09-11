@@ -23,14 +23,35 @@ function Materials() {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
+    const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
+
+    const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
-    const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
     const itemsPerPage = 17;
     const dispatch = useAppDispatch();
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
+    };
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredMaterial([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = materials.filter((material) =>
+                material.material_code.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredMaterial(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, materials]);
+
+    const handleSelectMaterial = (material: MaterialType) => {
+        setViewMaterial(material);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredMaterial([]); // Clear suggestions after selection
     };
 
     const updateMaterial = (id: number, material: MaterialType | null) => {
@@ -81,10 +102,27 @@ function Materials() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12 ">
-                                    <Input type="search" placeholder="Search Description" className="pl-12 border-2 focus:border-none"
+                                    <Input
+                                        type="search"
+                                        placeholder="Search Material Code"
+                                        className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}/>
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    {filteredMaterial.length > 0 && (
+                                        <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                            {filteredMaterial.map((material) => (
+                                                <div
+                                                    key={material.id}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => handleSelectMaterial(material)}
+                                                >
+                                                    {material.material_code} - {material.item_description}  
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-40" 
                                     onClick={() => setOpenAddModal(true)}>

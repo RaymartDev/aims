@@ -27,6 +27,9 @@ function Store() {
     const [editStore, setEditStore] = useState<StoreType | null>(null);
     const [regStore, setRegStore] = useState<StoreType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+
+    const [filteredStores, setFilteredStores] = useState<StoreType[]>([]);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const itemsPerPage = 17;
@@ -53,6 +56,24 @@ function Store() {
         setCurrentPage(page);
     };
     
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredStores([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = stores.filter((store) =>
+                store.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredStores(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, stores]);
+
+    const handleSelectStore = (store: StoreType) => {
+        setViewStore(store);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredStores([]); // Clear suggestions after selection
+    };
+
     const updateStore = (id: number, store: StoreType | null) => {
         if (!store) {
             setEditStore(null);
@@ -97,10 +118,27 @@ function Store() {
                             </div>
                             <div className="flex flex-row w-6/12 space-x-2">
                                 <div className="relative w-10/12">
-                                    <Input type="search" placeholder="Search Store Name" className="pl-12 border-2 focus:border-none" 
+                                    <Input
+                                        type="search"
+                                        placeholder="Search Store Name"
+                                        className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}/>
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    {filteredStores.length > 0 && (
+                                        <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                            {filteredStores.map((store) => (
+                                                <div
+                                                    key={store.id}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => handleSelectStore(store)}
+                                                >
+                                                    {store.name} - {store.company_name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>   
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-40" 
                                     onClick={() => setOpenAddModal(true)}>
