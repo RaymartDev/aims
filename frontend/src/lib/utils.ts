@@ -73,3 +73,12 @@ export async function fetchData({
     }
   }
 }
+
+export const getActiveStatus = (obj: any) => {
+  if (!obj) return false;
+  const today = new Date();
+  const effectiveTo = new Date(obj.effective_to);
+
+  // Check if the current date is less than or equal to effective_to
+  return today <= effectiveTo;
+};

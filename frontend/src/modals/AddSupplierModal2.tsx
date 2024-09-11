@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
@@ -58,6 +58,7 @@ function AddSupplierModal2 ({ onClose, onBack, handleAddDetailChange, getAddData
                     province: getAddDataByKey('province'),
                     zip: getAddDataByKey('zipCode'),
                     remarks: getAddDataByKey('remarks'),
+                    active_status: getActiveStatus(response.data?.supplier),
                 });
                 clearAddData();
                 onClose();

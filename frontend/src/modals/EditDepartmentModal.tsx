@@ -4,7 +4,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type DepartmentType from "@/interface/department";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 interface EditDepartmentModalProps {
   onClose: () => void;
   department: DepartmentType | null;
-  updateDepartment: (id: number, department: DepartmentType | null) => void;
+  updateDepartment: (department: DepartmentType | null) => void;
 }
 
 function EditDepartmentModal({ onClose, department, updateDepartment }: EditDepartmentModalProps) {
@@ -28,9 +28,10 @@ function EditDepartmentModal({ onClose, department, updateDepartment }: EditDepa
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully updated department');
-        updateDepartment(department?.id || 1, {
+        updateDepartment({
           id: department?.id || 1,
           name,
+          active_status: getActiveStatus(response.data?.department),
         })
         setName('');
         onClose();

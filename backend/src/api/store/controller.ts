@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCode, updateStore } from './service';
+import { deleteStoreById, findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCode, updateStore } from './service';
 import { findCompanyByName } from '../company/service';
 import { Store } from '@prisma/client';
 
@@ -69,6 +69,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Store not found!' });
     }
 
+    const findStoreName = await findStoreByCostCode(req.body.cost_center_code);
+    if (findStoreName) {
+      return res.status(400).json({ message: 'Store with that cost center code already exists!' });
+    }
+
     const updateData: Record<string, any> = {
       modified_by_id: req.user?.id || 1, // Always include the user ID
     };
@@ -128,6 +133,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         totalPages: stores.totalPages || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Store ID is required!' });
+    }
+
+    const findStore = await findStoreById(parseInt(id));
+    if (!findStore) {
+      return res.status(400).json({ message: 'Store not found' });
+    }
+
+    const storeToDelete = await deleteStoreById(parseInt(id));
+    if (storeToDelete) {
+      return res.status(200).json({ store: storeToDelete, message: 'Successfully deleted store' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Store ID is required!' });
+    }
+
+    const findStore = await findStoreById(parseInt(id));
+    if (!findStore) {
+      return res.status(400).json({ message: 'Store not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findStore.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated store';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated store';
+    }
+
+    const newStore = await updateStore({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ store: newStore, message });
   } catch (err) {
     next(err);
   }

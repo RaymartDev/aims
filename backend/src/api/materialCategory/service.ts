@@ -1,5 +1,6 @@
 import { Material_Category } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertMaterialCategory(material_category: any): Promise<Material_Category | null> {
   try {
@@ -31,6 +32,17 @@ export async function updateMaterialCategory(material_category: any, id: number)
 export async function findMaterialCategoryById(id: number): Promise<Material_Category | null> {
   try {
     const materialCategory = await prisma.material_Category.findUniqueOrThrow({
+      where: { id },
+    });
+    return materialCategory;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteMaterialCategoryById(id: number): Promise<Material_Category | null> {
+  try {
+    const materialCategory = await prisma.material_Category.delete({
       where: { id },
     });
     return materialCategory;
@@ -104,6 +116,7 @@ export async function listMaterialCategories(page: number, limit: number): Promi
       const materialCategoriesFinal = materialCategories.map((materialCategory) => ({
         id: materialCategory.id,
         description: materialCategory.description,
+        active_status: activeStatus(materialCategory),
       }));
       
       return { materialCategoriesFinal, maxPage: totalPages };

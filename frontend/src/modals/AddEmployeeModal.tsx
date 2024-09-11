@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import type EmployeeType from "@/interface/employee";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import axios, { CancelTokenSource } from "axios";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 import { Check, ChevronDown } from "lucide-react";
@@ -193,6 +193,7 @@ function AddEmployeeModal({ addEmployee, onClose }: AddEmployeeModalProps) {
           company_name: companyPopOver.selected,
           date_hired: new Date(dateHired),
           registered_status: false,
+          active_status: getActiveStatus(response.data?.employee),
         });
       }
       onClose();

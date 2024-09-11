@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useCallback, useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
 import EditDepartmentModal from "@/modals/EditDepartmentModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type DepartmentType from "@/interface/department";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -19,6 +20,7 @@ function Department() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState<DepartmentType | null>(null);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -43,15 +45,16 @@ function Department() {
         loadDepartments();
       }, [loadDepartments]);
 
-    const updateDepartment = (id: number, department: DepartmentType | null) => {
-        if (department) {
-            const index = departments.findIndex(department => department.id === id);
-            if (index !== -1) {
-                departments[index] = department;
-                setEditDepartment(null);
-            }
+      const updateDepartment = (updatedDepartment: DepartmentType | null) => {
+        if (updatedDepartment) {
+            setDepartments(prevDepartments =>
+                prevDepartments.map(department =>
+                    department.id === updatedDepartment.id ? updatedDepartment : department
+                )
+            );
+            setEditDepartment(null);
         }
-    }
+      };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -93,7 +96,7 @@ function Department() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Department</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -101,14 +104,14 @@ function Department() {
                             {departments.map(department => (
                                 <TableRow key={department.id}>
                                     <TableCell>{department.name}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{department.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                             setEditDepartment(department);
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -116,7 +119,7 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{department.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -155,6 +158,7 @@ function Department() {
             </div>
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }

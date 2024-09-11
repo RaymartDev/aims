@@ -2,7 +2,7 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { Department } from '@prisma/client';
-import { findDepartmentById, findDepartmentByName, insertDepartment, listDepartments, searchDepartmentByName, updateDepartment } from './service';
+import { deleteDepartmentById, findDepartmentById, findDepartmentByName, insertDepartment, listDepartments, searchDepartmentByName, updateDepartment } from './service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -49,6 +49,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Department not found' });
     }
 
+    const findDepartmentName = await findDepartmentByName(req.body.name);
+    if (findDepartmentName) {
+      return res.status(400).json({ message: 'Department name already exists!' });
+    }
+
     const newDepartment = await updateDepartment({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newDepartment) {
       res.status(200).json({ department: newDepartment, message: 'Successfully updated department' });
@@ -90,6 +95,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         maxPage: departments.maxPage || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Department ID is required!' });
+    }
+
+    const findDepartment = await findDepartmentById(parseInt(id));
+    if (!findDepartment) {
+      return res.status(400).json({ message: 'Department not found' });
+    }
+
+    const departmentToDelete = await deleteDepartmentById(parseInt(id));
+    if (departmentToDelete) {
+      return res.status(200).json({ department: departmentToDelete, message: 'Successfully deleted department' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Department ID is required!' });
+    }
+
+    const findDepartment = await findDepartmentById(parseInt(id));
+    if (!findDepartment) {
+      return res.status(400).json({ message: 'Department not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findDepartment.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated department';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated department';
+    }
+
+    const newDepartment = await updateDepartment({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ department: newDepartment, message });
   } catch (err) {
     next(err);
   }

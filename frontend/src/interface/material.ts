@@ -10,4 +10,5 @@ export default interface Material {
     material_type: string;
     uom: string;
     date_entry: Date;
+    active_status: boolean;
 }

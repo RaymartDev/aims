@@ -5,4 +5,5 @@ export default interface Store {
     cost_center_code: string;
     address: string;
     registered_status: boolean;
+    active_status: boolean;
 }

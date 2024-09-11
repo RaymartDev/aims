@@ -4,7 +4,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type CategoryType from "@/interface/category";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 interface EditCategoryModalProps {
   onClose: () => void;
-  updateCategory: (id: number, category: CategoryType | null) => void;
+  updateCategory: (category: CategoryType | null) => void;
   category: CategoryType | null;
 }
 
@@ -28,9 +28,10 @@ function EditCategoryModal({ onClose, category, updateCategory }: EditCategoryMo
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully updated material category');
-        updateCategory(category?.id || 1, {
+        updateCategory({
           id: category?.id || 1,
           description,
+          active_status: getActiveStatus(response.data?.material_category),
         })
         setDescription('');
         onClose();

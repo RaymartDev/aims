@@ -1,5 +1,6 @@
 import { Department } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertDepartment(department: any): Promise<Department | null> {
   try {
@@ -31,6 +32,17 @@ export async function updateDepartment(department: any, id: number): Promise<Dep
 export async function findDepartmentById(id: number): Promise<Department | null> {
   try {
     const department = await prisma.department.findFirst({
+      where: { id },
+    });
+    return department;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteDepartmentById(id: number): Promise<Department | null> {
+  try {
+    const department = await prisma.department.delete({
       where: { id },
     });
     return department;
@@ -103,6 +115,7 @@ export async function listDepartments(page: number, limit: number): Promise<{ de
       const departmentsFinal = departments.map((department) => ({
         id: department.id,
         name: department.name,
+        active_status: activeStatus(department),
       }));
       
       return { departmentsFinal, maxPage: totalPages };

@@ -1,5 +1,6 @@
 import { Material_Type } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertMaterialType(material_type: any): Promise<Material_Type | null> {
   try {
@@ -31,6 +32,17 @@ export async function updateMaterialType(material_type: any, id: number): Promis
 export async function findMaterialTypeById(id: number): Promise<Material_Type | null> {
   try {
     const materialType = await prisma.material_Type.findFirst({
+      where: { id },
+    });
+    return materialType;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteMaterialTypeById(id: number): Promise<Material_Type | null> {
+  try {
+    const materialType = await prisma.material_Type.delete({
       where: { id },
     });
     return materialType;
@@ -103,6 +115,7 @@ export async function listMaterialTypes(page: number, limit: number): Promise<{ 
       const materialTypesFinal = materialTypes.map((materialType) => ({
         id: materialType.id,
         description: materialType.description,
+        active_status: activeStatus(materialType),
       }));
       
       return { materialTypesFinal, maxPage: totalPages };

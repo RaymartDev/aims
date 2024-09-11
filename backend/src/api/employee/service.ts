@@ -1,5 +1,6 @@
 import { Employee } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertEmployee(employee: any): Promise<Employee | null> {
   try {
@@ -31,6 +32,17 @@ export async function updateEmployee(employee: any, id: number): Promise<Employe
 export async function findEmployeeById(id: number): Promise<Employee | null> {
   try {
     const employee = await prisma.employee.findFirst({
+      where: { id },
+    });
+    return employee;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteEmployeeById(id: number): Promise<Employee | null> {
+  try {
+    const employee = await prisma.employee.delete({
       where: { id },
     });
     return employee;
@@ -145,6 +157,7 @@ export async function listEmployees(page: number, limit: number): Promise<{ empl
         company_name: employee.company?.name,
         date_hired: employee.date_hired,
         registered_status: employee.registered,
+        active_status: activeStatus(employee),
       }));
       
       return { employeesFinal, totalPages };

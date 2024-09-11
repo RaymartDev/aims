@@ -6,7 +6,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type CompanyType from "@/interface/company";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 
 interface EditCompanyModalProps {
     onClose: () => void;
-    updateCompany: (id: number, company: CompanyType | null) => void;
+    updateCompany: (company: CompanyType | null) => void;
     company: CompanyType | null;
 }
 
@@ -30,9 +30,10 @@ function EditCompanyModal ({ onClose, updateCompany, company }: EditCompanyModal
       
             if (response.status >= 200 && response.status < 300) {
               toast.success(response.data?.message || 'Successfully updated company');
-              updateCompany(company?.id || 1, {
+              updateCompany({
                 id: company?.id || 1,
                 name,
+                active_status: getActiveStatus(response.data?.company),
               })
               setName('');
               onClose();

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findMaterialTypeById, findMaterialTypeByName, insertMaterialType, listMaterialTypes, searchMaterialTypeByName, updateMaterialType } from './service';
+import { deleteMaterialTypeById, findMaterialTypeById, findMaterialTypeByName, insertMaterialType, listMaterialTypes, searchMaterialTypeByName, updateMaterialType } from './service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -48,6 +48,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material Type not found' });
     }
 
+    const findMaterialTypeDesc = await findMaterialTypeByName(req.body.description);
+    if (findMaterialTypeDesc) {
+      return res.status(400).json({ message: 'Type with that description already exists!' });
+    }
+
     const newMaterialType = await updateMaterialType({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialType) {
       res.status(200).json({ materialType: newMaterialType, message: 'Successfully updated department' });
@@ -89,6 +94,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         maxPage: materialTypes.maxPage || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material Type ID is required!' });
+    }
+
+    const findMaterialType = await findMaterialTypeById(parseInt(id));
+    if (!findMaterialType) {
+      return res.status(400).json({ message: 'Material Type not found' });
+    }
+
+    const typeToDelete = await deleteMaterialTypeById(parseInt(id));
+    if (typeToDelete) {
+      return res.status(200).json({ material_type: typeToDelete, message: 'Successfully deleted material type' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material Type ID is required!' });
+    }
+
+    const findMaterialType = await findMaterialTypeById(parseInt(id));
+    if (!findMaterialType) {
+      return res.status(400).json({ message: 'Material Type not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findMaterialType.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated material type';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated material type';
+    }
+
+    const newMaterialType = await updateMaterialType({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ material_type: newMaterialType, message });
   } catch (err) {
     next(err);
   }

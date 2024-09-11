@@ -5,7 +5,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type TypeInterface from "@/interface/types";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -28,8 +28,9 @@ function AddTypesModal({ addType, onClose }: AddTypesModalProps) {
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully created type');
         addType({
-          id: response.data?.id || 1,
+          id: response.data.materialType?.id || 1,
           description,
+          active_status: getActiveStatus(response.data?.materialType),
         });
         onClose();
         setDescription('');

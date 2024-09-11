@@ -1,5 +1,6 @@
 import { Supplier, Supplier_Contact_Details } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertSupplier(supplier: any): Promise<Supplier | null> {
   try {
@@ -58,6 +59,17 @@ export async function updateSupplierContact(supplier_contact: any, id: number): 
 export async function findSupplierById(id: number): Promise<Supplier | null> {
   try {
     const supplier = await prisma.supplier.findFirst({
+      where: { id },
+    });
+    return supplier;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteSupplierById(id: number): Promise<Supplier | null> {
+  try {
+    const supplier = await prisma.supplier.delete({
       where: { id },
     });
     return supplier;
@@ -163,6 +175,7 @@ export async function listSuppliers(page: number, limit: number): Promise<{ supp
         province: supplier.contact_details.province,
         zip: supplier.contact_details.zip_code,
         remarks: supplier.contact_details.remarks,
+        active_status: activeStatus(supplier),
       }));
       return { suppliersFinal, maxPage: totalPages };
     }

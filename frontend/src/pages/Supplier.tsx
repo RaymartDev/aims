@@ -14,6 +14,7 @@ import EditSupplierModal from "@/modals/EditSupplierModal";
 import EditSupplierModal2 from "@/modals/EditSupplierModal2";
 import ViewSupplierModal from "@/modals/ViewSupplierModal";
 import ViewSupplierModal2 from "@/modals/ViewSupplierModal2";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type SupplierType from "@/interface/supplier";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -28,6 +29,7 @@ function Supplier() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openNextEditModal, setOpenNextEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [openNextViewModal, setOpenNextViewModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -180,15 +182,16 @@ function Supplier() {
         }
     }
 
-    const updateSupplier = (id: number, supplier: SupplierType | null) => {
-        if (supplier) {
-            const index = suppliers.findIndex(supplier => supplier.id === id);
-            if (index !== -1) {
-                suppliers[index] = supplier;
-                setEditSupplier(null);
-            }
+    const updateSupplier = (updatedSupplier: SupplierType | null) => {
+        if (updatedSupplier) {
+            setSuppliers(prevSuppliers =>
+                prevSuppliers.map(supplier =>
+                    supplier.id === updatedSupplier.id ? updatedSupplier : supplier
+                )
+            );
+            setEditSupplier(null);
         }
-    }
+    };
       
 
     const handleNextAddModal = () => {
@@ -297,6 +300,7 @@ function Supplier() {
                                     <TableHead>Contact Person</TableHead>
                                     <TableHead>Business Number</TableHead>
                                     <TableHead>Mobile Number</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -308,13 +312,14 @@ function Supplier() {
                                         <TableCell>{supplier.contact_person}</TableCell>
                                         <TableCell>{supplier.business_number}</TableCell>
                                         <TableCell>{supplier.mobile_number}</TableCell>
+                                        <TableCell>{supplier.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditSupplierData(supplier);
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -326,7 +331,7 @@ function Supplier() {
                                                         setViewSupplier(supplier);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{supplier.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -404,6 +409,7 @@ function Supplier() {
                     setOpenNextViewModal(false);
                 }} 
                 onBack={handleViewBack}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </>
     );
 }

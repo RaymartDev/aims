@@ -11,6 +11,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddStoreModal from "@/modals/AddStoreModal";
 import EditStoreModal from "@/modals/EditStoreModal";
 import ViewStoreModal from "@/modals/ViewStoreModal"
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type StoreType from "@/interface/store";
 import UserRegistrationStore from "@/modals/UserRegistrationStore";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -23,6 +24,7 @@ function Store() {
     const [stores, setStores] = useState<StoreType[]>([]);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [viewStore, setViewStore] = useState<StoreType | null>(null);
     const [editStore, setEditStore] = useState<StoreType | null>(null);
     const [regStore, setRegStore] = useState<StoreType | null>(null);
@@ -56,6 +58,14 @@ function Store() {
         setCurrentPage(page);
     };
     
+    const updateStore = (updatedStore: StoreType | null) => {
+        if (updatedStore) {
+            setStores(prevStores =>
+                prevStores.map(store =>
+                    store.id === updatedStore.id ? updatedStore : store
+                )
+            );
+    
     useEffect(() => {
         if (searchQuery.trim() === "") {
             setFilteredStores([]); // Reset suggestions if search is cleared
@@ -84,7 +94,7 @@ function Store() {
             stores[index] = store;
             setEditStore(null);
         }
-    }
+      };
 
     const registerStore = (id: number) => {
         setStores(prevStores => 
@@ -155,7 +165,8 @@ function Store() {
                                     <TableHead>Store Name</TableHead>
                                     <TableHead>Cost Center Code</TableHead>
                                     <TableHead>Address</TableHead>
-                                    <TableHead>Status</TableHead>
+                                    <TableHead>Registered Status</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -167,13 +178,14 @@ function Store() {
                                         <TableCell>{store.cost_center_code}</TableCell>
                                         <TableCell>{store.address}</TableCell>
                                         <TableCell>{store.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
+                                        <TableCell>{store.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditStore(store);
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -185,7 +197,7 @@ function Store() {
                                                         setViewStore(store);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => {
                                                         setRegStore(store);
                                                         setOpenUserRegModal(true);
@@ -230,6 +242,7 @@ function Store() {
             {openAddModal && <AddStoreModal addStore={addStore} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistrationStore registerStore={registerStore} store={regStore} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditStoreModal updateStore={updateStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
             {openViewModal && <ViewStoreModal 
                 store={viewStore}
                 onClose={() => {

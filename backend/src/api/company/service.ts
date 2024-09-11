@@ -1,5 +1,6 @@
 import { Company } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertCompany(company: any): Promise<Company | null> {
   try {
@@ -23,6 +24,17 @@ export async function updateCompany(company: any, id: number): Promise<Company |
       where: { id },
     });
     return updatedCompany;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteCompanyById(id: number): Promise<Company | null> {
+  try {
+    const company = await prisma.company.delete({
+      where: { id },
+    });
+    return company;
   } catch (error) {
     throw new Error('Database error');
   }
@@ -103,6 +115,7 @@ export async function listCompanies(page: number, limit: number): Promise<{ comp
       const companiesFinal = companies.map((company) => ({
         id: company.id,
         name: company.name,
+        active_status: activeStatus(company),
       }));
       return { companiesFinal, maxPage: totalPages };
     }

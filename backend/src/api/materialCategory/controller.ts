@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findMaterialCategoryById, findMaterialCategoryByName, insertMaterialCategory, listMaterialCategories, searchMaterialCategoryByName, updateMaterialCategory } from './service';
+import { deleteMaterialCategoryById, findMaterialCategoryById, findMaterialCategoryByName, insertMaterialCategory, listMaterialCategories, searchMaterialCategoryByName, updateMaterialCategory } from './service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -48,6 +48,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material Category not found' });
     }
 
+    const findMaterialCatName = await findMaterialCategoryByName(req.body.description);
+    if (findMaterialCatName) {
+      return res.status(400).json({ message: 'Category with that description already exists!' });
+    }
+
     const newMaterialCategory = await updateMaterialCategory({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialCategory) {
       res.status(200).json({ material_category: newMaterialCategory, message: 'Successfully updated material category' });
@@ -87,6 +92,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         maxPage: materialCategories.maxPage || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material Category ID is required!' });
+    }
+
+    const findMaterialCategory = await findMaterialCategoryById(parseInt(id));
+    if (!findMaterialCategory) {
+      return res.status(400).json({ message: 'Material Category not found' });
+    }
+
+    const categoryToDelete = await deleteMaterialCategoryById(parseInt(id));
+    if (categoryToDelete) {
+      return res.status(200).json({ material_category: categoryToDelete, message: 'Successfully deleted material category' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Material Category ID is required!' });
+    }
+
+    const findMaterialCategory = await findMaterialCategoryById(parseInt(id));
+    if (!findMaterialCategory) {
+      return res.status(400).json({ message: 'Material Category not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findMaterialCategory.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated material category';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated material category';
+    }
+
+    const newMaterialCategory = await updateMaterialCategory({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ material_category: newMaterialCategory, message });
   } catch (err) {
     next(err);
   }

@@ -10,4 +10,5 @@ export default interface Employee {
     company_name: string;
     date_hired: Date;
     registered_status: boolean;
+    active_status: boolean;
 }

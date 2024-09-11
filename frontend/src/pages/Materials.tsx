@@ -11,6 +11,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
 import ViewMaterialModal from "@/modals/ViewMaterialModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type MaterialType from "@/interface/material";
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -23,6 +24,7 @@ function Materials() {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
 
     const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
@@ -54,15 +56,16 @@ function Materials() {
         setFilteredMaterial([]); // Clear suggestions after selection
     };
 
-    const updateMaterial = (id: number, material: MaterialType | null) => {
-        if (material) {
-            const index = materials.findIndex(material => material.id === id);
-            if (index !== -1) {
-                materials[index] = material;
-                setEditMaterial(null);
-            }
+    const updateMaterial = (updatedMaterial: MaterialType | null) => {
+        if (updatedMaterial) {
+            setMaterials(prevMaterials =>
+                prevMaterials.map(material =>
+                    material.id === updatedMaterial.id ? updatedMaterial : material
+                )
+            );
+            setEditMaterial(null);
         }
-    }
+      };
 
     const addMaterial = (material: MaterialType | null) => {
         if (material) {
@@ -142,6 +145,7 @@ function Materials() {
                                     <TableHead>Material Type</TableHead>
                                     <TableHead>Cost</TableHead>
                                     <TableHead>Date Entry</TableHead>
+                                    <TableHead>Active Status</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -155,13 +159,14 @@ function Materials() {
                                         <TableCell>{material.material_type}</TableCell>
                                         <TableCell>{formatCurrency(material.unit_cost)}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
+                                        <TableCell>Active</TableCell>
                                         <TableCell align="center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditMaterial(material);
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -173,7 +178,7 @@ function Materials() {
                                                         setViewMaterial(material);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem>{material.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -219,6 +224,7 @@ function Materials() {
                     setViewMaterial(null);
                     setOpenViewModal(false);
             }}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </>
     );
 }

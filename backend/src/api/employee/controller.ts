@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNo, updateEmployee } from './service';
+import { deleteEmployeeById, findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNo, updateEmployee } from './service';
 import { findCompanyByName } from '../company/service';
 import { findDepartmentByName } from '../department/service';
 import { Employee } from '@prisma/client';
@@ -87,6 +87,11 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Employee not found!' });
     }
 
+    const findEmployeeNo = await findEmployeeByEmployeeNo(req.body.employee_no);
+    if (findEmployeeNo) {
+      return res.status(400).json({ message: 'Employee number already exists!' });
+    }
+
     const { department_name, company_name, ...restOfBody } = req.body;
 
     // Create an update dictionary
@@ -154,6 +159,62 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
         totalPages: employees.totalPages || 1,
       } });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteOne = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Employee ID is required!' });
+    }
+
+    const findEmployee = await findEmployeeById(parseInt(id));
+    if (!findEmployee) {
+      return res.status(400).json({ message: 'Employee not found' });
+    }
+
+    const employeeToDelete = await deleteEmployeeById(parseInt(id));
+    if (employeeToDelete) {
+      return res.status(200).json({ employee: employeeToDelete, message: 'Successfully deleted employee' });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const toggleActivate = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: 'Employee ID is required!' });
+    }
+
+    const findEmployee = await findEmployeeById(parseInt(id));
+    if (!findEmployee) {
+      return res.status(400).json({ message: 'Employee not found' });
+    }
+
+    const today = new Date();
+    const effectiveTo = new Date(findEmployee.effective_to);
+    
+    let newEffectiveTo;
+    let message;
+    if (effectiveTo <= today) {
+      // If effective_to is less than or equal to today, set it to 2099-12-31
+      newEffectiveTo = new Date('2099-12-31');
+      message = 'Successfully activated employee';
+    } else {
+      // Otherwise, set it to today's date
+      newEffectiveTo = today;
+      message = 'Successfully de-activated employee';
+    }
+
+    const newEmployee = await updateEmployee({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+
+    return res.status(200).json({ employee: newEmployee, message });
   } catch (err) {
     next(err);
   }

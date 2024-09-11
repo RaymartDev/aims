@@ -1,5 +1,6 @@
 import { Store } from '@prisma/client';
 import prisma from '../../lib/prisma';
+import { activeStatus } from '../../lib';
 
 export async function insertStore(store: any): Promise<Store | null> {
   try {
@@ -45,6 +46,17 @@ export async function updateStoreRegistration(status: boolean, id: number): Prom
 export async function findStoreById(id: number): Promise<Store | null> {
   try {
     const store = await prisma.store.findFirst({
+      where: { id },
+    });
+    return store;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function deleteStoreById(id: number): Promise<Store | null> {
+  try {
+    const store = await prisma.store.delete({
       where: { id },
     });
     return store;
@@ -130,6 +142,7 @@ export async function listStores(page: number, limit: number): Promise<{ storesF
         cost_center_code: store.cost_center_code,
         address: store.address,
         registered_status: store.registered,
+        active_status: activeStatus(store),
       }));
 
       return { storesFinal: storesFinal, totalPages };

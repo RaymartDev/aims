@@ -5,7 +5,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type CompanyType from "@/interface/company";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -28,8 +28,9 @@ function AddCompanyModal({ addCompany, onClose }: AddCompanyModalProps) {
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully created company');
         addCompany({
-          id: response.data?.id || 1,
+          id: response.data?.company?.id || 1,
           name,
+          active_status: getActiveStatus(response.data?.company),
         });
         onClose();
         setName('');

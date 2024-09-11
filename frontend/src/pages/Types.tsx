@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import ViewTypeModal from "@/modals/ViewTypeModal";
 // import EditTypeModal from "@/modals/EditTypeModal";
 import type TypeInterface from "@/interface/types";
@@ -28,6 +29,7 @@ function Types() {
     const [filteredType, setFilteredType] = useState<TypeInterface[]>([]);
 
     const itemsPerPage = 17;
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
@@ -72,15 +74,16 @@ function Types() {
         setFilteredType([]); // Clear suggestions after selection
     };
 
-    const updateType = (id: number, type: TypeInterface | null) => {
-        if (type) {
-            const index = types.findIndex(type => type.id === id);
-            if (index !== -1) {
-                types[index] = type;
-                setEditType(null);
-            }
+    const updateType = (updatedType: TypeInterface | null) => {
+        if (updatedType) {
+            setTypes(prevTypes =>
+                prevTypes.map(type =>
+                    type.id === updatedType.id ? updatedType : type
+                )
+            );
+            setEditType(null);
         }
-    }
+    };
 
     const addType = (type: TypeInterface | null) => {
         if (type) {
@@ -135,7 +138,7 @@ function Types() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Type Description</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -143,14 +146,14 @@ function Types() {
                             {types.map(type => (
                                 <TableRow key={type.id}>
                                     <TableCell>{type.description}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{type.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditType(type);
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -158,7 +161,7 @@ function Types() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{type.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -197,6 +200,7 @@ function Types() {
             </div>
             {openModal && <AddTypeModal addType={addType} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
             {openViewModal && <ViewTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}}/>}
         </div>
     );

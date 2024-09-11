@@ -14,4 +14,5 @@ export default interface Supplier {
     province: string;
     zip: string;
     remarks: string;
+    active_status: boolean;
   }

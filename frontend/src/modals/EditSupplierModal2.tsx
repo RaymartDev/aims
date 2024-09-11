@@ -6,7 +6,7 @@ import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
 import type SupplierType from "@/interface/supplier";
 import axios from "axios";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 interface EditSupplierModal2Props {
@@ -16,7 +16,7 @@ interface EditSupplierModal2Props {
     getEditDataByKey: (key: string) => string;
     handleEditDetailChange: (target: string, value: string) => void;
     clearEditData: () => void;
-    updateSupplier: (id: number, supplier: SupplierType | null) => void;
+    updateSupplier: (supplier: SupplierType | null) => void;
 }
 
 function EditSupplierModal2 ({ onClose, onBack, getEditDataByKey, handleEditDetailChange, editSupplier, clearEditData, updateSupplier }: EditSupplierModal2Props) {
@@ -43,7 +43,7 @@ function EditSupplierModal2 ({ onClose, onBack, getEditDataByKey, handleEditDeta
             if (response.status >= 200 && response.status < 300) { 
                 toast.success(response.data?.message || 'Successfully updated supplier');
                 onClose();
-                updateSupplier(editSupplier?.id || 1, {
+                updateSupplier({
                     id: editSupplier?.id || 1,
                     supplier_code: getEditDataByKey('supplierCode'),
                     company_name: getEditDataByKey('companyName'),
@@ -59,6 +59,7 @@ function EditSupplierModal2 ({ onClose, onBack, getEditDataByKey, handleEditDeta
                     province: getEditDataByKey('province'),
                     zip: getEditDataByKey('zipCode'),
                     remarks: getEditDataByKey('remarks'),
+                    active_status: getActiveStatus(response.data?.supplier),
                 })
                 clearEditData();
             }

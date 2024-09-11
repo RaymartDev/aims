@@ -4,7 +4,7 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import type TypeInterface from "@/interface/types";
-import { getVersion } from "@/lib/utils";
+import { getActiveStatus, getVersion } from "@/lib/utils";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 interface EditTypeModalProps {
   onClose: () => void;
-  updateType: (id: number, type: TypeInterface | null) => void;
+  updateType: (type: TypeInterface | null) => void;
   type: TypeInterface | null;
 }
 
@@ -28,9 +28,10 @@ function EditTypeModal({ onClose, type, updateType }: EditTypeModalProps) {
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully updated material type');
-        updateType(type?.id || 1, {
+        updateType({
           id: type?.id || 1,
           description,
+          active_status: getActiveStatus(response.data?.materialType),
         })
         setDescription('');
         onClose();
