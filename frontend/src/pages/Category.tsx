@@ -9,8 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddCategoryModal from "@/modals/AddCategoryModal";
-import EditCategoryModal from "@/modals/EditCategoryModal";
-import ViewCategoryModal from "@/modals/ViewCategoryModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type CategoryType from "@/interface/category";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -22,6 +21,7 @@ function Category() {
     const [openViewModal, setOpenViewModal] = useState(false);
     const [viewCategory, setViewCategory] = useState<CategoryType | null>(null);
     const [categories, setCategories] = useState<CategoryType[]>([])
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -53,33 +53,16 @@ function Category() {
         loadCategories();
       }, [loadCategories]);
 
-    useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredCategory([]); // Reset suggestions if search is cleared
-        } else {
-            const filtered = categories.filter((category) =>
-                category.description.toLowerCase().includes(searchQuery.toLowerCase())
+      const updateCategory = (updatedCategory: CategoryType | null) => {
+        if (updatedCategory) {
+            setCategories(prevCategories =>
+                prevCategories.map(category =>
+                    category.id === updatedCategory.id ? updatedCategory : category
+                )
             );
-            setFilteredCategory(filtered.slice(0, 5)); // Show top 5 suggestions
+            setEditCategory(null);
         }
-    }, [searchQuery, categories]);
-
-    const handleSelectCategory = (category: CategoryType) => {
-        setViewCategory(category);
-        setOpenViewModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredCategory([]); // Clear suggestions after selection
-    };
-
-    const updateCategory = (id: number, category: CategoryType | null) => {
-        if (category) {
-            const index = categories.findIndex(category => category.id === id);
-            if (index !== -1) {
-                categories[index] = category;
-                setEditCategory(null);
-            }
-        }
-    }
+      };
 
     const addCategory = (category: CategoryType | null) => {
         if (category) {
@@ -134,7 +117,7 @@ function Category() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Category Description</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -142,14 +125,14 @@ function Category() {
                             {categories.map(category => (
                                 <TableRow key={category.id}>
                                     <TableCell>{category.description}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{category.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditCategory(category);
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -157,7 +140,7 @@ function Category() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{category.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -196,7 +179,7 @@ function Category() {
             </div>
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
-            {openViewModal && <ViewCategoryModal category={viewCategory} onClose={() => {setOpenViewModal(false); setViewCategory(null);}}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }

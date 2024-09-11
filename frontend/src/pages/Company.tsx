@@ -10,6 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useCallback, useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
 import EditCompanyModal from "@/modals/EditCompanyModal";
+import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import type CompanyType from "@/interface/company";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -18,6 +19,7 @@ import { logout } from "@/slices/userSlice";
 function Company() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+    const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const itemsPerPage = 17;
@@ -30,15 +32,16 @@ function Company() {
         setCurrentPage(page);
     };
 
-    const updateCompany = (id: number, company: CompanyType | null) => {
-        if (company) {
-            const index = companies.findIndex(company => company.id === id);
-            if (index !== -1) {
-                companies[index] = company;
-                setEditCompany(null);
-            }
+    const updateCompany = (updatedCompany: CompanyType | null) => {
+        if (updatedCompany) {
+            setCompanies(prevCompanies =>
+                prevCompanies.map(company =>
+                    company.id === updatedCompany.id ? updatedCompany : company
+                )
+            );
+            setEditCompany(null);
         }
-    }
+      };
 
     const loadCompanies = useCallback(() => {
         fetchData({
@@ -93,7 +96,7 @@ function Company() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Company Name</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Active Status</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -101,14 +104,14 @@ function Company() {
                             {companies.map(company => (
                                 <TableRow key={company.id}>
                                     <TableCell>{company.name}</TableCell>
-                                    <TableCell>Active</TableCell>
+                                    <TableCell>{company.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditCompany(company);
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -116,7 +119,7 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                <DropdownMenuItem>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -155,6 +158,7 @@ function Company() {
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
         </div>
     );
 }
