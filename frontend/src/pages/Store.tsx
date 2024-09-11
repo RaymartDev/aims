@@ -58,14 +58,7 @@ function Store() {
         setCurrentPage(page);
     };
     
-    const updateStore = (updatedStore: StoreType | null) => {
-        if (updatedStore) {
-            setStores(prevStores =>
-                prevStores.map(store =>
-                    store.id === updatedStore.id ? updatedStore : store
-                )
-            );
-    
+
     useEffect(() => {
         if (searchQuery.trim() === "") {
             setFilteredStores([]); // Reset suggestions if search is cleared
@@ -253,4 +246,5 @@ function Store() {
     );
 }
 
-export default Store
+
+export default Store;

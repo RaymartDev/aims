@@ -9,7 +9,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import { useCallback, useEffect, useState } from "react";
 import AddCategoryModal from "@/modals/AddCategoryModal";
+import EditCategoryModal from "@/modals/EditCategoryModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import ViewCategoryModal from "@/modals/ViewCategoryModal";
 import type CategoryType from "@/interface/category";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -18,12 +20,12 @@ import { logout } from "@/slices/userSlice";
 function Category() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
-    const [openViewModal, setOpenViewModal] = useState(false);
-    const [viewCategory, setViewCategory] = useState<CategoryType | null>(null);
     const [categories, setCategories] = useState<CategoryType[]>([])
     const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [openViewModal, setOpenViewModal] = useState(false);
+    const [viewCategory, setViewCategory] = useState<CategoryType | null>(null);
 
     const [filteredCategory, setFilteredCategory] = useState<CategoryType[]>([]);
 
@@ -52,6 +54,25 @@ function Category() {
       useEffect(() => {
         loadCategories();
       }, [loadCategories]);
+
+      useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredCategory([]); // Reset suggestions if search is cleared
+        } else {
+            const filtered = categories.filter((category) =>
+                category.description.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredCategory(filtered.slice(0, 5)); // Show top 5 suggestions
+        }
+    }, [searchQuery, categories]);
+
+    const handleSelectCategory = (category: CategoryType) => {
+        setViewCategory(category);
+        setOpenViewModal(true);
+        setSearchQuery(""); // Clear search query after selection
+        setFilteredCategory([]); // Clear suggestions after selection
+    };
+
 
       const updateCategory = (updatedCategory: CategoryType | null) => {
         if (updatedCategory) {
@@ -86,7 +107,7 @@ function Category() {
                             <div className="relative w-10/12 ">
                                 <Input
                                     type="search"
-                                    placeholder="Search Category"
+                                    placeholder="Search Type"
                                     className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -180,6 +201,7 @@ function Category() {
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openViewModal && <ViewCategoryModal category={viewCategory} onClose={() => {setOpenViewModal(false); setViewCategory(null);}}/>}
         </div>
     );
 }
