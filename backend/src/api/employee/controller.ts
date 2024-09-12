@@ -38,7 +38,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Department not found!' });
     }
 
-    const newEmployee = await insertEmployee({ 
+    const newEmployee = await insertEmployee({
       first_name,
       last_name,
       employee_no,
@@ -49,7 +49,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
       division,
       modified_by_id: req.user?.id || 1,
     });
-    
+
     if (newEmployee) {
       res.status(200).json({ employee: newEmployee, message: 'Successfully created employee' });
     }
@@ -69,7 +69,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Employee not found!' });
     }
 
-    res.status(200).json( { employee, message: 'Successfully found employee' });
+    res.status(200).json({ employee, message: 'Successfully found employee' });
   } catch (err) {
     next(err);
   }
@@ -88,7 +88,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findEmployeeNo = await findEmployeeByEmployeeNo(req.body.employee_no);
-    if (findEmployeeNo) {
+    if (findEmployeeNo && findEmployee.employee_no !== req.body.employee_no) {
       return res.status(400).json({ message: 'Employee number already exists!' });
     }
 
@@ -130,7 +130,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const { employee_no } = req.query;
-    
+
     if (!employee_no || typeof employee_no !== 'string') {
       return res.status(400).json({ error: 'Employee no query parameter is required and must be a string' });
     }
@@ -152,12 +152,14 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
     }
 
     const employees = await listEmployees(page, limit);
-    if (employees) { 
-      res.status(200).json({ employees: employees.employeesFinal, message: 'Successfully retrieved employees', misc: {
-        page,
-        limit,
-        totalPages: employees.totalPages || 1,
-      } });
+    if (employees) {
+      res.status(200).json({
+        employees: employees.employeesFinal, message: 'Successfully retrieved employees', misc: {
+          page,
+          limit,
+          totalPages: employees.totalPages || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -199,7 +201,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findEmployee.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {

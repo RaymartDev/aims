@@ -30,7 +30,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material Type not found' });
     }
 
-    res.status(200).json( { materialType, message: 'Successfully found department' });
+    res.status(200).json({ materialType, message: 'Successfully found department' });
   } catch (err) {
     next(err);
   }
@@ -49,13 +49,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findMaterialTypeDesc = await findMaterialTypeByName(req.body.description);
-    if (findMaterialTypeDesc) {
+    if (findMaterialTypeDesc && findMaterialType.description !== req.body.description) {
       return res.status(400).json({ message: 'Type with that description already exists!' });
     }
 
     const newMaterialType = await updateMaterialType({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialType) {
-      res.status(200).json({ materialType: newMaterialType, message: 'Successfully updated department' });
+      res.status(200).json({ materialType: newMaterialType, message: 'Successfully updated type' });
     }
   } catch (err) {
     next(err);
@@ -88,11 +88,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const materialTypes = await listMaterialTypes(page, limit);
     if (materialTypes) {
-      res.status(200).json({ materialTypes: materialTypes.materialTypesFinal, message: 'Successfully retrieved material types', misc: {
-        page,
-        limit,
-        maxPage: materialTypes.maxPage || 1,
-      } });
+      res.status(200).json({
+        materialTypes: materialTypes.materialTypesFinal, message: 'Successfully retrieved material types', misc: {
+          page,
+          limit,
+          maxPage: materialTypes.maxPage || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -134,7 +136,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findMaterialType.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {

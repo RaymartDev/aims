@@ -12,7 +12,7 @@ interface DeleteConfirmationProps {
     const [loading, setLoading] = useState(false);
   
     return (
-      <div className={`fixed inset-0 bg-black opacity-75 flex justify-center items-center ${open ? 'block' : 'hidden'}`}>
+      <div className={`fixed inset-0 bg-black opacity-75 flex justify-center z-20 items-center ${open ? 'block' : 'hidden'}`}>
         <div className="bg-slate-50 flex flex-col border border-black shadow-xl rounded-xl px-4 py-3">
           <div className="w-full flex justify-between px-2 py-2 border-b-2 border-gray-400">
             <h1 className="text-lg text-black font-bold">DELETE CONFIRMATION</h1>

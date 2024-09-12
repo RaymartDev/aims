@@ -9,7 +9,7 @@ import { findEmployeeById, updateEmployeeRegistration } from '../employee/servic
 import { findStoreById, updateStoreRegistration } from '../store/service';
 
 export const register = async (req: UserRequest, res: Response, next: NextFunction) => {
-  const { 
+  const {
     registrationType,
     employee_id,
     store_id,
@@ -56,7 +56,7 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
     }
 
     const findDepartment = await findDepartmentByName(department);
-    if (!findDepartment) { 
+    if (!findDepartment) {
       return res.status(401).json({ message: 'Department does not exist' });
     }
 
@@ -80,7 +80,7 @@ export const register = async (req: UserRequest, res: Response, next: NextFuncti
         return res.status(401).json({ message: 'Admin status is required!' });
       }
     }
-    
+
     if (registrationType === 'store') {
       const store = await findStoreById(parseInt(store_id));
       if (!store) {
@@ -170,11 +170,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     // create token
-    const token =  generateToken({ 
-      id: findUser.id, 
-      username: findUser.username, 
-      name: findUser.name, 
-      admin: findUser.role?.name === 'Administrator',
+    const token = generateToken({
+      id: findUser.id,
+      username: findUser.username,
+      name: findUser.name,
+      admin: findUser.role?.name === 'Admin',
       employee_number: findUser.employee_no,
       cost_code: findUser.cost_center_code,
     });
@@ -190,7 +190,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 };
 
-export const logout =  async (req: Request, res: Response, next: NextFunction) => {
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.cookie('token', '', { expires: new Date(0), httpOnly: true });
     res.status(200).json({ message: 'Successfully logged out' });

@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddCategoryModal from "@/modals/AddCategoryModal";
 import EditCategoryModal from "@/modals/EditCategoryModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
-import ViewCategoryModal from "@/modals/ViewCategoryModal";
+import SearchCategoryModal from "@/modals/SearchCategoryModal"
 import type CategoryType from "@/interface/category";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -55,7 +55,7 @@ function Category() {
         loadCategories();
       }, [loadCategories]);
 
-      useEffect(() => {
+    useEffect(() => {
         if (searchQuery.trim() === "") {
             setFilteredCategory([]); // Reset suggestions if search is cleared
         } else {
@@ -74,16 +74,16 @@ function Category() {
     };
 
 
-      const updateCategory = (updatedCategory: CategoryType | null) => {
-        if (updatedCategory) {
-            setCategories(prevCategories =>
-                prevCategories.map(category =>
-                    category.id === updatedCategory.id ? updatedCategory : category
-                )
-            );
-            setEditCategory(null);
-        }
-      };
+    const updateCategory = (updatedCategory: CategoryType | null) => {
+    if (updatedCategory) {
+        setCategories(prevCategories =>
+            prevCategories.map(category =>
+                category.id === updatedCategory.id ? updatedCategory : category
+            )
+        );
+        setEditCategory(null);
+    }
+    };
 
     const addCategory = (category: CategoryType | null) => {
         if (category) {
@@ -107,7 +107,7 @@ function Category() {
                             <div className="relative w-10/12 ">
                                 <Input
                                     type="search"
-                                    placeholder="Search Type"
+                                    placeholder="Search Category"
                                     className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -201,7 +201,7 @@ function Category() {
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openViewModal && <ViewCategoryModal category={viewCategory} onClose={() => {setOpenViewModal(false); setViewCategory(null);}}/>}
+            {openViewModal && <SearchCategoryModal category={viewCategory} onClose={() => {setOpenViewModal(false); setViewCategory(null);}}/>}
         </div>
     );
 }

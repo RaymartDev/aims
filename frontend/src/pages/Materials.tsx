@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -12,6 +13,7 @@ import AddMaterialModal from "@/modals/AddMaterialModal";
 import EditMaterialModal from "@/modals/EditMaterialModal";
 import ViewMaterialModal from "@/modals/ViewMaterialModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import SearchProductModal from "@/modals/SearchProductModal";
 import type MaterialType from "@/interface/material";
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -21,6 +23,7 @@ function Materials() {
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
@@ -51,7 +54,7 @@ function Materials() {
 
     const handleSelectMaterial = (material: MaterialType) => {
         setViewMaterial(material);
-        setOpenViewModal(true);
+        setOpenSearchModal(true);
         setSearchQuery(""); // Clear search query after selection
         setFilteredMaterial([]); // Clear suggestions after selection
     };
@@ -225,6 +228,7 @@ function Materials() {
                     setOpenViewModal(false);
             }}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openSearchModal && <SearchProductModal material={viewMaterial} onClose={() => {setOpenViewModal(false); setViewMaterial(null);}}/>}
         </>
     );
 }

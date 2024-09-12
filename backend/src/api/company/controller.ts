@@ -31,7 +31,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Company not found' });
     }
 
-    res.status(200).json( { company, message: 'Successfully found company' });
+    res.status(200).json({ company, message: 'Successfully found company' });
   } catch (err) {
     next(err);
   }
@@ -72,7 +72,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findCompany.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {
@@ -106,7 +106,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findCompanyName = await findCompanyByName(req.body.name || '');
-    if (findCompanyName) {
+    if (findCompanyName && findCompany.name !== req.body.name) {
       return res.status(400).json({ message: 'Company name already exists!' });
     }
 
@@ -145,11 +145,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const companies = await listCompanies(page, limit);
     if (companies) {
-      res.status(200).json({ companies: companies.companiesFinal, message: 'Successfully retrieved companies', misc: {
-        page,
-        limit,
-        maxPage: companies.maxPage || 1,
-      } });
+      res.status(200).json({
+        companies: companies.companiesFinal, message: 'Successfully retrieved companies', misc: {
+          page,
+          limit,
+          maxPage: companies.maxPage || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);

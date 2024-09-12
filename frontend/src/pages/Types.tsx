@@ -10,7 +10,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useCallback, useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
-import ViewTypeModal from "@/modals/ViewTypeModal";
+import SearchTypeModal from "@/modals/SearchTypeModal";
 // import EditTypeModal from "@/modals/EditTypeModal";
 import type TypeInterface from "@/interface/types";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -201,7 +201,7 @@ function Types() {
             {openModal && <AddTypeModal addType={addType} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openViewModal && <ViewTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}}/>}
+            {openViewModal && <SearchTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}}/>}
         </div>
     );
 }

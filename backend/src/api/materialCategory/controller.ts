@@ -30,7 +30,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Material Category not found' });
     }
 
-    res.status(200).json( { material_category, message: 'Successfully found material category' });
+    res.status(200).json({ material_category, message: 'Successfully found material category' });
   } catch (err) {
     next(err);
   }
@@ -49,7 +49,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findMaterialCatName = await findMaterialCategoryByName(req.body.description);
-    if (findMaterialCatName) {
+    if (findMaterialCatName && findMaterialCatName.description !== req.body.description) {
       return res.status(400).json({ message: 'Category with that description already exists!' });
     }
 
@@ -86,11 +86,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const materialCategories = await listMaterialCategories(page, limit);
     if (materialCategories) {
-      res.status(200).json({ material_categories: materialCategories.materialCategoriesFinal, message: 'Successfully retrieved material categories', misc: {
-        page,
-        limit,
-        maxPage: materialCategories.maxPage || 1,
-      } });
+      res.status(200).json({
+        material_categories: materialCategories.materialCategoriesFinal, message: 'Successfully retrieved material categories', misc: {
+          page,
+          limit,
+          maxPage: materialCategories.maxPage || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -132,7 +134,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findMaterialCategory.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {

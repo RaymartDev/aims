@@ -48,7 +48,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
     if (!material) {
       return res.status(400).json({ message: 'Material could not be found!' });
     }
-    res.status(200).json( { material, message: 'Successfully found material' });
+    res.status(200).json({ material, message: 'Successfully found material' });
   } catch (err) {
     next(err);
   }
@@ -66,7 +66,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findSku = await findMaterialBySku(req.body.material_code, req.body.item_code);
-    if (findSku) {
+    if (findSku && `${findMaterial.item_code}${findMaterial.material_code}` !== `${req.body.material_code}${req.body.item_code}`) {
       return res.status(400).json({ message: 'Material with that item and material code already exists!' });
     }
 
@@ -99,7 +99,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const { name } = req.query;
-    
+
     if (!name || typeof name !== 'string') {
       return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
     }
@@ -124,11 +124,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const materials = await listMaterials(page, limit);
     if (materials) {
-      res.status(200).json({ materials: materials.materialsFinal, message: 'Successfully retrieved materials', misc: {
-        page,
-        limit,
-        maxPage: materials.maxPage || 1,
-      } });
+      res.status(200).json({
+        materials: materials.materialsFinal, message: 'Successfully retrieved materials', misc: {
+          page,
+          limit,
+          maxPage: materials.maxPage || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -170,7 +172,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findMaterial.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {

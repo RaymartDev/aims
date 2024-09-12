@@ -7,7 +7,7 @@ import { Store } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { 
+    const {
       company,
       name,
       cost_center_code,
@@ -24,7 +24,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Company not found' });
     }
 
-    const newStore = await insertStore({ 
+    const newStore = await insertStore({
       company_id: companyObj.id,
       name,
       cost_center_code,
@@ -51,7 +51,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Store not found!' });
     }
 
-    res.status(200).json( { store, message: 'Successfully found store' });
+    res.status(200).json({ store, message: 'Successfully found store' });
   } catch (err) {
     next(err);
   }
@@ -70,7 +70,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findStoreName = await findStoreByCostCode(req.body.cost_center_code);
-    if (findStoreName) {
+    if (findStoreName && findStore.cost_center_code !== req.body.cost_center_code) {
       return res.status(400).json({ message: 'Store with that cost center code already exists!' });
     }
 
@@ -79,7 +79,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     };
 
     const { company_name, ...restOfBody } = req.body;
-    
+
     if (company_name) {
       const findCompany = await findCompanyByName(company_name);
       if (!findCompany) {
@@ -91,7 +91,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     Object.assign(updateData, restOfBody);
 
     const newStore = await updateStore({ ...updateData }, parseInt(id));
-    
+
     if (newStore) {
       res.status(200).json({ store: newStore, message: 'Successfully updated store' });
     }
@@ -103,7 +103,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const { cost_code } = req.query;
-    
+
     if (!cost_code || typeof cost_code !== 'string') {
       return res.status(400).json({ error: 'Cost code query parameter is required and must be a string' });
     }
@@ -127,11 +127,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const stores = await listStores(page, limit);
     if (stores) {
-      res.status(200).json({ stores: stores.storesFinal, message: 'Successfully retrieved stores', misc: {
-        page,
-        limit,
-        totalPages: stores.totalPages || 1,
-      } });
+      res.status(200).json({
+        stores: stores.storesFinal, message: 'Successfully retrieved stores', misc: {
+          page,
+          limit,
+          totalPages: stores.totalPages || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -173,7 +175,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findStore.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {

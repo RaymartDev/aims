@@ -7,7 +7,7 @@ import { Supplier } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { 
+    const {
       supplier_code,
       company,
       address,
@@ -48,7 +48,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     });
 
     if (newSupplierDetails) {
-      const newSupplier = await insertSupplier({ 
+      const newSupplier = await insertSupplier({
         supplier_code,
         company_id: findCompany.id,
         address,
@@ -78,7 +78,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(401).json({ message: 'Supplier not found!' });
     }
 
-    res.status(200).json( { supplier, message: 'Successfully found supplier' });
+    res.status(200).json({ supplier, message: 'Successfully found supplier' });
   } catch (err) {
     next(err);
   }
@@ -96,7 +96,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findSupplierCode = await findSupplierByCode(req.body.supplier_code);
-    if (findSupplierCode) {
+    if (findSupplierCode && findSupplier.supplier_code !== req.body.supplier_code) {
       return res.status(400).json({ message: 'Supplier with that supplier code already exists!' });
     }
 
@@ -142,7 +142,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     const { supplier_code } = req.query;
-    
+
     if (!supplier_code || typeof supplier_code !== 'string') {
       return res.status(400).json({ error: 'Cost code query parameter is required and must be a string' });
     }
@@ -166,11 +166,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const suppliers = await listSuppliers(page, limit);
     if (suppliers) {
-      res.status(200).json({ suppliers: suppliers.suppliersFinal, message: 'Successfully retrieved suppliers', misc: {
-        page,
-        limit,
-        maxPage: suppliers.maxPage || 1,
-      } });
+      res.status(200).json({
+        suppliers: suppliers.suppliersFinal, message: 'Successfully retrieved suppliers', misc: {
+          page,
+          limit,
+          maxPage: suppliers.maxPage || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -212,7 +214,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findSupplier.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {

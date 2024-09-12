@@ -31,7 +31,7 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ message: 'Department not found' });
     }
 
-    res.status(200).json( { department, message: 'Successfully found department' });
+    res.status(200).json({ department, message: 'Successfully found department' });
   } catch (err) {
     next(err);
   }
@@ -50,7 +50,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findDepartmentName = await findDepartmentByName(req.body.name);
-    if (findDepartmentName) {
+    if (findDepartmentName && findDepartment.name !== req.body.name) {
       return res.status(400).json({ message: 'Department name already exists!' });
     }
 
@@ -89,11 +89,13 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
 
     const departments = await listDepartments(page, limit);
     if (departments) {
-      res.status(200).json({ departments: departments.departmentsFinal, message: 'Successfully retrieved departments', misc: {
-        page,
-        limit,
-        maxPage: departments.maxPage || 1,
-      } });
+      res.status(200).json({
+        departments: departments.departmentsFinal, message: 'Successfully retrieved departments', misc: {
+          page,
+          limit,
+          maxPage: departments.maxPage || 1,
+        }
+      });
     }
   } catch (err) {
     next(err);
@@ -135,7 +137,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
 
     const today = new Date();
     const effectiveTo = new Date(findDepartment.effective_to);
-    
+
     let newEffectiveTo;
     let message;
     if (effectiveTo <= today) {
