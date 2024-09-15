@@ -15,6 +15,7 @@ import UserRegistration from "@/modals/UserRegistration";
 import EditEmployeeModal from "@/modals/EditEmployeeModal";
 import ViewEmployeeModal from "@/modals/ViewEmployeeModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import SearchEmployeeModal from "@/modals/SearchEmployeeModal";
 import type EmployeeType from "@/interface/employee";
 import { fetchData, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -29,7 +30,9 @@ function Employee() {
     const [openUserRegModal, setOpenUserRegModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchEmployee, setSearchEmployee] = useState<EmployeeType | null>(null);
     const [viewEmployee, setViewEmployee] = useState<EmployeeType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -43,7 +46,7 @@ function Employee() {
     const loadEmployees = useCallback(() => {
         fetchData({
           url: `${getVersion()}/employee/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
             setEmployees(data.employees);
             setMaxPage(data.misc.maxPage);
@@ -63,22 +66,22 @@ function Employee() {
 
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredEmployees([]); // Reset suggestions if search is cleared
+            setFilteredEmployees([]); 
         } else {
             const filtered = employees.filter((employee) =>
                 employee.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 employee.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 employee.employee_no.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setFilteredEmployees(filtered.slice(0, 5)); // Show top 5 suggestions
+            setFilteredEmployees(filtered.slice(0, 10));
         }
     }, [searchQuery, employees]);
 
     const handleSelectEmployee = (employee: EmployeeType) => {
-        setViewEmployee(employee);
-        setOpenViewModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredEmployees([]); // Clear suggestions after selection
+        setSearchEmployee(employee);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredEmployees([]);
     };
 
     const updateEmployee = (updatedEmployee: EmployeeType | null) => {
@@ -153,7 +156,7 @@ function Employee() {
                             </div>    
                         </div>
                     </div>
-                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
+                    <div className="mt-5 overflow-y-auto overflow-x-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -183,13 +186,13 @@ function Employee() {
                                         <TableCell>{formatDateAsString(new Date(employee.date_hired))}</TableCell>
                                         <TableCell>{employee.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
                                         <TableCell>{employee.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                        <TableCell align="center">
+                                        <TableCell className="flex flex-row items-center justify-center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditEmployee(employee);
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"onClick={() => setopenDeleteModal(true)}><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white"onClick={() => setOpenDeleteModal(true)}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -246,13 +249,14 @@ function Employee() {
             {openAddModal && <AddEmployeeModal addEmployee={addEmployee} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
             {openViewModal && <ViewEmployeeModal 
                 employee={viewEmployee} 
                 onClose={() => {
                     setOpenViewModal(false);
                     setViewEmployee(null);
                 }}/>}
+            {openSearchModal && <SearchEmployeeModal employee={searchEmployee} onClose={() => {setOpenSearchModal(false); setSearchEmployee(null);}}/>}
         </>
     );
 }

@@ -15,6 +15,7 @@ import EditSupplierModal2 from "@/modals/EditSupplierModal2";
 import ViewSupplierModal from "@/modals/ViewSupplierModal";
 import ViewSupplierModal2 from "@/modals/ViewSupplierModal2";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import SearchSupplierModal from "@/modals/SearchSupplierModal";
 import type SupplierType from "@/interface/supplier";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -31,6 +32,8 @@ function Supplier() {
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [openNextViewModal, setOpenNextViewModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchSupplier, setSearchSupplier] = useState<SupplierType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
@@ -79,7 +82,7 @@ function Supplier() {
     const loadSuppliers = useCallback(() => {
         fetchData({
           url: `${getVersion()}/supplier/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
             setSuppliers(data.suppliers);
             setMaxPage(data.misc.maxPage);
@@ -99,21 +102,21 @@ function Supplier() {
 
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredSupplier([]); // Reset suggestions if search is cleared
+            setFilteredSupplier([]); 
         } else {
             const filtered = suppliers.filter((supplier) =>
                 supplier.supplier_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 supplier.company_name.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setFilteredSupplier(filtered.slice(0, 5)); // Show top 5 suggestions
+            setFilteredSupplier(filtered.slice(0, 10)); 
         }
     }, [searchQuery, suppliers]);
 
     const handleSelectSupplier = (supplier: SupplierType) => {
-        setViewSupplier(supplier);
-        setOpenViewModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredSupplier([]); // Clear suggestions after selection
+        setSearchSupplier(supplier);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredSupplier([]);
     };
 
     const addSupplier = (supplier: SupplierType | null) => {
@@ -291,7 +294,7 @@ function Supplier() {
                             </div>    
                         </div>
                     </div>
-                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${72 + 270}px)` }}>
+                    <div className="mt-5 overflow-y-auto overflow-x-auto" style={{ maxHeight: `calc(100vh - ${72 + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -313,7 +316,7 @@ function Supplier() {
                                         <TableCell>{supplier.business_number}</TableCell>
                                         <TableCell>{supplier.mobile_number}</TableCell>
                                         <TableCell>{supplier.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                        <TableCell align="center">
+                                        <TableCell className="flex flex-row items-center justify-center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditSupplierData(supplier);
                                                 setOpenEditModal(true);
@@ -410,6 +413,7 @@ function Supplier() {
                 }} 
                 onBack={handleViewBack}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openSearchModal && <SearchSupplierModal supplier={searchSupplier} onClose={() => {setOpenSearchModal(false); setSearchSupplier(null);}}/>}
         </>
     );
 }

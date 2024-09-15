@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
 import EditDepartmentModal from "@/modals/EditDepartmentModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import SearchDepartmentModal from "@/modals/SearchDepartmentModal";
 import type DepartmentType from "@/interface/department";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -21,8 +22,13 @@ function Department() {
     const [editModal, setEditModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState<DepartmentType | null>(null);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchDepartment, setSearchDepartment] = useState<DepartmentType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
+
+    const [filteredDepartment, setFilteredDepartment] = useState<DepartmentType[]>([])
+
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const itemsPerPage = 17;
@@ -31,7 +37,7 @@ function Department() {
     const loadDepartments = useCallback(() => {
         fetchData({
           url: `${getVersion()}/department/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
             setDepartments(data.departments);
             setMaxPage(data.misc.maxPage);
@@ -45,16 +51,34 @@ function Department() {
         loadDepartments();
       }, [loadDepartments]);
 
-      const updateDepartment = (updatedDepartment: DepartmentType | null) => {
-        if (updatedDepartment) {
-            setDepartments(prevDepartments =>
-                prevDepartments.map(department =>
-                    department.id === updatedDepartment.id ? updatedDepartment : department
-                )
+      useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredDepartment([]);
+        } else {
+            const filtered = departments.filter((department) =>
+                department.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setEditDepartment(null);
+            setFilteredDepartment(filtered.slice(0, 10));
         }
-      };
+    }, [searchQuery, departments]);
+
+    const handleSelectDepartment = (department: DepartmentType) => {
+        setSearchDepartment(department);
+        setOpenSearchModal(true);
+        setSearchQuery(""); 
+        setFilteredDepartment([]); 
+    };
+
+    const updateDepartment = (updatedDepartment: DepartmentType | null) => {
+    if (updatedDepartment) {
+        setDepartments(prevDepartments =>
+            prevDepartments.map(department =>
+                department.id === updatedDepartment.id ? updatedDepartment : department
+            )
+        );
+        setEditDepartment(null);
+        }
+    };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -80,10 +104,27 @@ function Department() {
                         </div>
                         <div className="flex flex-row w-6/12 space-x-2">
                             <div className="relative w-10/12 ">
-                                <Input type="search" placeholder="Search Department" className="pl-12 border-2 focus:border-none" 
+                                <Input
+                                    type="search"
+                                    placeholder="Search Category"
+                                    className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}/>
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                {filteredDepartment.length > 0 && (
+                                    <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                        {filteredDepartment.map((department) => (
+                                            <div
+                                                key={department.id}
+                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                onClick={() => handleSelectDepartment(department)}
+                                            >
+                                                {department.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>   
                             <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-48" onClick={() => setOpenModal(true)}>
                                 <Plus size={20}/><span className="text-sm">Add Department</span>
@@ -105,7 +146,7 @@ function Department() {
                                 <TableRow key={department.id}>
                                     <TableCell>{department.name}</TableCell>
                                     <TableCell>{department.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                    <TableCell align="center">
+                                    <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                             setEditDepartment(department);
                                             setEditModal(true);
@@ -159,6 +200,7 @@ function Department() {
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openSearchModal && <SearchDepartmentModal department={searchDepartment} onClose={() => {setOpenSearchModal(false); setSearchDepartment(null);}}/>}
         </div>
     );
 }

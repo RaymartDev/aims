@@ -16,9 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import type TypeInterface from "@/interface/types";
-import EditTypeModal from "./EditTypeModal";
-import DeleteConfirmation from "./DeleteConfirmation";
-import { useState } from "react";
 
 interface SearchTypeModalProps {
   onClose: () => void;
@@ -26,22 +23,6 @@ interface SearchTypeModalProps {
 }
 
 function SearchTypeModal({ onClose, type }: SearchTypeModalProps) {
-  const [types, setTypes] = useState<TypeInterface[]>([]);
-  const [editType, setEditType] = useState<TypeInterface | null>(null);
-  const [editModal, setEditModal] = useState(false);
-  const [openDeleteModal, setopenDeleteModal] = useState(false);
-
-  const updateType = (updatedType: TypeInterface | null) => {
-    if (updatedType) {
-        setTypes(prevTypes =>
-            prevTypes.map(type =>
-                type.id === updatedType.id ? updatedType : type
-            )
-        );
-        setEditType(null);
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
       <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
@@ -76,14 +57,10 @@ function SearchTypeModal({ onClose, type }: SearchTypeModalProps) {
                 <TableCell>{type?.active_status ? 'Active' : 'Inactive'}</TableCell>
                 <TableCell align="center">
                   <Button
-                    className="bg-transparent text-black hover:text-white"
-                    onClick={()=> {
-                      setEditType(type);
-                      setEditModal(true);
-                  }}>
+                    className="bg-transparent text-black hover:text-white">
                     <Pencil />
                   </Button>
-                  <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}>
+                  <Button className="bg-transparent text-black hover:text-white">
                     <Trash />
                   </Button>
                   <DropdownMenu>
@@ -102,8 +79,6 @@ function SearchTypeModal({ onClose, type }: SearchTypeModalProps) {
           </Table>
         </div>
       </div>
-      {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
-      {openDeleteModal && (<DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>)}
     </div>
   );
 }

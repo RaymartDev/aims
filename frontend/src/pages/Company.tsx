@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
 import EditCompanyModal from "@/modals/EditCompanyModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import SearchCompanyModal from "@/modals/SearchCompanyModal";
 import type CompanyType from "@/interface/company";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -20,10 +21,15 @@ function Company() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchCompany, setSearchCompany] = useState<CompanyType | null>(null);
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
-    const itemsPerPage = 17;
     const [searchQuery, setSearchQuery] = useState('');
+
+    const [filteredCompany, setFilteredCompany] = useState<CompanyType[]>([]);
+
+    const itemsPerPage = 17;
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
@@ -46,7 +52,7 @@ function Company() {
     const loadCompanies = useCallback(() => {
         fetchData({
           url: `${getVersion()}/company/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
             setCompanies(data.companies);
             setMaxPage(data.misc.maxPage);
@@ -59,6 +65,24 @@ function Company() {
       useEffect(() => {
         loadCompanies();
       }, [loadCompanies]);
+
+      useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredCompany([]);
+        } else {
+            const filtered = companies.filter((company) =>
+                company.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredCompany(filtered.slice(0, 10)); 
+        }
+    }, [searchQuery, companies]);
+
+    const handleSelectCompany = (company: CompanyType) => {
+        setSearchCompany(company);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredCompany([]);
+    }
 
     const addCompany = (company: CompanyType) => {
         if (company) {
@@ -80,10 +104,27 @@ function Company() {
                         </div>
                         <div className="flex flex-row w-6/12 space-x-2">
                             <div className="relative w-10/12 ">
-                                <Input type="search" placeholder="Search Company" className="pl-12 border-2 focus:border-none" 
+                                <Input
+                                    type="search"
+                                    placeholder="Search Category"
+                                    className="pl-12 border-2 focus:border-none"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}/>
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                {filteredCompany.length > 0 && (
+                                    <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                        {filteredCompany.map((company) => (
+                                            <div
+                                                key={company.id}
+                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                onClick={() => handleSelectCompany(company)}
+                                            >
+                                                {company.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>   
                             <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-48" onClick={() => setOpenModal(true)}>
                                 <Plus size={20}/><span className="text-sm">Add Company</span>
@@ -105,7 +146,7 @@ function Company() {
                                 <TableRow key={company.id}>
                                     <TableCell>{company.name}</TableCell>
                                     <TableCell>{company.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                    <TableCell align="center">
+                                    <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditCompany(company);
                                             setEditModal(true);
@@ -159,6 +200,7 @@ function Company() {
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
         </div>
     );
 }

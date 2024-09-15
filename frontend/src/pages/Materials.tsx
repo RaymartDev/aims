@@ -27,6 +27,7 @@ function Materials() {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
+    const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
 
@@ -43,20 +44,20 @@ function Materials() {
 
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredMaterial([]); // Reset suggestions if search is cleared
+            setFilteredMaterial([]);
         } else {
             const filtered = materials.filter((material) =>
                 material.material_code.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setFilteredMaterial(filtered.slice(0, 5)); // Show top 5 suggestions
+            setFilteredMaterial(filtered.slice(0, 10));
         }
     }, [searchQuery, materials]);
 
     const handleSelectMaterial = (material: MaterialType) => {
-        setViewMaterial(material);
+        setSearchMaterial(material);
         setOpenSearchModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredMaterial([]); // Clear suggestions after selection
+        setSearchQuery("");
+        setFilteredMaterial([]);
     };
 
     const updateMaterial = (updatedMaterial: MaterialType | null) => {
@@ -137,7 +138,7 @@ function Materials() {
                             </div>    
                         </div>
                     </div>
-                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
+                    <div className="mt-5 overflow-y-auto overflow-x-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -162,8 +163,8 @@ function Materials() {
                                         <TableCell>{material.material_type}</TableCell>
                                         <TableCell>{formatCurrency(material.unit_cost)}</TableCell>
                                         <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
-                                        <TableCell>Active</TableCell>
-                                        <TableCell align="center">
+                                        <TableCell>{material.active_status ? 'Active' : 'Inactive'}</TableCell>
+                                        <TableCell className="flex flex-row items-center justify-center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditMaterial(material);
                                                 setOpenEditModal(true);
@@ -228,7 +229,7 @@ function Materials() {
                     setOpenViewModal(false);
             }}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openSearchModal && <SearchProductModal material={viewMaterial} onClose={() => {setOpenViewModal(false); setViewMaterial(null);}}/>}
+            {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
         </>
     );
 }

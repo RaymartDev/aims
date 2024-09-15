@@ -16,9 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import type CategoryType from "@/interface/category";
-import EditCategoryModal from './EditCategoryModal';
-import DeleteConfirmation from "./DeleteConfirmation";
-import { useState } from "react";
 
 interface SearchCategoryModalProps {
   onClose: () => void;
@@ -26,27 +23,12 @@ interface SearchCategoryModalProps {
 }
 
 function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
-  const [editModal, setEditModal] = useState(false);
-  const [openDeleteModal, setopenDeleteModal] = useState(false);
-
-  const updateCategory = (updatedCategory: CategoryType | null) => {
-    if (updatedCategory) {
-      setCategories((prevCategories) =>
-        prevCategories.map((category) =>
-          category.id === updatedCategory.id ? updatedCategory : category
-        )
-      );
-      setEditCategory(null);
-    }
-  };
-
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
       <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
         <div className="flex items-center justify-between w-full border-b-2 border-black">
-          <h1 className="font-extrabold text-xl">View Type Details</h1>
+          <h1 className="font-extrabold text-xl">View Category Details</h1>
           <Button
             className="text-black bg-transparent hover:bg-transparent p-0"
             onClick={() => {
@@ -76,15 +58,10 @@ function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
                 <TableCell>{category?.active_status ? 'Active' : 'Inactive'}</TableCell>
                 <TableCell align="center">
                   <Button
-                    className="bg-transparent text-black hover:text-white"
-                    onClick={() => {
-                      setEditCategory(category);
-                      setEditModal(true);
-                    }}
-                  >
+                    className="bg-transparent text-black hover:text-white">
                     <Pencil />
                   </Button>
-                  <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}>
+                  <Button className="bg-transparent text-black hover:text-white">
                     <Trash />
                   </Button>
                   <DropdownMenu>
@@ -103,14 +80,6 @@ function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
           </Table>
         </div>
       </div>
-      {editModal && (
-        <EditCategoryModal
-          category={editCategory}
-          updateCategory={updateCategory}
-          onClose={() => setEditModal(false)}
-        />
-      )}
-      {openDeleteModal && (<DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>)}
     </div>
   );
 }

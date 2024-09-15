@@ -17,8 +17,6 @@ import {
     TableRow,
 } from "@/Components/ui/table";
 import type MaterialType from "@/interface/material";
-import EditMaterialModal from "./EditMaterialModal";
-import DeleteConfirmation from "./DeleteConfirmation";
 import { formatCurrency, formatDateAsString } from "@/lib/utils";
 
 interface SearchProuctModalProps {
@@ -27,22 +25,6 @@ interface SearchProuctModalProps {
 }
 
 function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
-    const [materials, setMaterials] = useState<MaterialType[]>([]);
-    const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
-    const [openEditModal, setOpenEditModal] = useState(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-    const updateMaterial = (updatedMaterial: MaterialType | null) => {
-        if (updatedMaterial) {
-            setMaterials((prevMaterials) =>
-                prevMaterials.map((material) =>
-                    material.id === updatedMaterial.id ? updatedMaterial : material
-                )
-            );
-            setEditMaterial(null);
-        }
-    };
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-2/5 2xl:w-2/3 bg-slate-50 rounded-2xl p-6">
@@ -92,21 +74,14 @@ function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
                                         new Date(material?.date_entry || "")
                                     )}
                                 </TableCell>
-                                <TableCell>Active</TableCell>
+                                <TableCell>{material?.active_status ? 'Active' : 'Inactive'}</TableCell>
                                 <TableCell align="center">
                                     <Button
-                                        className="bg-transparent text-black hover:text-white"
-                                        onClick={() => {
-                                            setEditMaterial(material);
-                                            setOpenEditModal(true);
-                                        }}
-                                    >
+                                        className="bg-transparent text-black hover:text-white">
                                         <Pencil />
                                     </Button>
                                     <Button
-                                        className="bg-transparent text-black hover:text-white"
-                                        onClick={() => setOpenDeleteModal(true)}
-                                    >
+                                        className="bg-transparent text-black hover:text-white">
                                         <Trash />
                                     </Button>
                                     <DropdownMenu>
@@ -129,19 +104,6 @@ function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
                     </Table>
                 </div>
             </div>
-            {openEditModal && (
-                <EditMaterialModal
-                    updateMaterial={updateMaterial}
-                    material={editMaterial}
-                    onClose={() => setOpenEditModal(false)}
-                />
-            )}
-            {openDeleteModal && (
-                <DeleteConfirmation
-                    open={openDeleteModal}
-                    onClose={() => setOpenDeleteModal(false)}
-                />
-            )}
         </div>
     );
 }

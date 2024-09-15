@@ -24,8 +24,8 @@ function Category() {
     const [openDeleteModal, setopenDeleteModal] = useState(false);
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const [openViewModal, setOpenViewModal] = useState(false);
-    const [viewCategory, setViewCategory] = useState<CategoryType | null>(null);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchCategory, setSearchCategory] = useState<CategoryType | null>(null);
 
     const [filteredCategory, setFilteredCategory] = useState<CategoryType[]>([]);
 
@@ -41,7 +41,7 @@ function Category() {
     const loadCategories = useCallback(() => {
         fetchData({
           url: `${getVersion()}/material-category/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
             setCategories(data.material_categories);
             setMaxPage(data.misc.maxPage);
@@ -57,20 +57,20 @@ function Category() {
 
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredCategory([]); // Reset suggestions if search is cleared
+            setFilteredCategory([]); 
         } else {
             const filtered = categories.filter((category) =>
                 category.description.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setFilteredCategory(filtered.slice(0, 5)); // Show top 5 suggestions
+            setFilteredCategory(filtered.slice(0, 10)); 
         }
     }, [searchQuery, categories]);
 
     const handleSelectCategory = (category: CategoryType) => {
-        setViewCategory(category);
-        setOpenViewModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredCategory([]); // Clear suggestions after selection
+        setSearchCategory(category);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredCategory([]);
     };
 
 
@@ -147,7 +147,7 @@ function Category() {
                                 <TableRow key={category.id}>
                                     <TableCell>{category.description}</TableCell>
                                     <TableCell>{category.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                    <TableCell align="center">
+                                    <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditCategory(category);
                                             setEditModal(true);
@@ -201,7 +201,7 @@ function Category() {
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openViewModal && <SearchCategoryModal category={viewCategory} onClose={() => {setOpenViewModal(false); setViewCategory(null);}}/>}
+            {openSearchModal && <SearchCategoryModal category={searchCategory} onClose={() => {setOpenSearchModal(false); setSearchCategory(null);}}/>}
         </div>
     );
 }

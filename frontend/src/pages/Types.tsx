@@ -38,7 +38,7 @@ function Types() {
     const loadTypes = useCallback(() => {
         fetchData({
           url: `${getVersion()}/material-type/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
             setTypes(data.materialTypes);
             setMaxPage(data.misc.maxPage);
@@ -58,20 +58,20 @@ function Types() {
 
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredType([]); // Reset suggestions if search is cleared
+            setFilteredType([]);
         } else {
             const filtered = types.filter((type) =>
                 type.description.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setFilteredType(filtered.slice(0, 5)); // Show top 5 suggestions
+            setFilteredType(filtered.slice(0, 10));
         }
     }, [searchQuery, types]);
 
     const handleSelectType = (type: TypeInterface) => {
         setViewType(type);
         setOpenViewModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredType([]); // Clear suggestions after selection
+        setSearchQuery("");
+        setFilteredType([]);
     };
 
     const updateType = (updatedType: TypeInterface | null) => {
@@ -147,7 +147,7 @@ function Types() {
                                 <TableRow key={type.id}>
                                     <TableCell>{type.description}</TableCell>
                                     <TableCell>{type.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                    <TableCell align="center">
+                                    <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {
                                             setEditType(type);
                                             setEditModal(true);

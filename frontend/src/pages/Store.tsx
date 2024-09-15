@@ -12,6 +12,7 @@ import AddStoreModal from "@/modals/AddStoreModal";
 import EditStoreModal from "@/modals/EditStoreModal";
 import ViewStoreModal from "@/modals/ViewStoreModal"
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import SearchStoreModal from "@/modals/SearchStoreModal";
 import type StoreType from "@/interface/store";
 import UserRegistrationStore from "@/modals/UserRegistrationStore";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -25,6 +26,8 @@ function Store() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchStore, setSearchStore] = useState<StoreType | null>(null);
     const [viewStore, setViewStore] = useState<StoreType | null>(null);
     const [editStore, setEditStore] = useState<StoreType | null>(null);
     const [regStore, setRegStore] = useState<StoreType | null>(null);
@@ -40,7 +43,7 @@ function Store() {
     const loadStores = useCallback(() => {
         fetchData({
           url: `${getVersion()}/store/list`,
-          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
             setStores(data.stores);
             setMaxPage(data.misc.maxPage);
@@ -61,20 +64,20 @@ function Store() {
 
     useEffect(() => {
         if (searchQuery.trim() === "") {
-            setFilteredStores([]); // Reset suggestions if search is cleared
+            setFilteredStores([]); 
         } else {
             const filtered = stores.filter((store) =>
                 store.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setFilteredStores(filtered.slice(0, 5)); // Show top 5 suggestions
+            setFilteredStores(filtered.slice(0, 10)); 
         }
     }, [searchQuery, stores]);
 
     const handleSelectStore = (store: StoreType) => {
-        setViewStore(store);
-        setOpenViewModal(true);
-        setSearchQuery(""); // Clear search query after selection
-        setFilteredStores([]); // Clear suggestions after selection
+        setSearchStore(store);
+        setOpenSearchModal(true);
+        setSearchQuery(""); 
+        setFilteredStores([]); 
     };
 
     const updateStore = (updatedStore: StoreType | null) => {
@@ -149,7 +152,7 @@ function Store() {
                             </div>    
                         </div>
                     </div>
-                    <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${72 + 270}px)` }}>
+                    <div className="mt-5 overflow-y-auto overflow-x-auto" style={{ maxHeight: `calc(100vh - ${72 + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -171,7 +174,7 @@ function Store() {
                                         <TableCell>{store.address}</TableCell>
                                         <TableCell>{store.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
                                         <TableCell>{store.active_status ? 'Active' : 'Inactive'}</TableCell>
-                                        <TableCell align="center">
+                                        <TableCell className="flex flex-row items-center justify-center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                                 setEditStore(store);
                                                 setOpenEditModal(true);
@@ -241,6 +244,7 @@ function Store() {
                     setViewStore(null);
                     setOpenViewModal(false);
             }}/>}
+            {openSearchModal && <SearchStoreModal store={searchStore} onClose={() => {setOpenSearchModal(false); setSearchStore(null);}}/>}
         </>
     );
 }
