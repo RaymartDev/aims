@@ -85,6 +85,16 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                 <Input id="user" type="Text" className="focus:border-none" />
               </div>
             </div>
+            <div className="flex flex-row w-full space-x-2">
+              <div className="space-y-1 w-full">
+                <Label htmlFor="request">Quantity</Label>
+                <Input id="request" type="Text" className="focus:border-none w-1/2" />
+              </div>
+              <div className="space-y-1 w-full">
+                <Label htmlFor="user">Remarks</Label>
+                <Input id="user" type="Text" className="focus:border-none" />
+              </div>
+            </div>
           </div>
           <div className="space-x-2 mt-5 flex justify-end">
             <Button

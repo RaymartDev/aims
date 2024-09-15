@@ -387,17 +387,6 @@ function Deliveries() {
               />
             </div>
             <div>
-              <Label htmlFor="unit">
-                Unit <span className=" text-red-500">*</span>
-              </Label>
-              <Input
-                id="unit"
-                type="Number"
-                className=" focus:border-none"
-                required
-              />
-            </div>
-            <div>
               <Label htmlFor="Capex">
                 Capex No. <span className=" text-red-500">*</span>
               </Label>

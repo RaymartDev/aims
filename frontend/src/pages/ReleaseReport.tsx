@@ -11,27 +11,27 @@ import CancelModal from "@/modals/CancelModal";
 import ViewDetailsModal from "@/modals/ViewDetailsModal";
 
 const delivery = [
-    { id: 1, deliveryNumber: "100230457", shippedBy: "Jane Doe", shippedDate: "01/02/24", receivedBy: "Jack Sparrow", receivedDate: "02/10/24", status: "Received" },
-    { id: 2, deliveryNumber: "100230458", shippedBy: "John Smith", shippedDate: "01/15/24", receivedBy: "Alice Johnson", receivedDate: "02/12/24", status: "Received" },
-    { id: 3, deliveryNumber: "100230459", shippedBy: "Sarah Connor", shippedDate: "01/25/24", receivedBy: "Bob Brown", receivedDate: "02/15/24", status: "Pending" },
-    { id: 4, deliveryNumber: "100230460", shippedBy: "Michael Scott", shippedDate: "02/01/24", receivedBy: "Pam Beesly", receivedDate: "02/18/24", status: "Received" },
-    { id: 5, deliveryNumber: "100230461", shippedBy: "Laura Palmer", shippedDate: "02/05/24", receivedBy: "James Hurley", receivedDate: "02/20/24", status: "Pending" },
-    { id: 6, deliveryNumber: "100230462", shippedBy: "Tom Riddle", shippedDate: "02/10/24", receivedBy: "Harry Potter", receivedDate: "02/22/24", status: "Received" },
-    { id: 7, deliveryNumber: "100230463", shippedBy: "Walter White", shippedDate: "02/15/24", receivedBy: "Jesse Pinkman", receivedDate: "02/25/24", status: "Received" },
-    { id: 8, deliveryNumber: "100230464", shippedBy: "Tony Stark", shippedDate: "02/18/24", receivedBy: "Steve Rogers", receivedDate: "02/28/24", status: "Pending" },
-    { id: 9, deliveryNumber: "100230465", shippedBy: "Bruce Wayne", shippedDate: "02/20/24", receivedBy: "Clark Kent", receivedDate: "03/01/24", status: "Received" },
-    { id: 10, deliveryNumber: "100230466", shippedBy: "Natasha Romanoff", shippedDate: "02/22/24", receivedBy: "Clint Barton", receivedDate: "03/05/24", status: "Pending" },
-    { id: 11, deliveryNumber: "100230467", shippedBy: "Peter Parker", shippedDate: "02/25/24", receivedBy: "Mary Jane", receivedDate: "03/10/24", status: "Received" },
-    { id: 12, deliveryNumber: "100230468", shippedBy: "Diana Prince", shippedDate: "03/01/24", receivedBy: "Bruce Banner", receivedDate: "03/15/24", status: "Received" },
-    { id: 13, deliveryNumber: "100230469", shippedBy: "Clark Kent", shippedDate: "03/05/24", receivedBy: "Lois Lane", receivedDate: "03/20/24", status: "Pending" },
-    { id: 14, deliveryNumber: "100230470", shippedBy: "Bruce Banner", shippedDate: "03/10/24", receivedBy: "Thor Odinson", receivedDate: "03/25/24", status: "Received" },
-    { id: 15, deliveryNumber: "100230471", shippedBy: "Barry Allen", shippedDate: "03/15/24", receivedBy: "Iris West", receivedDate: "03/30/24", status: "Pending" },
-    { id: 16, deliveryNumber: "100230472", shippedBy: "Oliver Queen", shippedDate: "03/20/24", receivedBy: "Felicity Smoak", receivedDate: "04/05/24", status: "Received" },
-    { id: 17, deliveryNumber: "100230473", shippedBy: "Hal Jordan", shippedDate: "03/25/24", receivedBy: "John Stewart", receivedDate: "04/10/24", status: "Pending" },
-    { id: 18, deliveryNumber: "100230474", shippedBy: "Arthur Curry", shippedDate: "03/30/24", receivedBy: "Mera", receivedDate: "04/15/24", status: "Received" },
-    { id: 19, deliveryNumber: "100230475", shippedBy: "Lex Luthor", shippedDate: "04/05/24", receivedBy: "Lena Luthor", receivedDate: "04/20/24", status: "Pending" },
-    { id: 20, deliveryNumber: "100230476", shippedBy: "Harvey Dent", shippedDate: "04/10/24", receivedBy: "Rachel Dawes", receivedDate: "04/25/24", status: "Received" },
-    { id: 21, deliveryNumber: "200230477", shippedBy: "Bane", shippedDate: "04/15/24", receivedBy: "Talia al Ghul", receivedDate: "04/30/24", status: "Pending" }
+    { id: 1, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230457", shippedBy: "Jane Doe", shippedDate: "01/02/24", receivedBy: "Jack Sparrow", receivedDate: "02/10/24", status: "Received" },
+    { id: 2, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230458", shippedBy: "John Smith", shippedDate: "01/15/24", receivedBy: "Alice Johnson", receivedDate: "02/12/24", status: "Received" },
+    { id: 3, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230459", shippedBy: "Sarah Connor", shippedDate: "01/25/24", receivedBy: "Bob Brown", receivedDate: "02/15/24", status: "Pending" },
+    { id: 4, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230460", shippedBy: "Michael Scott", shippedDate: "02/01/24", receivedBy: "Pam Beesly", receivedDate: "02/18/24", status: "Received" },
+    { id: 5, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230461", shippedBy: "Laura Palmer", shippedDate: "02/05/24", receivedBy: "James Hurley", receivedDate: "02/20/24", status: "Pending" },
+    { id: 6, reqName: 'Lloyd' ,costNumber: '', empNumber: '3215',deliveryNumber: "100230462", shippedBy: "Tom Riddle", shippedDate: "02/10/24", receivedBy: "Harry Potter", receivedDate: "02/22/24", status: "Received" },
+    { id: 7, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230463", shippedBy: "Walter White", shippedDate: "02/15/24", receivedBy: "Jesse Pinkman", receivedDate: "02/25/24", status: "Received" },
+    { id: 8, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230464", shippedBy: "Tony Stark", shippedDate: "02/18/24", receivedBy: "Steve Rogers", receivedDate: "02/28/24", status: "Pending" },
+    { id: 9, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230465", shippedBy: "Bruce Wayne", shippedDate: "02/20/24", receivedBy: "Clark Kent", receivedDate: "03/01/24", status: "Received" },
+    { id: 10, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230466", shippedBy: "Natasha Romanoff", shippedDate: "02/22/24", receivedBy: "Clint Barton", receivedDate: "03/05/24", status: "Pending" },
+    { id: 11, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230467", shippedBy: "Peter Parker", shippedDate: "02/25/24", receivedBy: "Mary Jane", receivedDate: "03/10/24", status: "Received" },
+    { id: 12, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230468", shippedBy: "Diana Prince", shippedDate: "03/01/24", receivedBy: "Bruce Banner", receivedDate: "03/15/24", status: "Received" },
+    { id: 13, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230469", shippedBy: "Clark Kent", shippedDate: "03/05/24", receivedBy: "Lois Lane", receivedDate: "03/20/24", status: "Pending" },
+    { id: 14, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230470", shippedBy: "Bruce Banner", shippedDate: "03/10/24", receivedBy: "Thor Odinson", receivedDate: "03/25/24", status: "Received" },
+    { id: 15, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230471", shippedBy: "Barry Allen", shippedDate: "03/15/24", receivedBy: "Iris West", receivedDate: "03/30/24", status: "Pending" },
+    { id: 16, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230472", shippedBy: "Oliver Queen", shippedDate: "03/20/24", receivedBy: "Felicity Smoak", receivedDate: "04/05/24", status: "Received" },
+    { id: 17, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230473", shippedBy: "Hal Jordan", shippedDate: "03/25/24", receivedBy: "John Stewart", receivedDate: "04/10/24", status: "Pending" },
+    { id: 18, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230474", shippedBy: "Arthur Curry", shippedDate: "03/30/24", receivedBy: "Mera", receivedDate: "04/15/24", status: "Received" },
+    { id: 19, reqName: 'Lloyd' ,costNumber: '', empNumber: '2341',deliveryNumber: "100230475", shippedBy: "Lex Luthor", shippedDate: "04/05/24", receivedBy: "Lena Luthor", receivedDate: "04/20/24", status: "Pending" },
+    { id: 20, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "100230476", shippedBy: "Harvey Dent", shippedDate: "04/10/24", receivedBy: "Rachel Dawes", receivedDate: "04/25/24", status: "Received" },
+    { id: 21, reqName: 'Lloyd' ,costNumber: '3215', empNumber: '',deliveryNumber: "200230477", shippedBy: "Bane", shippedDate: "04/15/24", receivedBy: "Talia al Ghul", receivedDate: "04/30/24", status: "Pending" }
 ];
 
 
@@ -112,6 +112,9 @@ function ReleaseReport() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>DR Number</TableHead>
+                                    <TableHead>Requestor Name</TableHead>
+                                    <TableHead>Employee Number</TableHead>
+                                    <TableHead>Cost Center Number</TableHead>
                                     <TableHead>Shipped By</TableHead>
                                     <TableHead>Shipped Date</TableHead>
                                     <TableHead>Received By</TableHead>
@@ -124,6 +127,9 @@ function ReleaseReport() {
                                 {currentDelivery.map(delivery => (
                                     <TableRow key={delivery.id}>
                                         <TableCell>{delivery.deliveryNumber}</TableCell>
+                                        <TableCell>{delivery.reqName}</TableCell>
+                                        <TableCell>{delivery.empNumber}</TableCell>
+                                        <TableCell>{delivery.costNumber}</TableCell>
                                         <TableCell>{delivery.shippedBy}</TableCell>
                                         <TableCell>{delivery.shippedDate}</TableCell>
                                         <TableCell>{delivery.receivedBy}</TableCell>
