@@ -262,6 +262,7 @@ function DeliveryReceipt() {
               <TableRow>
                 <TableHead>Item Number</TableHead>
                 <TableHead>Item Description</TableHead>
+                <TableHead>Available</TableHead>
                 <TableHead>Quantity</TableHead>
                 <TableHead>Unit</TableHead>
                 <TableHead>Serial Number</TableHead>
@@ -276,6 +277,7 @@ function DeliveryReceipt() {
                 <TableRow className="h-8" key={itemList.id}>
                   <TableCell>{itemList.itemNumber}</TableCell>
                   <TableCell>{itemList.itemDesc}</TableCell>
+                  <TableCell>10</TableCell>
                   <TableCell>
                     <Input
                       type="number"
