@@ -14,6 +14,7 @@ import { Label } from "@/Components/ui/label";
 import SelectItemModal from "@/modals/SelectItemModal";
 import AssetEntryModal from "@/modals/AssetEntryModal";
 import { Plus, Trash } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const itemList = [
   {
@@ -157,6 +158,7 @@ function DeliveryReceipt() {
   const [openModal, setOpenModal] = useState(false);
   const [openAssetModal, setOpenAssetModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("employee");
+  const navigate = useNavigate();
 
   const headerHeight = 72;
 
@@ -304,7 +306,8 @@ function DeliveryReceipt() {
           >
             Asset
           </Button>
-          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36">
+          <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36"
+          onClick={() => navigate("/download")}>
             Print
           </Button>
         </div>

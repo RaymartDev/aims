@@ -20,7 +20,6 @@ import {
 import AddAssetModal from "@/modals/AddAssetModal";
 import { Plus, Trash } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
-import { useNavigate } from "react-router-dom";
 
 const itemList = [
   {
@@ -179,7 +178,6 @@ function AcknowledgementReceipt() {
   const [selectedDR, setSelectedDR] = useState("");
   const [selectedName, setSelectedName] = useState("");
   const [selectedType, setSelectedType] = useState("");
-  const navigate = useNavigate();
 
   const headerHeight = 72;
 
@@ -387,9 +385,7 @@ function AcknowledgementReceipt() {
         </div>
         <div className="flex items-end mt-5">
           <Button
-            className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36"
-            onClick={() => navigate("/download")}
-          >
+            className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36">
             Print
           </Button>
         </div>
