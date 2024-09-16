@@ -292,7 +292,7 @@ function Sidebar() {
                   >
                     <div className="mx-14 font-bold flex justify-center items-center space-x-2">
                       <ReceiptText />
-                      <span>Release</span>
+                      <span>DR Release</span>
                     </div>
                   </NavLink>
                 </AccordionContent>
@@ -307,7 +307,7 @@ function Sidebar() {
                   >
                     <div className="mx-14 font-bold flex justify-center items-center space-x-2">
                       <Undo2 />
-                      <span>Return</span>
+                      <span>AR Return</span>
                     </div>
                   </NavLink>
                 </AccordionContent>
