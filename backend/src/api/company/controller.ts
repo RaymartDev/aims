@@ -150,7 +150,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           page,
           limit,
           maxPage: companies.maxPage || 1,
-        }
+        },
       });
     }
   } catch (err) {

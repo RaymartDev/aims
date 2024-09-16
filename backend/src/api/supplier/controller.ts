@@ -171,7 +171,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           page,
           limit,
           maxPage: suppliers.maxPage || 1,
-        }
+        },
       });
     }
   } catch (err) {

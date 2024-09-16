@@ -132,7 +132,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           page,
           limit,
           totalPages: stores.totalPages || 1,
-        }
+        },
       });
     }
   } catch (err) {

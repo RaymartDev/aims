@@ -24,6 +24,7 @@ model Employee {
   modified_on DateTime @updatedAt
   date_entry DateTime @default(now())
   registered Boolean @default(false)
+  deleted Boolean @default(false)
   modified_by_id Int? 
   modified_by User? @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   users User[]
@@ -37,6 +38,7 @@ model Store {
   cost_center_code String
   address String
   registered Boolean @default(false)
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -61,6 +63,7 @@ model User {
   cost_center_code String
   employee_no String
   division String
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -92,6 +95,7 @@ model UserRole {
   id          Int       @id @default(autoincrement())
   name        String
   users User[]
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -104,6 +108,7 @@ model Department {
   name       String
   users User[]
   employees  Employee[]
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -118,6 +123,7 @@ model Company {
   employees  Employee[]
   suppliers Supplier[]
   stores Store[]
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -136,6 +142,7 @@ model Supplier {
   tin_number      String
   contact_id Int
   contact_details Supplier_Contact_Details @relation(fields: [contact_id], references: [id], onDelete: Cascade)
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -156,6 +163,7 @@ model Supplier_Contact_Details {
   province String
   remarks String
   suppliers Supplier[] @relation
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -177,6 +185,7 @@ model Material {
   category_id Int
   category Material_Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   date_entry DateTime
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -214,6 +223,7 @@ model Delivery {
   requestor_user_id Int
   user User @relation("UserDelivery", fields: [user_id], references: [id], onDelete: Cascade)
   user_id Int
+  deleted Boolean @default(false)
   date_entry DateTime
   end_warranty DateTime
   effective_from DateTime @default(now())
@@ -244,6 +254,7 @@ model Release {
   received_date DateTime
   status String
   remarks String
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -254,6 +265,7 @@ model Release {
 model Material_Category {
   id         Int       @id @default(autoincrement())
   description       String
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -267,6 +279,7 @@ model Material_Category {
 model Material_Type {
   id         Int       @id @default(autoincrement())
   description       String
+  deleted Boolean @default(false)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt

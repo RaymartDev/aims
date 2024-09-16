@@ -93,7 +93,7 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           page,
           limit,
           maxPage: materialTypes.maxPage || 1,
-        }
+        },
       });
     }
   } catch (err) {
