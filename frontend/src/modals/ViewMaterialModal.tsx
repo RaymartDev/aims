@@ -43,7 +43,7 @@ function ViewMaterialModal ({ onClose, material }: ViewMaterialModalProps) {
                         </div>
                         <div className="space-y-1 w-1/2">
                             <p className="text-sm text-[#697386]">Category</p>
-                            <Input value={material?.category || ''} readOnly className="focus:border-none border-black" type="number"></Input>
+                            <Input value={material?.category || ''} readOnly className="focus:border-none border-black"></Input>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
