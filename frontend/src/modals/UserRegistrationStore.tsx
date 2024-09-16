@@ -1,14 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { X, Eye, EyeOff } from "lucide-react";
+import { X, Eye, EyeOff, ChevronDown, Check } from "lucide-react";
 import type StoreType from "@/interface/store";
-import { useState } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import axios, { CancelTokenSource } from "axios";
 import { getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+  } from "@/Components/ui/command";
+  import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/Components/ui/popover";
+  import { cn } from "@/lib/utils";
+  import type DepartmentType from "@/interface/department"
 
 interface UserRegistrationProps {
     onClose: () => void;
@@ -24,7 +40,69 @@ function UserRegistrationStore({ store, onClose, registerStore }: UserRegistrati
     const [employeeNo, setEmployeeNo] = useState('');
     const [showPassword, setShowPassword] =useState(false);
 
+    const [departmentPopOver, setDepartmentPopOver] = useState<{searchTerm: string, isOpen: boolean, results: DepartmentType[], selected: string}>({
+        searchTerm: '',
+        isOpen: false,
+        results: [],
+        selected: '',
+      });
+        // eslint-disable-next-line @typescript-eslint/ban-types
+    const debounce = (func: Function, delay: number) => {
+        let timer: NodeJS.Timeout;
+        return (...args: unknown[]) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+            func(...args);
+        }, delay);
+        };
+    };
+
+    const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchDepartmentData = useCallback(
+    debounce(async (term: string) => {
+      if (term) {
+        try {
+          // Cancel previous request if it exists
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+          }
+
+          // Create a new CancelTokenSource
+          const source = axios.CancelToken.source();
+          setCancelTokenSource(source);
+
+          const response = await axios.get(`${getVersion()}/department/search?name=${term}`, {
+            cancelToken: source.token,
+            timeout: 5000,
+          });
+          setDepartmentPopOver((prevState) => ({
+            ...prevState,
+            results: response.data.departments, // Assuming 'response.data' is an array of CategoryType
+          }));
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request canceled:', error.message);
+          } else {
+            console.error('Error fetching search results:', error);
+          }
+        }
+      } else {
+        setDepartmentPopOver((prevState) => ({
+          ...prevState,
+          results: [], // Clear results if no search term
+        }));
+      }
+    }, 500), // Adjust debounce delay as needed (500ms)
+    []
+  );
+  
     const clearData = () => {
+        setDepartmentPopOver({searchTerm: '',
+            isOpen: false,
+            results: [],
+            selected: ''})
         setUsername('');
         setPassword('');
         setDepartment('');
@@ -92,6 +170,12 @@ function UserRegistrationStore({ store, onClose, registerStore }: UserRegistrati
         }
     };
 
+    useEffect(() => {
+        if (departmentPopOver.searchTerm) {
+          fetchDepartmentData(departmentPopOver.searchTerm);
+        }
+      }, [departmentPopOver.searchTerm, fetchDepartmentData]);
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
@@ -128,8 +212,53 @@ function UserRegistrationStore({ store, onClose, registerStore }: UserRegistrati
                     </div>
                     <div className="flex flex-row w-full space-x-2">
                         <div className="space-y-1 w-full">
-                            <p className="text-sm text-[#697386]">Department</p>
-                            <Input value={department} onChange={(e) => setDepartment(e.target.value)} className="focus:border-none border-black"></Input>
+                        <p className="text-sm text-[#697386]">Department</p>
+                        <Popover open={departmentPopOver.isOpen} onOpenChange={(isOpen) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                            <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={departmentPopOver.isOpen}
+                                className="w-full justify-between border-black"
+                            >
+                                {departmentPopOver.selected || "Select Department"}
+                                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                            <Command>
+                                <CommandInput
+                                placeholder="Search Department"
+                                value={departmentPopOver.searchTerm}
+                                onValueChange={(searchTerm) => setDepartmentPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                                />
+                                <CommandList>
+                                <CommandEmpty>No department found.</CommandEmpty>
+                                {departmentPopOver.results.length > 0 && (
+                                    <CommandGroup>
+                                    {departmentPopOver.results.map((department) => (
+                                        <CommandItem
+                                        key={department.id}
+                                        value={department.name}
+                                        onSelect={(selected) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                        >
+                                        <Check
+                                            className={cn(
+                                            "mr-2 h-4 w-4",
+                                            departmentPopOver.selected === department.name
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                            )}
+                                        />
+                                        {department.name}
+                                        </CommandItem>
+                                    ))}
+                                    </CommandGroup>
+                                )}
+                                </CommandList>
+                            </Command>
+                            </PopoverContent>
+                        </Popover>
                         </div>
                         <div className="space-y-1 w-full">
                             <p className="text-sm text-[#697386]">Division</p>
