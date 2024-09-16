@@ -85,6 +85,24 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                 <Input id="user" type="Text" className="focus:border-none" />
               </div>
             </div>
+            <div>
+              <h1 className="mt-3 font-bold">Material Info</h1>
+              <hr />
+            </div>
+            <div className="space-y-1 w-full">
+                <Label htmlFor="user">Material Description</Label>
+                <Input id="user" type="Text" className="focus:border-none" disabled style={{ cursor: 'default' }} />
+            </div>
+            <div className="flex flex-row w-full space-x-2">
+              <div className="space-y-1 w-full">
+                <Label htmlFor="request">Category</Label>
+                <Input id="request" type="Text" className="focus:border-none" disabled style={{ cursor: 'default' }} />
+              </div>
+              <div className="space-y-1 w-full">
+                <Label htmlFor="user">Type</Label>
+                <Input id="user" type="Text" className="focus:border-none" disabled style={{ cursor: 'default' }} />
+              </div>
+            </div>
             <div className="flex flex-row w-full space-x-2">
               <div className="space-y-1 w-full">
                 <Label htmlFor="request">Quantity</Label>
