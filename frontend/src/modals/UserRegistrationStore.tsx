@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { X } from "lucide-react";
+import { X, Eye, EyeOff } from "lucide-react";
 import type StoreType from "@/interface/store";
 import { useState } from "react";
 import axios from "axios";
@@ -16,12 +16,13 @@ interface UserRegistrationProps {
     registerStore: (id: number) => void;
 }
 
-function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrationProps) {
+function UserRegistrationStore({ store, onClose, registerStore }: UserRegistrationProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [department, setDepartment] = useState('');
     const [division, setDivision] = useState('');
     const [employeeNo, setEmployeeNo] = useState('');
+    const [showPassword, setShowPassword] =useState(false);
 
     const clearData = () => {
         setUsername('');
@@ -29,10 +30,38 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
         setDepartment('');
         setDivision('');
         setEmployeeNo('');
-    }
+    };
+
+    const isValidUsername = (username: string) => {
+        if (username.length < 4) {
+            toast.error("Username must have at least 4 characters");
+            return false;
+        }
+        return true;
+    };
+    const isValidPassword = (password: string) => {
+        let isValid = true;
+        if (password.length < 4) {
+            toast.error("Password must have at least 4 characters");
+            isValid = false;
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            toast.error("Password must contain at least one special character");
+            isValid = false;
+        }
+        if (!/[A-Z]/.test(password)) {
+            toast.error("Password must contain at least one uppercase letter");
+            isValid = false;
+        }
+        return isValid;
+    };
 
     const handleRegister = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
+
+        if (!isValidUsername(username)) return;
+        if (!isValidPassword(password)) return;
+
         try {
             const response = await axios.post(`${getVersion()}/user/register`, {
                 registrationType: 'store',
@@ -46,28 +75,29 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
                 cost_center_code: store?.cost_center_code,
                 employee_number: employeeNo,
                 admin: 'n',
-            })
+            });
+
             if (response.status >= 200 && response.status < 300) {
                 toast.success(response.data?.message || 'Successfully registered store');
-                registerStore(store?.id || 1);    
+                registerStore(store?.id || 1);
             }
             onClose();
             clearData();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 toast.error(err.response?.data?.message || 'Something went wrong');
-              } else {
-                toast.error('Something went wrong')
-              }
+            } else {
+                toast.error('Something went wrong');
+            }
         }
-    }
+    };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between w-full border-b-2 border-black">
                     <h1 className="font-extrabold text-xl">User Registration</h1>
-                    <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30}/></Button>
+                    <Button className="text-black bg-transparent hover:bg-transparent p-0" onClick={onClose}><X size={30} /></Button>
                 </div>
                 <div className="flex flex-col justify-start mt-5 space-y-2">
                     <div className="flex flex-row w-full space-x-2">
@@ -85,9 +115,15 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
                             <p className="text-sm text-[#697386]">Username</p>
                             <Input value={username} onChange={(e) => setUsername(e.target.value)} className="focus:border-none border-black"></Input>
                         </div>
-                        <div className="space-y-1 w-full">
+                        <div className="space-y-1 w-full relative">
                             <p className="text-sm text-[#697386]">Password</p>
-                            <Input value={password} onChange={(e) => setPassword(e.target.value)} className="focus:border-none border-black"></Input>
+                            <Input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} className="focus:border-none border-black"/>
+                            <Button
+                                className="absolute right-2 top-5 text-black bg-transparent hover:bg-transparent p-0"
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </Button>
                         </div>
                     </div>
                     <div className="flex flex-row w-full space-x-2">
@@ -117,4 +153,4 @@ function UserRegistrationStore ({ store, onClose, registerStore }: UserRegistrat
     );
 }
 
-export default UserRegistrationStore
+export default UserRegistrationStore;
