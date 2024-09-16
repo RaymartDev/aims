@@ -31,7 +31,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
     const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 15;
     const dispatch = useAppDispatch();
 
     const loadMaterials = useCallback(() => {
