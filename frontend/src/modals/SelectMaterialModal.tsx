@@ -1,9 +1,18 @@
-import { useEffect, useState } from "react"
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+import { useCallback, useEffect, useState } from "react"
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Search, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import type MaterialType from "@/interface/material"
+import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
+import { useAppDispatch } from "@/store/store";
+import { logout } from "@/slices/userSlice";
+import SearchProductModal from "./SearchProductModal";
+
 
 interface SelectMaterialModalProps {
     open: boolean;
@@ -11,64 +20,65 @@ interface SelectMaterialModalProps {
     onNext: () => void;
 }
 
-const materials = [
-    {id:1, materialCode: 100231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "06/17/24" },
-    {id:2, materialCode: 200231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "07/01/23" },
-    {id:3, materialCode: 300231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:4, materialCode: 400231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:5, materialCode: 500231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:6, materialCode: 600231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:7, materialCode: 700231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:8, materialCode: 800231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:9, materialCode: 900231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:10, materialCode: 1000231, desc: "HP Probook 8GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:11, materialCode: 1100231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:12, materialCode: 1200231, desc: "Predator 16GB RAM / 512GB SSD i9-14500", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:13, materialCode: 1300231, desc: "ASUS 16GB RAM / 512GB SSD", itemCode: "GAME-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-    {id:14, materialCode: 1300231, desc: "AOC 16GB RAM / 512GB SSD", itemCode: "MONI-M04", unit: "PC", materialType: "OU", cost: "45,000", dateEntry: "05/21/22" },
-];
 
 function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
-    const headerHeight = 72;
-
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight < 500) return 10;
-        return 10;
-    };
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
+    const [materials, setMaterials] = useState<MaterialType[]>([]);
+    const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
-        };
+    const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
+    const itemsPerPage = 3;
+    const dispatch = useAppDispatch();
 
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    const loadMaterials = useCallback(() => {
+        fetchData({
+          url: `${getVersion()}/material/list`,
+          query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
+          onSuccess: (data) => {
+            setMaterials(data.materials);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadMaterials();
+      }, [loadMaterials]);
+
+
+      const handleSelectMaterial = (material: MaterialType) => {
+        setSearchMaterial(material);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredMaterial([]);
+    };
+
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setFilteredMaterial([]);
+        } else {
+            const filtered = materials.filter((material) =>
+                material.material_code.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredMaterial(filtered.slice(0, 10));
+        }
+    }, [searchQuery, materials]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const filteredMaterial = materials.filter(materials =>
-        materials.desc.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const indexOfLastMaterials = currentPage * itemsPerPage;
-    const indexOfFirstMaterials = indexOfLastMaterials - itemsPerPage;
-    const currentMaterials = filteredMaterial.slice(indexOfFirstMaterials, indexOfLastMaterials);
-
-    const totalPages = Math.ceil(filteredMaterial.length / itemsPerPage);
-
     const handleRowClick = (id: number) => {
         setSelectedMaterial(id);
     };
 
+    
     if (!open) return null;
 
     return(
@@ -81,38 +91,53 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                 <div className="flex flex-row items-center space-x-2 mt-5 w-3/4">
                     <h1 className="w-1/6">Materials</h1>
                     <div className="relative w-5/6">
-                        <Input type="search" placeholder="Search Description" className="pl-12 border-2 focus:border-none"
+                        <Input
+                            type="search"
+                            placeholder="Search Material Code"
+                            className="pl-12 border-2 focus:border-none"
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}/>
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        {filteredMaterial.length > 0 && (
+                            <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                {filteredMaterial.map((material) => (
+                                    <div
+                                        key={material.id}
+                                        className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                        onClick={() => handleSelectMaterial(material)}
+                                    >
+                                        {material.material_code} - {material.item_description}  
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>   
                 </div>
-                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
+                <div className="mt-5 overflow-y-auto" style={{ maxHeight: `calc(100vh - ${70 + 270}px)` }}>
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Material Code</TableHead>
                                 <TableHead>Description</TableHead>
                                 <TableHead>Item Code</TableHead>
-                                <TableHead>Unit</TableHead>
+                                <TableHead>Category</TableHead>
                                 <TableHead>Material Type</TableHead>
                                 <TableHead>Cost</TableHead>
                                 <TableHead>Date</TableHead>
-                                <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {currentMaterials.map(materials => (
-                                <TableRow key={materials.id}
-                                    onClick={() => handleRowClick(materials.id)}
-                                    className={selectedMaterial === materials.id ? "bg-hoverCream" : "cursor-pointer"}>
-                                    <TableCell>{materials.materialCode}</TableCell>
-                                    <TableCell>{materials.desc}</TableCell>
-                                    <TableCell>{materials.itemCode}</TableCell>
-                                    <TableCell>{materials.unit}</TableCell>
-                                    <TableCell>{materials.materialType}</TableCell>
-                                    <TableCell>{materials.cost}</TableCell>
-                                    <TableCell>{materials.dateEntry}</TableCell>
+                            {materials.map(material => (
+                                <TableRow key={material.id} onClick={() => handleRowClick(material.id)}
+                                    className={selectedMaterial === material.id ? "bg-hoverCream" : "cursor-pointer"}>
+                                    <TableCell>{material.material_code}</TableCell>
+                                    <TableCell>{material.item_description}</TableCell>
+                                    <TableCell>{material.item_code}</TableCell>
+                                    <TableCell>{material.category}</TableCell>
+                                    <TableCell>{material.material_type}</TableCell>
+                                    <TableCell>{formatCurrency(material.unit_cost)}</TableCell>
+                                    <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -126,7 +151,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                                     <PaginationPrevious href="#" onClick={() => handlePageChange(currentPage - 1)} />
                                 </PaginationItem>
                             )}
-                            {Array.from({ length: totalPages }, (_, index) => (
+                            {Array.from({ length: maxPage }, (_, index) => (
                                 <PaginationItem key={index}>
                                     <PaginationLink
                                         href="#"
@@ -137,7 +162,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                                     </PaginationLink>
                                 </PaginationItem>
                             ))}
-                            {currentPage < totalPages && (
+                            {currentPage < maxPage && (
                                 <PaginationItem>
                                     <PaginationNext href="#" onClick={() => handlePageChange(currentPage + 1)} />
                                 </PaginationItem>
@@ -150,6 +175,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}>Select</Button>
                 </div>
             </div>
+            {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
         </div>
         
     );

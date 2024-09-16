@@ -113,8 +113,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Archive />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Archive className="sm:hidden xl:inline"/>
                       <span>Inventory</span>
                     </div>
                   </NavLink>
@@ -128,9 +128,9 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Truck />
-                      <span>Deliveries</span>
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Truck className="sm:hidden xl:inline"/>
+                      <span >Deliveries</span>
                     </div>
                   </NavLink>
                 </AccordionContent>
@@ -162,8 +162,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Archive />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Archive className="sm:hidden xl:inline"/>
                       <span>Products</span>
                     </div>
                   </NavLink>
@@ -177,8 +177,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Truck />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Truck className="sm:hidden xl:inline"/>
                       <span>Category</span>
                     </div>
                   </NavLink>
@@ -192,8 +192,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Boxes />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Boxes className="sm:hidden xl:inline"/>
                       <span>Types</span>
                     </div>
                   </NavLink>
@@ -226,8 +226,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <UserRound />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <UserRound className="sm:hidden xl:inline"/>
                       <span>Employee</span>
                     </div>
                   </NavLink>
@@ -241,8 +241,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Store />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Store className="sm:hidden xl:inline"/>
                       <span>Store</span>
                     </div>
                   </NavLink>
@@ -256,8 +256,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Container />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Container className="sm:hidden xl:inline"/>
                       <span>Supplier</span>
                     </div>
                   </NavLink>
@@ -290,8 +290,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <ReceiptText />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <ReceiptText className="sm:hidden xl:inline"/>
                       <span>Release</span>
                     </div>
                   </NavLink>
@@ -305,8 +305,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Undo2 />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Undo2 className="sm:hidden xl:inline"/>
                       <span>Return</span>
                     </div>
                   </NavLink>
@@ -339,8 +339,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <ClipboardPaste />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <ClipboardPaste className="sm:hidden xl:inline"/>
                       <span>Release Report</span>
                     </div>
                   </NavLink>
@@ -354,8 +354,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <ClipboardCopy />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <ClipboardCopy className="sm:hidden xl:inline"/>
                       <span>Return Report</span>
                     </div>
                   </NavLink>
@@ -388,8 +388,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Building2 />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <Building2 className="sm:hidden xl:inline"/>
                       <span>Company</span>
                     </div>
                   </NavLink>
@@ -403,8 +403,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <Briefcase />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[10px] font-bold flex justify-center items-center space-x-2">
+                      <Briefcase className="sm:hidden xl:inline"/>
                       <span>Department</span>
                     </div>
                   </NavLink>
@@ -437,8 +437,8 @@ function Sidebar() {
                       }`
                     }
                   >
-                    <div className="mx-14 font-bold flex justify-center items-center space-x-2">
-                      <KeyRound />
+                    <div className="xl:mx-14 sm:mx-0 xl:text-sm sm:text-[12px] font-bold flex justify-center items-center space-x-2">
+                      <KeyRound className="sm:hidden xl:inline"/>
                       <span>Password</span>
                     </div>
                   </NavLink>
