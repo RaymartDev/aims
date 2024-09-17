@@ -193,7 +193,7 @@ function Store() {
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
                                                     <DropdownMenuItem>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => {
+                                                    <DropdownMenuItem disabled={store.registered_status} onClick={() => {
                                                         setRegStore(store);
                                                         setOpenUserRegModal(true);
                                                     }}>Register</DropdownMenuItem>
