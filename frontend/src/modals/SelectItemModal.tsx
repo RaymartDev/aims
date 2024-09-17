@@ -11,19 +11,20 @@ import type MaterialType from "@/interface/material"
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
-import SearchProductModal from "./SearchProductModal";
+import ProductDetailsModal from "./ProductDetailsModal";
 
 interface SelectItemModalProps {
     open: boolean;
     onClose: () => void;
+    onItemSelect: (material: MaterialType) => void;
 }
 
-function SelectItemModal({ open, onClose }: SelectItemModalProps) {
+function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
     const [openSearchModal, setOpenSearchModal] = useState(false);
-    const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
+    const [selectedMaterial, setSelectedMaterial] = useState<MaterialType | null>(null);
 
     const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -49,11 +50,17 @@ function SelectItemModal({ open, onClose }: SelectItemModalProps) {
       }, [loadMaterials]);
 
 
-      const handleSelectMaterial = (material: MaterialType) => {
+    const handleSelectMaterial = (material: MaterialType) => {
         setSearchMaterial(material);
         setOpenSearchModal(true);
         setSearchQuery("");
         setFilteredMaterial([]);
+    };
+
+    const handleAddItem = (material: MaterialType) => {
+        onItemSelect(material);  // Call the parent function to add the material to the delivery receipt
+        setOpenSearchModal(false);  // Close the modal after adding
+        setSearchMaterial(null);
     };
 
     useEffect(() => {
@@ -71,8 +78,15 @@ function SelectItemModal({ open, onClose }: SelectItemModalProps) {
         setCurrentPage(page);
     };
 
-    const handleRowClick = (id: number) => {
-        setSelectedMaterial(id);
+    const handleRowClick = (material: MaterialType) => {
+        setSelectedMaterial(material);
+    };
+
+    const handleSelectButtonClick = () => {
+        if (selectedMaterial) {
+            onItemSelect(selectedMaterial); // Only pass the selected material when the Select button is clicked
+            onClose(); // Close the modal after selection
+        }
     };
 
     if (!open) return null;
@@ -126,8 +140,8 @@ function SelectItemModal({ open, onClose }: SelectItemModalProps) {
                         </TableHeader>
                         <TableBody>
                             {materials.map(material => (
-                                <TableRow key={material.id} onClick={() => handleRowClick(material.id)}
-                                    className={selectedMaterial === material.id ? "bg-hoverCream" : "cursor-pointer"}>
+                                <TableRow key={material.id} onClick={() => handleRowClick(material)}
+                                    className={selectedMaterial?.id === material.id ? "bg-hoverCream" : "cursor-pointer"}>
                                     <TableCell>{material.material_code}</TableCell>
                                     <TableCell>{material.item_description}</TableCell>
                                     <TableCell>{material.item_code}</TableCell>
@@ -169,10 +183,10 @@ function SelectItemModal({ open, onClose }: SelectItemModalProps) {
                 </div>
                 <div className="flex justify-end space-x-5">
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}>Cancel</Button>
-                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white">Select</Button>
+                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={handleSelectButtonClick}>Add</Button>
                 </div>
             </div>
-            {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
+            {openSearchModal && (<ProductDetailsModal material={searchMaterial} onClose={() => setOpenSearchModal(false)}onAdd={handleAddItem}/>)}
         </div>
         
     );
