@@ -174,7 +174,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       id: findUser.id,
       username: findUser.username,
       name: findUser.name,
-      admin: findUser.role?.name === 'Admin',
+      admin: findUser.role?.name.toLowerCase().includes('admin'),
       employee_number: findUser.employee_no,
       cost_code: findUser.cost_center_code,
     });
