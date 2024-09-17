@@ -77,13 +77,7 @@ function DeliveryReceipt() {
           </div>
           <div className="flex justify-between w-full">
             <div className="flex space-x-5 w-1/2">
-              <div className="flex flex-col justify-end space-y-2 w-1/2">
-                <p className="text-sm">
-                  Requestor Name <span className=" text-red-500">*</span>
-                </p>
-                <Input className="focus:border-none w-full" />
-              </div>
-              <div className="flex flex-col justify-end space-y-2 w-1/2">
+            <div className="flex flex-col justify-end space-y-2 w-1/2">
                 <Label htmlFor="firstField">
                   {selectedOption === "employee"
                     ? "Employee Number"
@@ -92,7 +86,14 @@ function DeliveryReceipt() {
                 </Label>
                 <Input className="focus:border-none w-full" />
               </div>
+              <div className="flex flex-col justify-end space-y-2 w-1/2">
+                <p className="text-sm">
+                  Requestor Name <span className=" text-red-500">*</span>
+                </p>
+                <Input className="focus:border-none w-full" />
+              </div>
             </div>
+
             <div className="flex justify-end items-end gap-4">
               <Button className="bg-hoverCream text-fontHeading border hover:text-white font-semibold w-36">
                 <Plus size={20} />
@@ -106,6 +107,7 @@ function DeliveryReceipt() {
                 <span className="text-sm">Add Item</span>
               </Button>
             </div>
+
           </div>
         </div>
         <div
