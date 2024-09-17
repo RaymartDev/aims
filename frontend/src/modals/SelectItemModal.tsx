@@ -7,7 +7,7 @@ import { Input } from "@/Components/ui/input";
 import { Search, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
-import type MaterialType from "@/interface/material"
+import type DrReleaseItem from "@/interface/drReleaseItem"
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
@@ -16,17 +16,17 @@ import ProductDetailsModal from "./ProductDetailsModal";
 interface SelectItemModalProps {
     open: boolean;
     onClose: () => void;
-    onItemSelect: (material: MaterialType) => void;
+    onItemSelect: (material: DrReleaseItem) => void;
 }
 
 function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
-    const [materials, setMaterials] = useState<MaterialType[]>([]);
-    const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
+    const [materials, setMaterials] = useState<DrReleaseItem[]>([]);
+    const [searchMaterial, setSearchMaterial] = useState<DrReleaseItem | null>(null);
     const [openSearchModal, setOpenSearchModal] = useState(false);
-    const [selectedMaterial, setSelectedMaterial] = useState<MaterialType | null>(null);
+    const [selectedMaterial, setSelectedMaterial] = useState<DrReleaseItem | null>(null);
 
-    const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
+    const [filteredMaterial, setFilteredMaterial] = useState<DrReleaseItem[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const itemsPerPage = 15;
@@ -50,14 +50,14 @@ function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) 
       }, [loadMaterials]);
 
 
-    const handleSelectMaterial = (material: MaterialType) => {
+    const handleSelectMaterial = (material: DrReleaseItem) => {
         setSearchMaterial(material);
         setOpenSearchModal(true);
         setSearchQuery("");
         setFilteredMaterial([]);
     };
 
-    const handleAddItem = (material: MaterialType) => {
+    const handleAddItem = (material: DrReleaseItem) => {
         onItemSelect(material);  // Call the parent function to add the material to the delivery receipt
         setOpenSearchModal(false);  // Close the modal after adding
         setSearchMaterial(null);
@@ -78,7 +78,7 @@ function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) 
         setCurrentPage(page);
     };
 
-    const handleRowClick = (material: MaterialType) => {
+    const handleRowClick = (material: DrReleaseItem) => {
         setSelectedMaterial(material);
     };
 
@@ -186,7 +186,7 @@ function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) 
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={handleSelectButtonClick}>Add</Button>
                 </div>
             </div>
-            {openSearchModal && (<ProductDetailsModal material={searchMaterial} onClose={() => setOpenSearchModal(false)}onAdd={handleAddItem}/>)}
+            {openSearchModal && (<ProductDetailsModal material={searchMaterial} onClose={() => setOpenSearchModal(false)} onAdd={handleAddItem}/>)}
         </div>
         
     );

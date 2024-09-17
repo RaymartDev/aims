@@ -10,13 +10,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
-import type MaterialType from "@/interface/material";
+import type DrReleaseItem from "@/interface/drReleaseItem";
 import { formatCurrency, formatDateAsString } from "@/lib/utils";
 
 interface ProductDetailsModalProps {
     onClose: () => void;
-    material: MaterialType | null;
-    onAdd: (material: MaterialType) => void;
+    material: DrReleaseItem | null;
+    onAdd: (material: DrReleaseItem) => void;
 }
 
 function ProductDetailsModal({ onClose, material ,onAdd }: ProductDetailsModalProps) {

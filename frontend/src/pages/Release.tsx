@@ -14,7 +14,7 @@ import { Label } from "@/Components/ui/label";
 import SelectItemModal from "@/modals/SelectItemModal";
 import { Plus, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type MaterialType from "@/interface/material"
+import type SelectedItem from "@/interface/drReleaseItem"
 import { toast } from "react-toastify";
 
 
@@ -22,9 +22,9 @@ function DeliveryReceipt() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("employee");
   const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState<MaterialType[]>([]);
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
 
-  const handleItemSelect = (material: MaterialType) => {
+  const handleItemSelect = (material: SelectedItem) => {
     if (selectedItems.length < 11) {
       setSelectedItems((prevItems) => [...prevItems, material]);
       setOpenModal(false);
