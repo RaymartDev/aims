@@ -1,52 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { useLocation } from "react-router-dom";
+
 function Downloadpdf() {
-    const items = [
-      {
-        name: "KINGSTON 64GB USB FLASH DRIVE",
-        quantity: 4,
-        unit: "PC",
-        serialNO: "1000232133",
-        remarks: "OU",
-        status: "status",
-      },
-      {
-        name: "KINGSTON 64GB USB FLASH DRIVE",
-        quantity: 4,
-        unit: "PC",
-        serialNO: "1000232133",
-        remarks: "OU",
-        status: "status",
-      },
-      {
-        name: "KINGSTON 64GB USB FLASH DRIVE",
-        quantity: 4,
-        unit: "PC",
-        serialNO: "1000232133",
-        remarks: "OU",
-        status: "status",
-      },
-      {
-        name: "KINGSTON 64GB USB FLASH DRIVE",
-        quantity: 4,
-        unit: "PC",
-        serialNO: "1000232133",
-        remarks: "OU",
-        status: "status",
-      },
-      {
-        name: "KINGSTON 64GB USB FLASH DRIVE",
-        quantity: 4,
-        unit: "PC",
-        serialNO: "1000232133",
-        remarks: "OU",
-        status: "status",
-      },
-    ];
+
+  const location = useLocation();
+  const { selectedItems } = location.state || { selectedItems: [] };
   
     const filledItems = [
-      ...items,
+      ...selectedItems,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      ...Array(11 - items.length).fill({
+      ...Array(11 - selectedItems.length).fill({
         name: "\u200B", // Zero-width space
         quantity: "",
         unit: "",
@@ -81,14 +45,14 @@ function Downloadpdf() {
                     <tr
                       key={index}
                       className={
-                        item.name === "N/A" ? "text-gray-400 text-[8px]" : ""
+                        item.item_description === "N/A" ? "text-gray-400 text-[8px]" : ""
                       }
                     >
                       <td className="px-2 text-[8px] w-[5%]">
-                        {item.name !== "N/A" ? index + 1 : ""}
+                        {item.item_description !== "N/A" ? index + 1 : ""}
                       </td>
                       <td className="pl-2 text-sm text-[7px] w-[30%]">
-                        {item.name}
+                        {item.item_description}
                       </td>
                       <td className="pl-2 text-sm text-[7px]">
                         {item.quantity}
@@ -97,7 +61,7 @@ function Downloadpdf() {
                         {item.unit}
                       </td>
                       <td className="text-sm pl-4 text-[7px]">
-                        {item.serialNO}
+                        {item.item_code}
                       </td>
                       <td className="pl-5 text-sm text-[7px]">
                         {item.remarks}

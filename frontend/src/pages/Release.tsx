@@ -39,6 +39,10 @@ function DeliveryReceipt() {
     );
   };
 
+  const handlePrint = () => {
+    navigate("/download", { state: { selectedItems } });
+  };
+
   return (
     <>
       <div className="flex flex-col h-full w-full">
@@ -156,7 +160,7 @@ function DeliveryReceipt() {
         </div>
         <div className="space-x-2 flex items-end mt-5">
           <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36"
-          onClick={() => navigate("/download")}>
+          onClick={handlePrint}>
             Print
           </Button>
         </div>
