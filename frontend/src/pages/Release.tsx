@@ -23,6 +23,8 @@ function DeliveryReceipt() {
   const [selectedOption, setSelectedOption] = useState("employee");
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+  const [requestorName, setRequestorName] = useState('')
+  const [code, setCode] = useState('')
 
   const handleItemSelect = (material: SelectedItem) => {
     if (selectedItems.length < 11) {
@@ -40,7 +42,7 @@ function DeliveryReceipt() {
   };
 
   const handlePrint = () => {
-    navigate("/download", { state: { selectedItems } });
+    navigate("/download", { state: { selectedItems, requestorName, code } });
   };
 
   return (
@@ -88,13 +90,19 @@ function DeliveryReceipt() {
                     : "Cost Center Number"}{" "}
                   <span className=" text-red-500">*</span>
                 </Label>
-                <Input className="focus:border-none w-full" />
+                <Input 
+                  className="focus:border-none w-full" 
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)} />
               </div>
               <div className="flex flex-col justify-end space-y-2 w-1/2">
                 <p className="text-sm">
                   Requestor Name <span className=" text-red-500">*</span>
                 </p>
-                <Input className="focus:border-none w-full" />
+                <Input 
+                  className="focus:border-none w-full"
+                  value={requestorName}
+                  onChange={(e) => setRequestorName(e.target.value)} />
               </div>
             </div>
 

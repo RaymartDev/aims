@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 function Downloadpdf() {
 
   const location = useLocation();
-  const { selectedItems } = location.state || { selectedItems: [] };
+  const { selectedItems, requestorName, code } = location.state || { selectedItems: [], requestorName: "", code: "" };
   
     const filledItems = [
       ...selectedItems,
@@ -18,6 +18,19 @@ function Downloadpdf() {
         remarks: "",
       }),
     ];
+
+    const currentDate = new Date();
+
+    const formattedDate = currentDate.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit"
+    });
+
+    const formattedTime = currentDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
   
     return (
       <div className="w-full">
@@ -27,16 +40,16 @@ function Downloadpdf() {
               <p className="text-3xl font-bold">3289131</p>
             </div>
             <div className="flex text-[10px] pl-20 pt-4">
-              <p className="w-[325px]">KFC Taguig Tagaytay Quezon</p>
+              <p className="w-[325px]">{requestorName}</p>
               <p className="w-[190px]">Company ni janloyd</p>
-              <p className="w-[120px]">03/16/03</p>
-              <p className="">17:02</p>
+              <p className="w-[120px]">{formattedDate}</p>
+              <p className="">{formattedTime}</p>
             </div>
             <div className="flex text-[10px] pl-20 pt-3">
               <p className="w-[800px]">
                 Blk 6 lot 11 everlasting st. Dolmar Golden Hills
               </p>
-              <p>1400</p>
+              <p>{code}</p>
             </div>
             <div className="pt-7">
               <table className="w-full table-auto pt-2">
