@@ -110,6 +110,9 @@ export async function listDepartments(page: number, limit: number): Promise<{ de
       orderBy: {
         name: 'asc',
       },
+      where: {
+        deleted: false,
+      },
     });
     if (departments && departments.length > 0) {
       const departmentsFinal = departments.map((department) => ({

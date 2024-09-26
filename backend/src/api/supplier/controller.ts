@@ -223,7 +223,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
       message = 'Successfully activated supplier';
     } else {
       // Otherwise, set it to today's date
-      newEffectiveTo = today;
+      newEffectiveTo = new Date('2019-12-31');
       message = 'Successfully de-activated supplier';
     }
 

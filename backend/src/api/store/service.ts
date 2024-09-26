@@ -133,6 +133,9 @@ export async function listStores(page: number, limit: number): Promise<{ storesF
           },
         },
       },
+      where: {
+        deleted: false,
+      },
     });
     if (stores && stores.length > 0) {
       const storesFinal: StoreType[] = stores.map((store) => ({

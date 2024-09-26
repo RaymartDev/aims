@@ -156,6 +156,9 @@ export async function listSuppliers(page: number, limit: number): Promise<{ supp
           },
         },
       },
+      where: {
+        deleted: false,
+      },
     });
 
     if (suppliers && suppliers.length > 0) {

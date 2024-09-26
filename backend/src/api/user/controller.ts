@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { generateHashedPassword, generateToken } from '../../lib';
-import { createUser, findUserByEmployeeId, findUserByStoreId, findUserByUsername, updateUser } from './service';
+import { createUser, findUserByEmployeeId, findUserByStoreId, findUserByUsername, findUserByUsernameLogin, updateUser } from './service';
 import UserRequest from '../../interfaces/UserRequest';
 import { findDepartmentByName } from '../department/service';
 import { findEmployeeById, updateEmployeeRegistration } from '../employee/service';
@@ -158,7 +158,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
   try {
     // Check if username exists
-    const findUser = await findUserByUsername(username);
+    const findUser = await findUserByUsernameLogin(username);
     if (!findUser) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
@@ -174,7 +174,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       id: findUser.id,
       username: findUser.username,
       name: findUser.name,
-      admin: findUser.role?.name === 'Admin',
+      admin: findUser.role?.name.toLowerCase().includes('admin'),
       employee_number: findUser.employee_no,
       cost_code: findUser.cost_center_code,
     });

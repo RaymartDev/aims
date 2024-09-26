@@ -110,6 +110,9 @@ export async function listMaterialTypes(page: number, limit: number): Promise<{ 
       orderBy: {
         description: 'asc',
       },
+      where: {
+        deleted: false,
+      },
     });
     if (materialTypes && materialTypes.length > 0) {
       const materialTypesFinal = materialTypes.map((materialType) => ({

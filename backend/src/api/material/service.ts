@@ -137,6 +137,9 @@ export async function listMaterials(page: number, limit: number): Promise<{ mate
         type: true,
         category: true,
       },
+      where: {
+        deleted: false,
+      },
     });
 
     if (materials && materials.length > 0) {

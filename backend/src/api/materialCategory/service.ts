@@ -111,6 +111,9 @@ export async function listMaterialCategories(page: number, limit: number): Promi
       orderBy: {
         description: 'asc',
       },
+      where: {
+        deleted: false,
+      },
     });
     if (materialCategories && materialCategories.length > 0) {
       const materialCategoriesFinal = materialCategories.map((materialCategory) => ({

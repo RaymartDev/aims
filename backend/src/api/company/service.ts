@@ -110,6 +110,9 @@ export async function listCompanies(page: number, limit: number): Promise<{ comp
       orderBy: {
         name: 'asc',
       },
+      where: {
+        deleted: false,
+      },
     });
     if (companies && companies.length > 0) {
       const companiesFinal = companies.map((company) => ({

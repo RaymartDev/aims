@@ -143,6 +143,9 @@ export async function listEmployees(page: number, limit: number): Promise<{ empl
           },
         },
       },
+      where: {
+        deleted: false,
+      },
     });
 
     if (employees && employees.length > 0) {
