@@ -64,7 +64,7 @@ export async function findMaterialTypeByName(name: string): Promise<Material_Typ
   }
 }
 
-export async function searchMaterialTypeByName(name: string): Promise<Material_Type[]> {
+export async function searchMaterialTypeByName(name: string = '**--**'): Promise<Material_Type[]> {
   try {
     const materialTypes: Material_Type[] = await prisma.material_Type.findMany({
       where: {

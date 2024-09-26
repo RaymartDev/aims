@@ -111,7 +111,7 @@ function Materials() {
                                 <div className="relative w-10/12 ">
                                     <Input
                                         type="search"
-                                        placeholder="Search Material Code"
+                                        placeholder="Search Material Code / Material Desc / Item Code"
                                         className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}

@@ -70,7 +70,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                 <Label htmlFor="company">Company</Label>
                 <Input
                   id="company"
-                  readOnly
+                  disabled
                   className="focus:border-none active:border-none"
                 />
               </div>
@@ -106,7 +106,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
             <div className="flex flex-row w-full space-x-2">
               <div className="space-y-1 w-full">
                 <Label htmlFor="request">Quantity</Label>
-                <Input id="request" type="Text" className="focus:border-none w-1/2" />
+                <Input id="request" type="Number" className="focus:border-none w-1/2" />
               </div>
               <div className="space-y-1 w-full">
                 <Label htmlFor="user">Remarks</Label>

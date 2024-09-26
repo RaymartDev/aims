@@ -125,7 +125,7 @@ function Store() {
                                 <div className="relative w-10/12">
                                     <Input
                                         type="search"
-                                        placeholder="Search Store Name"
+                                        placeholder="Search Store Name / Cost Center Code"
                                         className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { deleteEmployeeById, findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNo, updateEmployee } from './service';
+import { deleteEmployeeById, findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNoOrName, updateEmployee } from './service';
 import { findCompanyByName } from '../company/service';
 import { findDepartmentByName } from '../department/service';
 import { Employee } from '@prisma/client';
@@ -129,13 +129,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { employee_no } = req.query;
+    const { employee_no, employee_name } = req.query;
 
-    if (!employee_no || typeof employee_no !== 'string') {
-      return res.status(400).json({ error: 'Employee no query parameter is required and must be a string' });
+    if ((!employee_no || typeof employee_no !== 'string') && (!employee_name || typeof employee_name !== 'string')) {
+      return res.status(400).json({ error: 'Employee no or name query parameter is required and must be a string' });
     }
 
-    const employees: Employee[] = await searchEmployeeByEmployeeNo(employee_no as string);
+    const employees: Employee[] = await searchEmployeeByEmployeeNoOrName(employee_no as string, employee_name as string);
     if (employees.length > 0) {
       res.status(200).json({ employees, message: 'Successfully found employees' });
     }

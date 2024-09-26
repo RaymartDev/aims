@@ -65,7 +65,7 @@ export async function findMaterialCategoryByName(description: string): Promise<M
   }
 }
 
-export async function searchMaterialCategoryByName(name: string): Promise<Material_Category[]> {
+export async function searchMaterialCategoryByName(name: string = '**--**'): Promise<Material_Category[]> {
   try {
     const materialCategories: Material_Category[] = await prisma.material_Category.findMany({
       where: {

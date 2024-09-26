@@ -2,10 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { useState } from "react";
-import KFC from "../../images/KFC_LOGO.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
-  BarChart,
   Warehouse,
   UsersRound,
   Settings,
@@ -68,27 +66,12 @@ function Sidebar() {
   return (
     <div className="h-screen relative sm:w-20 xl:w-64 border-r border-black">
       <div onClick={() => navigate('/')} className="cursor-pointer flex p-6 space-x-2">
-        <img src={KFC} className="h-12 block" />
         <h1 className="text-center text-2xl text-black font-extrabold w-full items-center justify-center font-montserrat hidden xl:block">
-          Asset Inventory
+          Asset Inventory Management
         </h1>
       </div>
       <nav className="mt-10">
         <ul>
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `flex items-center sm:justify-center xl:justify-start py-2.5 px-4 h-12 transition duration-200 font-extrabold space-x-2  ${
-                  isActive ? "bg-hoverCream" : "hover:bg-hoverCream"
-                }`
-              }
-            >
-              <BarChart />
-              <h1 className="sm:hidden xl:inline">Dashboard</h1>
-            </NavLink>
-          </li>
-
           {/* Inventory */}
           <li>
             <Accordion

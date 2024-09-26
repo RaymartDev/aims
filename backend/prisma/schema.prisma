@@ -28,6 +28,8 @@ model Employee {
   modified_by_id Int? 
   modified_by User? @relation("EmployeeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   users User[]
+
+  @@index([first_name, last_name, employee_no])
 }
 
 model Store {
@@ -45,6 +47,8 @@ model Store {
   modified_by_id Int? 
   modified_by User? @relation("StoreModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   users User[]
+
+  @@index([name, cost_center_code])
 }
 
 model User {
@@ -149,6 +153,8 @@ model Supplier {
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by User? @relation("SupplierModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   deliveries Delivery[]
+
+  @@index([supplier_code])
 }
 
 model Supplier_Contact_Details {
@@ -194,6 +200,8 @@ model Material {
   inventories Inventory[]
   deliveries Delivery[]
   release_details Release_Detail[]
+
+  @@index([item_code, description, material_code])
 }
 model Inventory {
   id Int @id @default(autoincrement())
@@ -234,25 +242,27 @@ model Delivery {
 }
 
 model Release_Detail {
-  release_number Int
+  release_number BigInt
   material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
   material_id Int 
   quantity Int
   remarks String
   release Release?  @relation(fields: [release_number], references: [release_number])
+
   @@id([release_number, material_id])
+  @@index([release_number])
 }
 
 model Release {
   id Int @id @default(autoincrement())
   release_detail Release_Detail[]
-  release_number Int @unique
+  release_number BigInt @unique
   shipped_by User @relation("ShippedByRelease", fields: [shipped_by_id], references: [id], onDelete: Cascade)
   shipped_by_id Int
   received_by User @relation("ReceivedByRelease", fields: [received_by_id], references: [id], onDelete: Cascade)
   received_by_id Int
   received_date DateTime
-  status String
+  status Int
   remarks String
   deleted Boolean @default(false)
   effective_from DateTime @default(now())
@@ -260,6 +270,8 @@ model Release {
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by User? @relation("ReleaseModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+
+  @@index([release_number])
 }
 
 model Material_Category {

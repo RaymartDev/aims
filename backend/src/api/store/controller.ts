@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { deleteStoreById, findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCode, updateStore } from './service';
+import { deleteStoreById, findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCodeOrName, updateStore } from './service';
 import { findCompanyByName } from '../company/service';
 import { Store } from '@prisma/client';
 
@@ -102,13 +102,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { cost_code } = req.query;
+    const { cost_code, name } = req.query;
 
-    if (!cost_code || typeof cost_code !== 'string') {
+    if ((!cost_code || typeof cost_code !== 'string') && (!name || typeof name !== 'string')) {
       return res.status(400).json({ error: 'Cost code query parameter is required and must be a string' });
     }
 
-    const stores: Store[] = await searchStoreByCostCode(cost_code as string);
+    const stores: Store[] = await searchStoreByCostCodeOrName(cost_code as string, name as string);
     if (stores.length > 0) {
       res.status(200).json({ stores, message: 'Successfully found stores' });
     }

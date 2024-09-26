@@ -76,19 +76,15 @@ export async function updateEmployeeRegistration(status: boolean, id: number): P
   }
 }
 
-export async function searchEmployeeByEmployeeNo(employee_no: string): Promise<Employee[]> {
+export async function searchEmployeeByEmployeeNoOrName(employee_no: string = '**--**', employee_name: string = '**-**'): Promise<Employee[]> {
   try {
-    const employees: Employee[] = await prisma.employee.findMany({
-      where: {
-        employee_no: {
-          startsWith: employee_no,
-        },
-      },
-      take: 10,
-      orderBy: {
-        employee_no: 'asc',
-      },
-    });
+    const employees: Employee[] = await prisma.$queryRaw`
+      SELECT * FROM \`Employee\`
+      WHERE \`employee_no\` LIKE ${employee_no + '%'}
+      OR CONCAT(\`first_name\`, ' ', \`last_name\`) LIKE ${'%' + employee_name + '%'}
+      ORDER BY \`employee_no\`
+      LIMIT 10
+    `;
     return employees;
   } catch (error) {
     throw new Error('Database error');

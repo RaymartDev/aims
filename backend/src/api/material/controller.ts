@@ -2,7 +2,7 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { Material } from '@prisma/client';
-import { deleteMaterialById, findMaterialById, findMaterialBySku, insertMaterial, listMaterials, searchMaterialByName, updateMaterial } from './service';
+import { deleteMaterialById, findMaterialById, findMaterialBySku, insertMaterial, listMaterials, searchMaterialByNameOrCode, updateMaterial } from './service';
 import { findMaterialCategoryByName } from '../materialCategory/service';
 import { findMaterialTypeByName } from '../materialType/service';
 
@@ -98,13 +98,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { name } = req.query;
+    const { name, mat_code, item_code } = req.query;
 
-    if (!name || typeof name !== 'string') {
+    if ((!name || typeof name !== 'string') && (!mat_code || typeof mat_code !== 'string') && (!item_code || typeof item_code !== 'string')) {
       return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
     }
 
-    const materials: Material[] = await searchMaterialByName(name as string);
+    const materials: Material[] = await searchMaterialByNameOrCode(name as string, mat_code as string, item_code as string);
     if (materials.length > 0) {
       res.status(200).json({ materials, message: 'Successfully found materials' });
     }

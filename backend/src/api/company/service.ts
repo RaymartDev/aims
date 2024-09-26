@@ -64,7 +64,7 @@ export async function findCompanyByName(name: string): Promise<Company | null> {
   }
 }
 
-export async function searchCompanyByName(name: string): Promise<Company[]> {
+export async function searchCompanyByName(name: string = '**--**'): Promise<Company[]> {
   try {
     const companies: Company[] = await prisma.company.findMany({
       where: {

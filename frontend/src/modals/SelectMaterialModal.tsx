@@ -92,7 +92,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                     <div className="relative w-5/6">
                         <Input
                             type="search"
-                            placeholder="Search Material Code"
+                            placeholder="Search Material Code / Material Desc / Item Code"
                             className="pl-12 border-2 focus:border-none"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}

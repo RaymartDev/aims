@@ -64,7 +64,7 @@ export async function findDepartmentByName(name: string): Promise<Department | n
   }
 }
 
-export async function searchDepartmentByName(name: string): Promise<Department[]> {
+export async function searchDepartmentByName(name: string = '**--**'): Promise<Department[]> {
   try {
     const departments: Department[] = await prisma.department.findMany({
       where: {

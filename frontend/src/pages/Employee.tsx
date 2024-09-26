@@ -129,7 +129,7 @@ function Employee() {
                                 <div className="relative w-10/12 ">
                                     <Input
                                         type="search"
-                                        placeholder="Search Employee Name / Number"
+                                        placeholder="Search Employee First Name | Last Name / Employee Number"
                                         className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}

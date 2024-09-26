@@ -8,6 +8,10 @@ import material from './material';
 import department from './department';
 import materialCategory from './materialCategory';
 import materialType from './materialType';
+import inventory from './inventory';
+import delivery from './delivery';
+import releaseReceipt from './releaseReceipt';
+import returnReceipt from './returnReceipt';
 
 const router = express.Router();
 
@@ -20,5 +24,11 @@ router.use('/department', department);
 router.use('/material', material);
 router.use('/material-type', materialType);
 router.use('/material-category', materialCategory);
+
+// inventory routes
+router.use('/inventory', inventory);
+router.use('/delivery', delivery);
+router.use('/release-receipt', releaseReceipt);
+router.use('/return-receipt', returnReceipt);
 
 export default router;
