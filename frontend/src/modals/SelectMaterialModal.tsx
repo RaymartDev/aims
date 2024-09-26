@@ -11,8 +11,7 @@ import type MaterialType from "@/interface/material"
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
-import SearchProductModal from "./SearchProductModal";
-
+import MaterialsDetailsModal from "./MaterialsDetailsModal";
 
 interface SelectMaterialModalProps {
     open: boolean;
@@ -175,7 +174,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}>Select</Button>
                 </div>
             </div>
-            {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
+            {openSearchModal && <MaterialsDetailsModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
         </div>
         
     );
