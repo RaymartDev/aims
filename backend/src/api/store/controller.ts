@@ -102,13 +102,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { cost_code, name } = req.query;
+    const { store } = req.query;
 
-    if ((!cost_code || typeof cost_code !== 'string') && (!name || typeof name !== 'string')) {
+    if (!store || typeof store !== 'string') {
       return res.status(400).json({ error: 'Cost code query parameter is required and must be a string' });
     }
 
-    const stores: Store[] = await searchStoreByCostCodeOrName(cost_code as string, name as string);
+    const stores: Store[] = await searchStoreByCostCodeOrName(store as string);
     if (stores.length > 0) {
       res.status(200).json({ stores, message: 'Successfully found stores' });
     }

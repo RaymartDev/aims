@@ -76,19 +76,19 @@ export async function findStoreByCostCode(cost_center_code: string): Promise<Sto
   }
 }
 
-export async function searchStoreByCostCodeOrName(cost_code: string = '**--**', name: string = '**--**'): Promise<Store[]> {
+export async function searchStoreByCostCodeOrName(store: string = '**--**'): Promise<Store[]> {
   try {
     const stores: Store[] = await prisma.store.findMany({
       where: {
         OR: [
           {
             cost_center_code: {
-              startsWith: cost_code,
+              startsWith: store,
             },
           },
           {
             name: {
-              startsWith: name,
+              startsWith: store,
             },
           },
         ],

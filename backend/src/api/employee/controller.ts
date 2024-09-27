@@ -129,13 +129,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { employee_no, employee_name } = req.query;
+    const { employee } = req.query;
 
-    if ((!employee_no || typeof employee_no !== 'string') && (!employee_name || typeof employee_name !== 'string')) {
+    if (!employee || typeof employee !== 'string') {
       return res.status(400).json({ error: 'Employee no or name query parameter is required and must be a string' });
     }
 
-    const employees: Employee[] = await searchEmployeeByEmployeeNoOrName(employee_no as string, employee_name as string);
+    const employees: Employee[] = await searchEmployeeByEmployeeNoOrName(employee as string);
     if (employees.length > 0) {
       res.status(200).json({ employees, message: 'Successfully found employees' });
     }
