@@ -92,30 +92,6 @@ export async function findSupplierByCode(supplier_code: string): Promise<Supplie
   }
 }
 
-export async function searchSupplierByCode(supplier: string = '**--**'): Promise<Supplier[]> {
-  try {
-    const suppliers = await prisma.supplier.findMany({
-      where: {
-        supplier_code: {
-          startsWith: supplier,
-        },
-        company: {
-          name: {
-            startsWith: supplier,
-          },
-        },
-      },
-      take: 10,
-      orderBy: {
-        supplier_code: 'asc',
-      },
-    });
-    return suppliers;
-  } catch (error) {
-    throw new Error('Database error');
-  }
-}
-
 interface SupplierType {
   id: number;
   supplier_code: string;
@@ -132,6 +108,61 @@ interface SupplierType {
   province: string;
   zip: string;
   remarks: string;
+}
+
+export async function searchSupplierByCode(supplier_query: string = '**--**'): Promise<SupplierType[]> {
+  try {
+    const suppliers = await prisma.supplier.findMany({
+      where: {
+        OR: [
+          {
+            supplier_code: {
+              startsWith: supplier_query,
+            },
+          },
+          {
+            company: {
+              name: {
+                startsWith: supplier_query,
+              },
+            },
+          },
+        ],
+      },
+      take: 10,
+      orderBy: {
+        supplier_code: 'asc',
+      },
+      include: {
+        company: true, 
+        contact_details: true,
+      },
+    });    
+    if (suppliers && suppliers.length > 0) {
+      const suppliersFinal = suppliers.map((supplier) => ({
+        id: supplier.id,
+        supplier_code: supplier.supplier_code,
+        company_name: supplier.company.name,
+        address: supplier.address,
+        contract_term: supplier.contract_term,
+        tin_number: supplier.tin_number,
+        contact_person: supplier.contact_details.contact_person,
+        email: supplier.contact_details.email_address,
+        mobile_number: supplier.contact_details.mobile_number,
+        business_number: supplier.contact_details.business_tel,
+        teleFax: supplier.contact_details.telefax_number,
+        cityTown: supplier.contact_details.city_town,
+        province: supplier.contact_details.province,
+        zip: supplier.contact_details.zip_code,
+        remarks: supplier.contact_details.remarks,
+        active_status: activeStatus(supplier),
+      }));
+      return suppliersFinal;
+    }
+    return [];
+  } catch (error) {
+    throw new Error('Database error');
+  }
 }
 
 export async function listSuppliers(page: number, limit: number): Promise<{ suppliersFinal: SupplierType[], maxPage: number }> {
