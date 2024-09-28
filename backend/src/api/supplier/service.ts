@@ -89,12 +89,17 @@ export async function findSupplierByCode(supplier_code: string): Promise<Supplie
   }
 }
 
-export async function searchSupplierByCode(supplier_code: string = '**--**'): Promise<Supplier[]> {
+export async function searchSupplierByCode(supplier: string = '**--**'): Promise<Supplier[]> {
   try {
-    const suppliers: Supplier[] = await prisma.supplier.findMany({
+    const suppliers = await prisma.supplier.findMany({
       where: {
         supplier_code: {
-          startsWith: supplier_code,
+          startsWith: supplier,
+        },
+        company: {
+          name: {
+            startsWith: supplier,
+          },
         },
       },
       take: 10,
