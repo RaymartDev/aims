@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+import { useCallback, useEffect, useState } from "react";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { Plus, Search } from "lucide-react";
+import { Check, ChevronDown, Plus, Search } from "lucide-react";
 import { Label } from "@/Components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/Components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import SelectMaterialModal from "@/modals/SelectMaterialModal";
 import AssignToModal from "@/modals/AssignToModal";
+import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
+import type SupplierType from "@/interface/supplier" 
+import { cn, getVersion } from "@/lib/utils";
+import axios, { CancelTokenSource } from "axios";
 
 const deliveries = [
   {
@@ -282,6 +283,72 @@ function Deliveries() {
   const [openNextModal, setOpenNextModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [supplierPopOver, setSupplierPopOver] = useState<{searchTerm: string, isOpen: boolean, results: SupplierType[], selected: string}>({
+    searchTerm: '',
+    isOpen: false,
+    results: [],
+    selected: '',
+  });
+
+  const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const debounce = (func: Function, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: unknown[]) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchData = useCallback(
+    debounce(async (term: string) => {
+      if (term) {
+        try {
+          // Cancel previous request if it exists
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+          }
+
+          // Create a new CancelTokenSource
+          const source = axios.CancelToken.source();
+          setCancelTokenSource(source);
+
+          const response = await axios.get(`${getVersion()}/supplier/search?supplier_name=${term}`, {
+            cancelToken: source.token,
+            timeout: 5000,
+          });
+          setSupplierPopOver((prevState) => ({
+            ...prevState,
+            results: response.data.suppliers, // Assuming 'response.data' is an array of CategoryType
+          }));
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request canceled:', error.message);
+          } else {
+            console.error('Error fetching search results:', error);
+          }
+        }
+      } else {
+        setSupplierPopOver((prevState) => ({
+          ...prevState,
+          results: [], // Clear results if no search term
+        }));
+      }
+    }, 500), // Adjust debounce delay as needed (500ms)
+    []
+  );
+
+  useEffect(() => {
+    if (supplierPopOver.searchTerm) {
+      fetchData(supplierPopOver.searchTerm);
+    }
+  }, [supplierPopOver.searchTerm, fetchData]);
+
+
   const headerHeight = 72;
 
   const getItemsPerPage = (height: number): number => {
@@ -351,12 +418,52 @@ function Deliveries() {
               <Label htmlFor="supplier">
                 Supplier Name <span className=" text-red-500">*</span>
               </Label>
-              <Input
-                id="supplier"
-                type="Text"
-                className=" focus:border-none"
-                required
-              />
+              <Popover open={supplierPopOver.isOpen} onOpenChange={(isOpen) => setSupplierPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={supplierPopOver.isOpen}
+                    className="w-full justify-between border-black"
+                  >
+                    {supplierPopOver.selected || "Select Supplier"}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput
+                      placeholder="Search Supplier"
+                      value={supplierPopOver.searchTerm}
+                      onValueChange={(searchTerm) => setSupplierPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                    />
+                    <CommandList>
+                      <CommandEmpty>No supplier found.</CommandEmpty>
+                      {supplierPopOver.results.length > 0 && (
+                        <CommandGroup>
+                          {supplierPopOver.results.map((supplier) => (
+                            <CommandItem
+                              key={supplier.id}
+                              value={supplier.company_name}
+                              onSelect={(selected) => setSupplierPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  supplierPopOver.selected === supplier.company_name
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {supplier.company_name}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      )}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             <div>
               <Label htmlFor="DR">
