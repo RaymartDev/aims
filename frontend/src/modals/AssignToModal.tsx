@@ -206,36 +206,36 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                       aria-expanded={employeePopOver.isOpen}
                       className="w-full justify-between border-black"
                     >
-                      {employeePopOver.selected || "Select Employee Number"}
+                      {employeePopOver.selected || "Select Employee"}
                       <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
                     <Command>
                       <CommandInput
-                        placeholder="Search Employee Number"
+                        placeholder="Search Employee"
                         value={employeePopOver.searchTerm}
                         onValueChange={(searchTerm) => setEmployeePopOver((prevState) => ({ ...prevState, searchTerm }))}
                       />
                       <CommandList>
-                        <CommandEmpty>No employee number found.</CommandEmpty>
+                        <CommandEmpty>No employee found.</CommandEmpty>
                         {employeePopOver.results.length > 0 && (
                           <CommandGroup>
                             {employeePopOver.results.map((employee) => (
                               <CommandItem
                                 key={employee.id}
-                                value={employee.employee_no}
+                                value={`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
                                 onSelect={(selected) => setEmployeePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
                               >
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    employeePopOver.selected === employee.employee_no
+                                    employeePopOver.selected === `${employee.employee_no} - ${employee.first_name} ${employee.last_name}`
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}
                                 />
-                                {employee.employee_no}
+                                {`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
                               </CommandItem>
                             ))}
                           </CommandGroup>
@@ -256,36 +256,36 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                       aria-expanded={storePopOver.isOpen}
                       className="w-full justify-between border-black"
                     >
-                      {storePopOver.selected || "Select Store Number"}
+                      {storePopOver.selected || "Select Store"}
                       <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-full p-0">
                     <Command>
                       <CommandInput
-                        placeholder="Search Store Number"
+                        placeholder="Search Store"
                         value={storePopOver.searchTerm}
                         onValueChange={(searchTerm) => setStorePopOver((prevState) => ({ ...prevState, searchTerm }))}
                       />
                       <CommandList>
-                        <CommandEmpty>No cost code number found.</CommandEmpty>
+                        <CommandEmpty>No store found.</CommandEmpty>
                         {storePopOver.results.length > 0 && (
                           <CommandGroup>
                             {storePopOver.results.map((store) => (
                               <CommandItem
                                 key={store.id}
-                                value={store.cost_center_code}
+                                value={`${store.cost_center_code} - ${store.name}`}
                                 onSelect={(selected) => setStorePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
                               >
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    storePopOver.selected === store.cost_center_code
+                                    storePopOver.selected === `${store.cost_center_code} - ${store.name}`
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}
                                 />
-                                {store.cost_center_code}
+                                {`${store.cost_center_code} - ${store.name}`}
                               </CommandItem>
                             ))}
                           </CommandGroup>
