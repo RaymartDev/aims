@@ -29,6 +29,35 @@ export async function updateStore(store: any, id: number): Promise<Store | null>
   }
 }
 
+export async function updateStoreAndUser(store: any, id: number): Promise<Store | null> {
+  try {
+    const updatedStore = await prisma.store.update({
+      data: {
+        ...store,
+      },
+      where: { id },
+    });
+    const user = await prisma.user.findFirst({
+      where: {
+        store_id: id,
+      },
+    });
+    if (user) {
+      await prisma.user.update({
+        data: {
+          ...store,
+        },
+        where: {
+          id: user.id,
+        },
+      });
+    }
+    return updatedStore;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function updateStoreRegistration(status: boolean, id: number): Promise<Store | null> {
   try {
     const updatedStore = await prisma.store.update({
@@ -55,14 +84,7 @@ export async function findStoreById(id: number): Promise<Store | null> {
 }
 
 export async function deleteStoreById(id: number): Promise<Store | null> {
-  try {
-    const store = await prisma.store.delete({
-      where: { id },
-    });
-    return store;
-  } catch (error) {
-    throw new Error('Database error');
-  }
+  return updateStoreAndUser({ deleted: true }, id);
 }
 
 export async function findStoreByCostCode(cost_center_code: string): Promise<Store | null> {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { deleteStoreById, findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCodeOrName, updateStore } from './service';
+import { deleteStoreById, findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCodeOrName, updateStore, updateStoreAndUser } from './service';
 import { findCompanyByName } from '../company/service';
 import { Store } from '@prisma/client';
 
@@ -183,12 +183,12 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
       newEffectiveTo = new Date('2099-12-31');
       message = 'Successfully activated store';
     } else {
-      // Otherwise, set it to today's date
+      // Otherwise, set it to past date
       newEffectiveTo = new Date('2019-12-31');
       message = 'Successfully de-activated store';
     }
 
-    const newStore = await updateStore({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+    const newStore = await updateStoreAndUser({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
 
     return res.status(200).json({ store: newStore, message });
   } catch (err) {

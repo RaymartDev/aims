@@ -42,7 +42,10 @@ export async function findDepartmentById(id: number): Promise<Department | null>
 
 export async function deleteDepartmentById(id: number): Promise<Department | null> {
   try {
-    const department = await prisma.department.delete({
+    const department = await prisma.department.update({
+      data: {
+        deleted: true,
+      },
       where: { id },
     });
     return department;

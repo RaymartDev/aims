@@ -24,6 +24,7 @@ function ChangePassword() {
     length: false,
     uppercase: false,
     specialChar: false,
+    numeric: false,
   });
   const [isMatch, setIsMatch] = useState(true);
   const dispatch = useAppDispatch();
@@ -55,13 +56,20 @@ function ChangePassword() {
 
   useEffect(() => {
     setConditions({
-      length: newPassword.length >= 4 && newPassword.length <= 32,
+      length: (newPassword.length >= 4 && newPassword.length <= 32),
       uppercase: /[A-Z]/.test(newPassword),
+      numeric: /[0-9]/.test(newPassword),
       specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(newPassword),
     });
-
-    setIsMatch(newPassword === confirmPassword);
   }, [newPassword, confirmPassword]);
+
+  useEffect(() => {
+    if (conditions.length && conditions.uppercase && conditions.specialChar && conditions.numeric) {
+      setIsMatch(newPassword === confirmPassword);
+    } else {
+      setIsMatch(true);
+    }
+  }, [conditions, newPassword, confirmPassword])
 
   return (
     <>
@@ -112,26 +120,6 @@ function ChangePassword() {
                 {isPasswordVisible1 ? <EyeOff size={20} /> : <Eye size={20} />}
               </span>
             </div>
-            <div className="flex flex-col gap-2 pt-2">
-              {!conditions.length && (
-                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
-                  <CircleCheck size={20} />
-                  New Password must be 4-8 characters long.
-                </p>
-              )}
-              {!conditions.uppercase && (
-                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
-                  <CircleCheck size={20} />
-                  1 uppercase letter.
-                </p>
-              )}
-              {!conditions.specialChar && (
-                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
-                  <CircleCheck size={20} />
-                  1 special character.
-                </p>
-              )}
-            </div>
           </div>
           <div className="w-[40%] pt-10">
             <p className="text-sm font-semibold text-[#9E9E9E]">Confirm New Password</p>
@@ -150,6 +138,32 @@ function ChangePassword() {
               >
                 {isPasswordVisible2 ? <EyeOff size={20} /> : <Eye size={20} />}
               </span>
+            </div>
+            <div className="flex flex-col gap-2 pt-10">
+              {!conditions.length && (
+                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
+                  <CircleCheck size={20} />
+                  Must be 4-8 characters long.
+                </p>
+              )}
+              {!conditions.uppercase && (
+                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
+                  <CircleCheck size={20} />
+                  Must have at least 1 uppercase (A-Z) character.
+                </p>
+              )}
+              {!conditions.specialChar && (
+                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
+                  <CircleCheck size={20} />
+                  Must have at least 1 special character.
+                </p>
+              )}
+              {!conditions.numeric && (
+                <p className="text-sm font-semibold text-[#9E9E9E] flex items-center gap-1">
+                  <CircleCheck size={20} />
+                  Must have at least 1 numeric (0-9) character.
+                </p>
+              )}
             </div>
             {!isMatch && (
               <p className="text-sm font-semibold text-red-600">

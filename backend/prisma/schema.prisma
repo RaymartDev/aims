@@ -53,8 +53,8 @@ model Store {
 
 model User {
   id Int @id @default(autoincrement())
-  employee_id Int?     // nullable foreign key to Employee
-  store_id    Int?     // nullable foreign key to Store
+  employee_id Int?  // nullable foreign key to Employee
+  store_id    Int?  // nullable foreign key to Store
   Employee   Employee? @relation(fields: [employee_id], references: [id])
   Store      Store?   @relation(fields: [store_id], references: [id])
   role_id Int

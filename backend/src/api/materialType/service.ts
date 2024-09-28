@@ -42,7 +42,10 @@ export async function findMaterialTypeById(id: number): Promise<Material_Type | 
 
 export async function deleteMaterialTypeById(id: number): Promise<Material_Type | null> {
   try {
-    const materialType = await prisma.material_Type.delete({
+    const materialType = await prisma.material_Type.update({
+      data: {
+        deleted: true,
+      },
       where: { id },
     });
     return materialType;

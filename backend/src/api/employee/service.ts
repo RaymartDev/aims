@@ -29,6 +29,36 @@ export async function updateEmployee(employee: any, id: number): Promise<Employe
   }
 }
 
+export async function updateEmployeeAndUser(employee: any, id: number): Promise<Employee | null> {
+  try {
+    const createEmployee = await prisma.employee.update({
+      data: {
+        ...employee,
+      },
+      where: { id },
+    });
+
+    const user = await prisma.user.findFirst({
+      where: {
+        employee_id: id,
+      },
+    });
+    if (user) {
+      await prisma.user.update({
+        data: {
+          ...employee,
+        },
+        where: {
+          id: user.id,
+        },
+      });
+    }
+    return createEmployee;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function findEmployeeById(id: number): Promise<Employee | null> {
   try {
     const employee = await prisma.employee.findFirst({
@@ -41,14 +71,7 @@ export async function findEmployeeById(id: number): Promise<Employee | null> {
 }
 
 export async function deleteEmployeeById(id: number): Promise<Employee | null> {
-  try {
-    const employee = await prisma.employee.delete({
-      where: { id },
-    });
-    return employee;
-  } catch (error) {
-    throw new Error('Database error');
-  }
+  return updateEmployeeAndUser({ deleted: true }, id);
 }
 
 export async function findEmployeeByEmployeeNo(employee_no: string): Promise<Employee | null> {

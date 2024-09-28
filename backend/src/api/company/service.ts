@@ -31,7 +31,10 @@ export async function updateCompany(company: any, id: number): Promise<Company |
 
 export async function deleteCompanyById(id: number): Promise<Company | null> {
   try {
-    const company = await prisma.company.delete({
+    const company = await prisma.company.update({
+      data: {
+        deleted: true,
+      },
       where: { id },
     });
     return company;

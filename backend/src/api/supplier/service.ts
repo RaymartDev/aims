@@ -69,7 +69,10 @@ export async function findSupplierById(id: number): Promise<Supplier | null> {
 
 export async function deleteSupplierById(id: number): Promise<Supplier | null> {
   try {
-    const supplier = await prisma.supplier.delete({
+    const supplier = await prisma.supplier.update({
+      data: {
+        deleted: true,
+      },
       where: { id },
     });
     return supplier;

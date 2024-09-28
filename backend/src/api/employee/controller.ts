@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { deleteEmployeeById, findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNoOrName, updateEmployee } from './service';
+import { deleteEmployeeById, findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNoOrName, updateEmployee, updateEmployeeAndUser } from './service';
 import { findCompanyByName } from '../company/service';
 import { findDepartmentByName } from '../department/service';
 import { Employee } from '@prisma/client';
@@ -214,7 +214,7 @@ export const toggleActivate = async (req: UserRequest, res: Response, next: Next
       message = 'Successfully de-activated employee';
     }
 
-    const newEmployee = await updateEmployee({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
+    const newEmployee = await updateEmployeeAndUser({ modified_by_id: req.user?.id || 1, effective_to: newEffectiveTo }, parseInt(id));
 
     return res.status(200).json({ employee: newEmployee, message });
   } catch (err) {
