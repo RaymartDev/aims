@@ -76,12 +76,12 @@ export async function updateEmployeeRegistration(status: boolean, id: number): P
   }
 }
 
-export async function searchEmployeeByEmployeeNoOrName(employee_no: string = '**--**', employee_name: string = '**-**'): Promise<Employee[]> {
+export async function searchEmployeeByEmployeeNoOrName(employee: string = '**--**'): Promise<Employee[]> {
   try {
     const employees: Employee[] = await prisma.$queryRaw`
       SELECT * FROM \`Employee\`
-      WHERE \`employee_no\` LIKE ${employee_no + '%'}
-      OR CONCAT(\`first_name\`, ' ', \`last_name\`) LIKE ${'%' + employee_name + '%'}
+      WHERE \`employee_no\` LIKE ${employee + '%'}
+      OR CONCAT(\`first_name\`, ' ', \`last_name\`) LIKE ${'%' + employee + '%'}
       ORDER BY \`employee_no\`
       LIMIT 10
     `;

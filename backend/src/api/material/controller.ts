@@ -98,13 +98,13 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { name, mat_code, item_code } = req.query;
+    const { material } = req.query;
 
-    if ((!name || typeof name !== 'string') && (!mat_code || typeof mat_code !== 'string') && (!item_code || typeof item_code !== 'string')) {
+    if (!material || typeof material !== 'string') {
       return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
     }
 
-    const materials: Material[] = await searchMaterialByNameOrCode(name as string, mat_code as string, item_code as string);
+    const materials: Material[] = await searchMaterialByNameOrCode(material as string);
     if (materials.length > 0) {
       res.status(200).json({ materials, message: 'Successfully found materials' });
     }

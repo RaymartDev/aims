@@ -78,24 +78,24 @@ export async function findMaterialByName(name: string): Promise<Material | null>
   }
 }
 
-export async function searchMaterialByNameOrCode(name: string = '**--**', mat_code: string = '**--**', item_code: string = '**--**'): Promise<Material[]> {
+export async function searchMaterialByNameOrCode(material: string = '**--**'): Promise<Material[]> {
   try {
     const materials: Material[] = await prisma.material.findMany({
       where: {
         OR: [
           {
             description: {
-              startsWith: name,
+              startsWith: material,
             },
           },
           {
             material_code: {
-              startsWith: mat_code,
+              startsWith: material,
             },
           },
           {
             item_code: {
-              startsWith: item_code,
+              startsWith: material,
             },
           },
         ],
