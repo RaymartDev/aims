@@ -64,7 +64,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
           const source = axios.CancelToken.source();
           setCancelTokenSource(source);
 
-          const response = await axios.get(`${getVersion()}/employee/search?employee_no=${term}`, {
+          const response = await axios.get(`${getVersion()}/employee/search?employee=${term}`, {
             cancelToken: source.token,
             timeout: 5000,
           });
@@ -102,7 +102,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
           const source = axios.CancelToken.source();
           setCancelTokenSource(source);
 
-          const response = await axios.get(`${getVersion()}/store/search?cost_code=${term}`, {
+          const response = await axios.get(`${getVersion()}/store/search?store=${term}`, {
             cancelToken: source.token,
             timeout: 5000,
           });
