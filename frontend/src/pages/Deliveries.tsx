@@ -317,7 +317,7 @@ function Deliveries() {
           const source = axios.CancelToken.source();
           setCancelTokenSource(source);
 
-          const response = await axios.get(`${getVersion()}/supplier/search?supplier_name=${term}`, {
+          const response = await axios.get(`${getVersion()}/supplier/search?supplier_code=${term}`, {
             cancelToken: source.token,
             timeout: 5000,
           });
@@ -444,18 +444,18 @@ function Deliveries() {
                           {supplierPopOver.results.map((supplier) => (
                             <CommandItem
                               key={supplier.id}
-                              value={supplier.company_name}
+                              value={supplier.supplier_code}
                               onSelect={(selected) => setSupplierPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  supplierPopOver.selected === supplier.company_name
+                                  supplierPopOver.selected === supplier.supplier_code
                                     ? "opacity-100"
                                     : "opacity-0"
                                 )}
                               />
-                              {supplier.company_name}
+                              {supplier.supplier_code}
                             </CommandItem>
                           ))}
                         </CommandGroup>

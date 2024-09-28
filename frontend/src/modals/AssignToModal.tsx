@@ -68,6 +68,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
             cancelToken: source.token,
             timeout: 5000,
           });
+          
           setEmployeePopOver((prevState) => ({
             ...prevState,
             results: response.data.employees, // Assuming 'response.data' is an array of CategoryType
@@ -106,6 +107,7 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
             cancelToken: source.token,
             timeout: 5000,
           });
+
           setStorePopOver((prevState) => ({
             ...prevState,
             results: response.data.stores, // Assuming 'response.data' is an array of CategoryType
@@ -301,13 +303,13 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
                     ? "Employee Name"
                     : "Store Name"}
                 </Label>
-                <Input id="name" className="focus:border-none" />
+                <Input id="name" className="focus:border-none" readOnly/>
               </div>
               <div className="space-y-1 w-1/2">
                 <Label htmlFor="company">Company</Label>
                 <Input
                   id="company"
-                  disabled
+                  readOnly
                   className="focus:border-none active:border-none"
                 />
               </div>
