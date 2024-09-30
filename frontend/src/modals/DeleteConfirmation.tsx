@@ -1,15 +1,50 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { X, Loader } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { useState } from "react";
+import CompanyType from "@/interface/company";
+import axios from "axios";
+import { getVersion } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 
 interface DeleteConfirmationProps {
     open: boolean;
     onClose: () => void;
+    company: CompanyType | null;
+    handleDelete: (company: CompanyType | null) => void;
   }
   
-  function DeleteConfirmation({ open, onClose}: DeleteConfirmationProps) {
+  function DeleteConfirmation({ open, onClose, company, handleDelete }: DeleteConfirmationProps) {
     const [loading, setLoading] = useState(false);
+
+    const handleDeleteConfirmation = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      setLoading(true);
+
+      try {
+        const response = await axios.delete(`${getVersion()}/company/delete/${company?.id || 0}`);
+        if (response.status >= 200 && response.status < 300) {
+          toast.success(response.data?.message || 'Successfully deleted company');
+          handleDelete(company);
+          setLoading(false);
+          onClose();
+        } else {
+          setLoading(false);
+          onClose();
+        }
+      }catch (err) {
+        if (axios.isAxiosError(err)) {
+            toast.error(err.response?.data?.message || 'Something went wrong');
+          } else {
+            toast.error('Something went wrong')
+        }
+        setLoading(false);
+        onClose();
+      }
+    }
   
     return (
       <div className={`fixed inset-0 bg-black bg-opacity-75 flex justify-center z-50 items-center ${open ? 'block' : 'hidden'}`}>
@@ -26,9 +61,7 @@ interface DeleteConfirmationProps {
           <div className="w-full flex justify-center gap-5 px-3 py-2">
           <Button
               className="bg-hoverCream text-fontHeading font-semibold hover:text-white px-5 py-3 items-center"
-              onClick={() => {
-                setLoading(true);
-              }}
+              onClick={(e) => handleDeleteConfirmation(e)}
             >
               {loading ? (
                 <Loader className="animate-spin" />

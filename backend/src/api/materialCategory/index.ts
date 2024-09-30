@@ -9,7 +9,7 @@ router.put('/update/:id', authenticateToken, update);
 router.get('/get/:id', authenticateToken, getOne);
 router.get('/search', authenticateToken, search);
 router.get('/list', authenticateToken, list);
-router.get('/activate:id', authenticateToken, toggleActivate);
-router.delete('/delete:id', authenticateToken, deleteOne);
+router.get('/activate/:id', authenticateToken, toggleActivate);
+router.delete('/delete/:id', authenticateToken, deleteOne);
 
 export default router;

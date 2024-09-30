@@ -192,6 +192,8 @@ model Material {
   category Material_Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   date_entry DateTime
   deleted Boolean @default(false)
+  serial_number String?
+  asset_number String?
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt

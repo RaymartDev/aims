@@ -26,6 +26,7 @@ function Company() {
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [deleteCompany, setDeleteCompany] = useState<CompanyType | null>(null);
 
     const [filteredCompany, setFilteredCompany] = useState<CompanyType[]>([]);
 
@@ -37,6 +38,15 @@ function Company() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    const handleDelete = (company: CompanyType | null) => {
+        if (company) {
+            setCompanies((prevCompanies) =>
+                prevCompanies.filter((c) => c.id !== company.id)
+            );
+            setDeleteCompany(null);
+        }
+    }
 
     const updateCompany = (updatedCompany: CompanyType | null) => {
         if (updatedCompany) {
@@ -152,7 +162,10 @@ function Company() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                            setDeleteCompany(company);
+                                            setopenDeleteModal(true);
+                                        }}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -199,7 +212,7 @@ function Company() {
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={handleDelete} company={deleteCompany} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
             {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
         </div>
     );
