@@ -32,7 +32,7 @@ export async function updateDepartment(department: any, id: number): Promise<Dep
 export async function findDepartmentById(id: number): Promise<Department | null> {
   try {
     const department = await prisma.department.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return department;
   } catch (error) {
@@ -73,6 +73,13 @@ export async function searchDepartmentByName(name: string = '**--**'): Promise<D
       where: {
         name: {
           startsWith: name,
+        },
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
         },
       },
       take: 10,

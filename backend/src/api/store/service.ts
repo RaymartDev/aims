@@ -75,7 +75,7 @@ export async function updateStoreRegistration(status: boolean, id: number): Prom
 export async function findStoreById(id: number): Promise<Store | null> {
   try {
     const store = await prisma.store.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return store;
   } catch (error) {
@@ -90,7 +90,7 @@ export async function deleteStoreById(id: number): Promise<Store | null> {
 export async function findStoreByCostCode(cost_center_code: string): Promise<Store | null> {
   try {
     const store = await prisma.store.findFirst({
-      where: { cost_center_code },
+      where: { cost_center_code, deleted: false },
     });
     return store;
   } catch (error) {
@@ -102,6 +102,13 @@ export async function searchStoreByCostCodeOrName(store: string = '**--**'): Pro
   try {
     const stores: Store[] = await prisma.store.findMany({
       where: {
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
+        },
         OR: [
           {
             cost_center_code: {

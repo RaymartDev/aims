@@ -46,7 +46,7 @@ export async function deleteCompanyById(id: number): Promise<Company | null> {
 export async function findCompanyById(id: number): Promise<Company | null> {
   try {
     const company = await prisma.company.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return company;
   } catch (error) {
@@ -59,7 +59,7 @@ export async function findCompanyByName(name: string): Promise<Company | null> {
     const dept = await prisma.company.findFirst({
       where: { name: {
         equals: name,
-      } },
+      }, deleted: false },
     });
     return dept;
   } catch (error) {
@@ -73,6 +73,13 @@ export async function searchCompanyByName(name: string = '**--**'): Promise<Comp
       where: {
         name: {
           startsWith: name,
+        },
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
         },
       },
       take: 10,
