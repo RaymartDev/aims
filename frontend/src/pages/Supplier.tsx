@@ -15,6 +15,7 @@ import EditSupplierModal2 from "@/modals/EditSupplierModal2";
 import ViewSupplierModal from "@/modals/ViewSupplierModal";
 import ViewSupplierModal2 from "@/modals/ViewSupplierModal2";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 import SearchSupplierModal from "@/modals/SearchSupplierModal";
 import type SupplierType from "@/interface/supplier";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -31,6 +32,7 @@ function Supplier() {
     const [openNextEditModal, setOpenNextEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeativateModal] =useState(false);
     const [openNextViewModal, setOpenNextViewModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchSupplier, setSearchSupplier] = useState<SupplierType | null>(null);
@@ -334,7 +336,7 @@ function Supplier() {
                                                         setViewSupplier(supplier);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>{supplier.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenDeativateModal(true)}>{supplier.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -413,6 +415,7 @@ function Supplier() {
                 }} 
                 onBack={handleViewBack}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
             {openSearchModal && <SearchSupplierModal supplier={searchSupplier} onClose={() => {setOpenSearchModal(false); setSearchSupplier(null);}}/>}
         </>
     );

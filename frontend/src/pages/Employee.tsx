@@ -15,6 +15,7 @@ import UserRegistration from "@/modals/UserRegistration";
 import EditEmployeeModal from "@/modals/EditEmployeeModal";
 import ViewEmployeeModal from "@/modals/ViewEmployeeModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 import SearchEmployeeModal from "@/modals/SearchEmployeeModal";
 import type EmployeeType from "@/interface/employee";
 import { fetchData, formatDateAsString, getVersion } from "@/lib/utils";
@@ -31,6 +32,7 @@ function Employee() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchEmployee, setSearchEmployee] = useState<EmployeeType | null>(null);
     const [viewEmployee, setViewEmployee] = useState<EmployeeType | null>(null);
@@ -204,7 +206,7 @@ function Employee() {
                                                         setViewEmployee(employee);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>{employee.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenDeactivateModal(true)}>{employee.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);
                                                         setOpenUserRegModal(true);
@@ -250,11 +252,12 @@ function Employee() {
             {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeactivateModal (false)}/>}
             {openViewModal && <ViewEmployeeModal 
                 employee={viewEmployee} 
                 onClose={() => {
                     setOpenViewModal(false);
-                    setViewEmployee(null);
+                    setViewEmployee(null);  
                 }}/>}
             {openSearchModal && <SearchEmployeeModal employee={searchEmployee} onClose={() => {setOpenSearchModal(false); setSearchEmployee(null);}}/>}
         </>

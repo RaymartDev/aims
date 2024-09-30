@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddDepartmentModal from "@/modals/AddDepartmentModal";
 import EditDepartmentModal from "@/modals/EditDepartmentModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 import SearchDepartmentModal from "@/modals/SearchDepartmentModal";
 import type DepartmentType from "@/interface/department";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -22,6 +23,7 @@ function Department() {
     const [editModal, setEditModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState<DepartmentType | null>(null);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeativateModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchDepartment, setSearchDepartment] = useState<DepartmentType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -160,7 +162,7 @@ function Department() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>{department.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setOpenDeativateModal(true)}>{department.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -200,6 +202,7 @@ function Department() {
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)}/>}
             {openSearchModal && <SearchDepartmentModal department={searchDepartment} onClose={() => {setOpenSearchModal(false); setSearchDepartment(null);}}/>}
         </div>
     );

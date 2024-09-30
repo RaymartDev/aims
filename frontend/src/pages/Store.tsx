@@ -12,6 +12,7 @@ import AddStoreModal from "@/modals/AddStoreModal";
 import EditStoreModal from "@/modals/EditStoreModal";
 import ViewStoreModal from "@/modals/ViewStoreModal"
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 import SearchStoreModal from "@/modals/SearchStoreModal";
 import type StoreType from "@/interface/store";
 import UserRegistrationStore from "@/modals/UserRegistrationStore";
@@ -26,6 +27,7 @@ function Store() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchStore, setSearchStore] = useState<StoreType | null>(null);
     const [viewStore, setViewStore] = useState<StoreType | null>(null);
@@ -192,7 +194,7 @@ function Store() {
                                                         setViewStore(store);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => setOpenDeactivateModal(true)}>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={store.registered_status} onClick={() => {
                                                         setRegStore(store);
                                                         setOpenUserRegModal(true);
@@ -238,6 +240,7 @@ function Store() {
             {openUserRegModal && <UserRegistrationStore registerStore={registerStore} store={regStore} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditStoreModal updateStore={updateStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)}/>}
             {openViewModal && <ViewStoreModal 
                 store={viewStore}
                 onClose={() => {

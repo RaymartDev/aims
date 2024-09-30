@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import AddCompanyModal from "@/modals/AddCompanyModal";
 import EditCompanyModal from "@/modals/EditCompanyModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 import SearchCompanyModal from "@/modals/SearchCompanyModal";
 import type CompanyType from "@/interface/company";
 import { fetchData, getVersion } from "@/lib/utils";
@@ -21,6 +22,7 @@ function Company() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeativateModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchCompany, setSearchCompany] = useState<CompanyType | null>(null);
     const [companies, setCompanies] = useState<CompanyType[]>([])
@@ -173,7 +175,7 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setOpenDeativateModal(true)}>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -213,6 +215,7 @@ function Company() {
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={handleDelete} company={deleteCompany} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
             {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
         </div>
     );
