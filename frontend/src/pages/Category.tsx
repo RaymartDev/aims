@@ -65,7 +65,7 @@ function Category() {
         if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/material-category/search`,
-                query: {desc: debouncedQuery },
+                query: {category: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredCategory(data.material_categories);
                 },

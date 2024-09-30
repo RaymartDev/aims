@@ -64,12 +64,12 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { desc } = req.query;
+    const { category } = req.query;
 
-    if (!desc || typeof desc !== 'string') {
-      return res.status(400).json({ error: 'Desc query parameter is required and must be a string' });
+    if (!category || typeof category !== 'string') {
+      return res.status(400).json({ error: 'Category query parameter is required and must be a string' });
     }
-    const materialCategories = await searchMaterialCategoryByName(desc as string);
+    const materialCategories = await searchMaterialCategoryByName(category as string);
     res.status(200).json({ material_categories: materialCategories, message: 'Successfully found material categories' });
   } catch (err) {
     next(err);

@@ -120,12 +120,12 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { name } = req.query;
+    const { company } = req.query;
 
-    if (!name || typeof name !== 'string') {
-      return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
+    if (!company || typeof company !== 'string') {
+      return res.status(400).json({ error: 'Company query parameter is required and must be a string' });
     }
-    const companies = await searchCompanyByName(name as string);
+    const companies = await searchCompanyByName(company as string);
     if (companies.length > 0) {
       res.status(200).json({ companies, message: 'Successfully found companies' });
     }

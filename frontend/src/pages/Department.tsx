@@ -62,7 +62,7 @@ function Department() {
         if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/department/search`,
-                query: {name: debouncedQuery },
+                query: {department: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredDepartment(data.departments.slice(0, 10));
                 },

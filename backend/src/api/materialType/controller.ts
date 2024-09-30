@@ -64,12 +64,12 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { desc } = req.query;
+    const { type } = req.query;
 
-    if (!desc || typeof desc !== 'string') {
-      return res.status(400).json({ error: 'Desc query parameter is required and must be a string' });
+    if (!type || typeof type !== 'string') {
+      return res.status(400).json({ error: 'Type query parameter is required and must be a string' });
     }
-    const materialTypes = await searchMaterialTypeByName(desc as string);
+    const materialTypes = await searchMaterialTypeByName(type as string);
     if (materialTypes.length > 0) {
       res.status(200).json({ materialTypes, message: 'Successfully found material types' });
     }

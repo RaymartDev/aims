@@ -100,9 +100,9 @@ function Company() {
         if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/company/search`,
-                query: {name: debouncedQuery },
+                query: {company: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredCompany(data.companies.slice(0, 10));
+                    setFilteredCompany(data.companies);
                 },
                 dispatch,
                 logout: () => dispatch(logout())

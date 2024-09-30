@@ -64,12 +64,12 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
 export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const { name } = req.query;
+    const { department } = req.query;
 
-    if (!name || typeof name !== 'string') {
-      return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
+    if (!department || typeof department !== 'string') {
+      return res.status(400).json({ error: 'Department query parameter is required and must be a string' });
     }
-    const departments = await searchDepartmentByName(name as string);
+    const departments = await searchDepartmentByName(department as string);
     if (departments.length > 0) {
       res.status(200).json({ departments, message: 'Successfully found departments' });
     }

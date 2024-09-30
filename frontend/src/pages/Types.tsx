@@ -67,7 +67,7 @@ function Types() {
         if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/material-type/search`,
-                query: {desc: debouncedQuery },
+                query: {type: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredType(data.materialTypes.slice(0, 10));
                 },
