@@ -59,6 +59,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
 
       if (newSupplier) {
         res.status(200).json({ supplier: newSupplier, contact_details: newSupplierDetails, message: 'Successfully created supplier' });
+      } else {
+        res.status(500).json({ message: 'Server error' });
       }
     }
   } catch (err) {
@@ -132,6 +134,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newSupplierContact = await updateSupplierContact({ ...updateContact }, newSupplier?.contact_id || 1);
     if (newSupplier) {
       res.status(200).json({ supplier: newSupplier, supplierContact: newSupplierContact, message: 'Successfully updated supplier' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -147,9 +151,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const suppliers = await searchSupplierByCode(supplier as string);
-    if (suppliers.length > 0) {
-      res.status(200).json({ suppliers, message: 'Successfully found suppliers' });
-    }
+    res.status(200).json({ suppliers, message: 'Successfully found suppliers' });
   } catch (err) {
     next(err);
   }
@@ -172,6 +174,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: suppliers.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

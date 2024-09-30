@@ -13,6 +13,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newCompany = await insertCompany({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newCompany) {
       res.status(200).json({ company: newCompany, message: 'Successfully created company' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -112,6 +114,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newCompany = await updateCompany({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newCompany) {
       res.status(200).json({ company: newCompany, message: 'Successfully updated company' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -125,10 +129,8 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     if (!company || typeof company !== 'string') {
       return res.status(400).json({ error: 'Company query parameter is required and must be a string' });
     }
-    const companies = await searchCompanyByName(company as string);
-    if (companies.length > 0) {
-      res.status(200).json({ companies, message: 'Successfully found companies' });
-    }
+    const companies = await searchCompanyByName(company);
+    res.status(200).json({ companies, message: 'Successfully searched' });
   } catch (err) {
     next(err);
   }
@@ -151,6 +153,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: companies.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

@@ -10,9 +10,7 @@ const generateHashedPassword = (password: string): Promise<string> => {
   return bcrypt.hash(password, 10);
 };
 
-type HasEffectiveTo = { effective_to: string | Date };
-
-const activeStatus = <T extends HasEffectiveTo>(obj: T): boolean => {
+const activeStatus = (obj: any): boolean => {
   const today = new Date();
   const effectiveTo = new Date(obj.effective_to);
 

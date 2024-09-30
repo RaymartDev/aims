@@ -31,6 +31,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newMaterial = await insertMaterial({ ...updateData });
     if (newMaterial) {
       res.status(200).json({ material: newMaterial, message: 'Successfully created material' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -89,6 +91,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newMaterial = await updateMaterial({ ...updateData }, parseInt(id));
     if (newMaterial) {
       res.status(200).json({ material: newMaterial, message: 'Successfully updated material' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -104,9 +108,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const materials = await searchMaterialByNameOrCode(material as string);
-    if (materials.length > 0) {
-      res.status(200).json({ materials, message: 'Successfully found materials' });
-    }
+    res.status(200).json({ materials, message: 'Successfully found materials' });
   } catch (err) {
     next(err);
   }
@@ -130,6 +132,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: materials.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

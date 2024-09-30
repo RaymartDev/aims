@@ -13,6 +13,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newDepartment = await insertDepartment({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newDepartment) {
       res.status(200).json({ department: newDepartment, message: 'Successfully created department' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -56,6 +58,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newDepartment = await updateDepartment({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newDepartment) {
       res.status(200).json({ department: newDepartment, message: 'Successfully updated department' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -70,9 +74,8 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Department query parameter is required and must be a string' });
     }
     const departments = await searchDepartmentByName(department as string);
-    if (departments.length > 0) {
-      res.status(200).json({ departments, message: 'Successfully found departments' });
-    }
+    res.status(200).json({ departments, message: 'Successfully found departments' });
+
   } catch (err) {
     next(err);
   }
@@ -95,6 +98,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: departments.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

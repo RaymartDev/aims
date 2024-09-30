@@ -8,6 +8,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newInventory = await insertInventory({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newInventory) {
       res.status(200).json({ inventory: newInventory, message: 'Successfully created inventory' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -46,6 +48,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newInventory = await updateInventory({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newInventory) {
       res.status(200).json({ inventory: newInventory, message: 'Successfully updated inventory' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -60,9 +64,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Inventory query parameter is required and must be a string' });
     }
     const inventories = await searchInventory(inventory as string);
-    if (inventories.length > 0) {
-      res.status(200).json({ inventories, message: 'Successfully found inventories' });
-    }
+    res.status(200).json({ inventories, message: 'Successfully found inventories' });
   } catch (err) {
     next(err);
   }
@@ -85,6 +87,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: inventories.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

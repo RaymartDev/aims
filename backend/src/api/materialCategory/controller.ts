@@ -13,6 +13,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newMaterialCategory = await insertMaterialCategory({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newMaterialCategory) {
       res.status(200).json({ material_category: newMaterialCategory, message: 'Successfully created material category' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -56,6 +58,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newMaterialCategory = await updateMaterialCategory({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialCategory) {
       res.status(200).json({ material_category: newMaterialCategory, message: 'Successfully updated material category' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -93,6 +97,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: materialCategories.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

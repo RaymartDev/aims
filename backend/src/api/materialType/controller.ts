@@ -13,6 +13,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newMaterialType = await insertMaterialType({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newMaterialType) {
       res.status(200).json({ materialType: newMaterialType, message: 'Successfully created material type' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -56,6 +58,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newMaterialType = await updateMaterialType({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newMaterialType) {
       res.status(200).json({ materialType: newMaterialType, message: 'Successfully updated type' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -70,9 +74,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Type query parameter is required and must be a string' });
     }
     const materialTypes = await searchMaterialTypeByName(type as string);
-    if (materialTypes.length > 0) {
-      res.status(200).json({ materialTypes, message: 'Successfully found material types' });
-    }
+    res.status(200).json({ materialTypes, message: 'Successfully found material types' });
   } catch (err) {
     next(err);
   }
@@ -95,6 +97,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: materialTypes.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

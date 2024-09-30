@@ -8,6 +8,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newDelivery = await insertDelivery({ modified_by_id: req.user?.id || 1, ...req.body });
     if (newDelivery) {
       res.status(200).json({ delivery: newDelivery, message: 'Successfully created delivery' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -46,6 +48,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newDelivery = await updateDelivery({ modified_by_id: req.user?.id || 1, ...req.body }, parseInt(id));
     if (newDelivery) {
       res.status(200).json({ delivery: newDelivery, message: 'Successfully updated delivery' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -60,9 +64,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Delivery query parameter is required and must be a string' });
     }
     const deliveries = await searchDeliveryByReferenceOrDesc(delivery as string);
-    if (deliveries.length > 0) {
-      res.status(200).json({ deliveries, message: 'Successfully found deliveries' });
-    }
+    res.status(200).json({ deliveries, message: 'Successfully found deliveries' });
   } catch (err) {
     next(err);
   }
@@ -85,6 +87,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           maxPage: deliveries.maxPage || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

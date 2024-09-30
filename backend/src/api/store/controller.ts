@@ -33,6 +33,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     });
     if (newStore) {
       res.status(200).json({ store: newStore, message: 'Successfully created store' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -93,6 +95,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
 
     if (newStore) {
       res.status(200).json({ store: newStore, message: 'Successfully updated store' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -108,9 +112,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const stores = await searchStoreByCostCodeOrName(store as string);
-    if (stores.length > 0) {
-      res.status(200).json({ stores, message: 'Successfully found stores' });
-    }
+    res.status(200).json({ stores, message: 'Successfully found stores' });
   } catch (err) {
     next(err);
   }
@@ -133,6 +135,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           totalPages: stores.totalPages || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);

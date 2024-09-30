@@ -51,6 +51,8 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
 
     if (newEmployee) {
       res.status(200).json({ employee: newEmployee, message: 'Successfully created employee' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
@@ -119,6 +121,8 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     const newEmployee = await updateEmployee(updateData, parseInt(id));
     if (newEmployee) {
       res.status(200).json({ employee: newEmployee, message: 'Successfully updated employee' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
 
   } catch (err) {
@@ -135,9 +139,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const employees = await searchEmployeeByEmployeeNoOrName(employee as string);
-    if (employees.length > 0) {
-      res.status(200).json({ employees, message: 'Successfully found employees' });
-    }
+    res.status(200).json({ employees, message: 'Successfully found employees' });
   } catch (err) {
     next(err);
   }
@@ -159,6 +161,8 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
           totalPages: employees.totalPages || 1,
         },
       });
+    } else {
+      res.status(500).json({ message: 'Server error' });
     }
   } catch (err) {
     next(err);
