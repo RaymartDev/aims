@@ -29,6 +29,7 @@ function Company() {
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [deleteCompany, setDeleteCompany] = useState<CompanyType | null>(null);
+    const [toggleCompany, setToggleCompany] = useState<CompanyType | null>(null);
 
     const [filteredCompany, setFilteredCompany] = useState<CompanyType[]>([]);
 
@@ -49,6 +50,16 @@ function Company() {
             setDeleteCompany(null);
         }
     }
+
+    const handleToggle = (company: CompanyType | null) => {
+        if (company) {
+          setCompanies((prevCompanies) =>
+            prevCompanies.map((c) =>
+              c.id === company.id ? { ...c, activate_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateCompany = (updatedCompany: CompanyType | null) => {
         if (updatedCompany) {
@@ -175,7 +186,10 @@ function Company() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem onClick={() => setOpenDeativateModal(true)}>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => {
+                                                    setToggleCompany(company);
+                                                    setOpenDeativateModal(true);
+                                                }}>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -214,8 +228,8 @@ function Company() {
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCompany)} link={`company/${deleteCompany?.id || 0}`} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCompany)} link={`company/delete/${deleteCompany?.id || 0}`} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleCompany?.active_status || true} handleToggle={() => handleToggle(toggleCompany)} link={`company/toggle/${toggleCompany?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
             {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
         </div>
     );
