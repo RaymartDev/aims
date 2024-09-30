@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { Department } from '@prisma/client';
 import { deleteDepartmentById, findDepartmentById, findDepartmentByName, insertDepartment, listDepartments, searchDepartmentByName, updateDepartment } from './service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -70,7 +69,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
     if (!name || typeof name !== 'string') {
       return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
     }
-    const departments: Department[] = await searchDepartmentByName(name as string);
+    const departments = await searchDepartmentByName(name as string);
     if (departments.length > 0) {
       res.status(200).json({ departments, message: 'Successfully found departments' });
     }

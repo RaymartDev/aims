@@ -67,7 +67,13 @@ export async function findDepartmentByName(name: string): Promise<Department | n
   }
 }
 
-export async function searchDepartmentByName(name: string = '**--**'): Promise<Department[]> {
+interface DepartmentType {
+  id: number;
+  name: string;
+  active_status: boolean;
+}
+
+export async function searchDepartmentByName(name: string = '**--**'): Promise<DepartmentType[]> {
   try {
     const departments: Department[] = await prisma.department.findMany({
       where: {
@@ -87,15 +93,18 @@ export async function searchDepartmentByName(name: string = '**--**'): Promise<D
         name: 'asc',
       },
     });
-    return departments;
+    if (departments && departments.length > 0) {
+      const departmentsFinal = departments.map((department) => ({
+        id: department.id,
+        name: department.name,
+        active_status: activeStatus(department),
+      }));
+      return departmentsFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }
-}
-
-interface DepartmentType {
-  id: number;
-  name: string;
 }
 
 export async function listDepartments(page: number, limit: number): Promise<{ departmentsFinal: DepartmentType[], maxPage: number }> {

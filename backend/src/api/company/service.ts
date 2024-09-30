@@ -67,7 +67,13 @@ export async function findCompanyByName(name: string): Promise<Company | null> {
   }
 }
 
-export async function searchCompanyByName(name: string = '**--**'): Promise<Company[]> {
+interface CompanyType {
+  id: number;
+  name: string;
+  active_status: boolean;
+}
+
+export async function searchCompanyByName(name: string = '**--**'): Promise<CompanyType[]> {
   try {
     const companies: Company[] = await prisma.company.findMany({
       where: {
@@ -87,15 +93,18 @@ export async function searchCompanyByName(name: string = '**--**'): Promise<Comp
         name: 'asc',
       },
     });
-    return companies;
+    if (companies && companies.length > 0) {
+      const companiesFinal = companies.map((company) => ({
+        id: company.id,
+        name: company.name,
+        active_status: activeStatus(company),
+      }));
+      return companiesFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }
-}
-
-interface CompanyType {
-  id: number;
-  name: string;
 }
 
 export async function listCompanies(page: number, limit: number): Promise<{ companiesFinal: CompanyType[], maxPage: number }> {
