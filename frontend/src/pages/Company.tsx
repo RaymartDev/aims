@@ -18,6 +18,7 @@ import type CompanyType from "@/interface/company";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import useDebounce from "@/hooks/useDebounce";
 
 function Company() {
     const [openModal, setOpenModal] = useState(false);
@@ -31,6 +32,7 @@ function Company() {
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const debouncedQuery = useDebounce(searchQuery, 250);
 
     const [deleteCompany, setDeleteCompany] = useState<CompanyType | null>(null);
     const [toggleCompany, setToggleCompany] = useState<CompanyType | null>(null);
@@ -95,10 +97,10 @@ function Company() {
 
 
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/company/search`,
-                query: {name: searchQuery },
+                query: {name: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredCompany(data.companies.slice(0, 10));
                 },
@@ -108,7 +110,7 @@ function Company() {
         } else {
             setFilteredCompany([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     const handleSelectCompany = (company: CompanyType) => {
         setSearchCompany(company);

@@ -18,6 +18,7 @@ import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
+import useDebounce from "@/hooks/useDebounce";
 
 function Category() {
     const [openModal, setOpenModal] = useState(false);
@@ -27,6 +28,7 @@ function Category() {
     const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const debouncedQuery = useDebounce(searchQuery, 250);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchCategory, setSearchCategory] = useState<CategoryType | null>(null);
     const [deleteCategory, setDeleteCategory] = useState<CategoryType | null>(null);
@@ -60,12 +62,12 @@ function Category() {
       }, [loadCategories]);
 
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/material-category/search`,
-                query: {desc: searchQuery },
+                query: {desc: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredCategory(data.material_categories.slice(0, 10));
+                    setFilteredCategory(data.material_categories);
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -73,7 +75,7 @@ function Category() {
         } else {
             setFilteredCategory([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     const handleSelectCategory = (category: CategoryType) => {
         setSearchCategory(category);

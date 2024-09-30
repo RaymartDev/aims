@@ -20,6 +20,7 @@ import UserRegistrationStore from "@/modals/UserRegistrationStore";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import useDebounce from "@/hooks/useDebounce";
 
 function Store() {
     const [openAddModal, setOpenAddModal] = useState(false);
@@ -37,6 +38,7 @@ function Store() {
     const [deleteStore, setDeleteStore] = useState<StoreType | null>(null);
     const [toggleStore, setToggleStore] = useState<StoreType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const debouncedQuery = useDebounce(searchQuery, 250);
 
     const [filteredStores, setFilteredStores] = useState<StoreType[]>([]);
 
@@ -67,10 +69,10 @@ function Store() {
     };
     
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/store/search`,
-                query: {store: searchQuery },
+                query: {store: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredStores(data.stores.slice(0, 10));
                 },
@@ -80,7 +82,7 @@ function Store() {
         } else {
             setFilteredStores([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     const handleSelectStore = (store: StoreType) => {
         setSearchStore(store);

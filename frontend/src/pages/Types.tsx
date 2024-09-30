@@ -19,6 +19,7 @@ import EditTypeModal from "@/modals/EditTypeModal";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
+import useDebounce from "@/hooks/useDebounce";
 
 function Types() {
     const [openModal, setOpenModal] = useState(false);
@@ -36,6 +37,7 @@ function Types() {
     const [deleteType, setDeleteType] = useState<TypeInterface | null>(null);
     const [toggleType, setToggleType] = useState<TypeInterface | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const debouncedQuery = useDebounce(searchQuery, 250);
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
@@ -62,10 +64,10 @@ function Types() {
     };
 
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/material-type/search`,
-                query: {desc: searchQuery },
+                query: {desc: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredType(data.materialTypes.slice(0, 10));
                 },
@@ -75,7 +77,7 @@ function Types() {
         } else {
             setFilteredType([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     const handleSelectType = (type: TypeInterface) => {
         setViewType(type);

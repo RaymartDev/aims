@@ -18,6 +18,7 @@ import type DepartmentType from "@/interface/department";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import useDebounce from "@/hooks/useDebounce";
 
 function Department() {
     const [openModal, setOpenModal] = useState(false);
@@ -28,6 +29,7 @@ function Department() {
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchDepartment, setSearchDepartment] = useState<DepartmentType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const debouncedQuery = useDebounce(searchQuery, 250);
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
     const [deleteDepartment, setDeleteDepartment] = useState<DepartmentType | null>(null);
     const [toggleDepartment, setToggleDepartment] = useState<DepartmentType | null>(null);
@@ -57,10 +59,10 @@ function Department() {
       }, [loadDepartments]);
 
       useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/department/search`,
-                query: {name: searchQuery },
+                query: {name: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredDepartment(data.departments.slice(0, 10));
                 },
@@ -70,7 +72,7 @@ function Department() {
         } else {
             setFilteredDepartment([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     const handleSelectDepartment = (department: DepartmentType) => {
         setSearchDepartment(department);

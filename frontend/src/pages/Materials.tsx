@@ -20,6 +20,7 @@ import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
+import useDebounce from "@/hooks/useDebounce";
 
 function Materials() {
     const [openAddModal, setOpenAddModal] = useState(false);
@@ -27,6 +28,7 @@ function Materials() {
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const debouncedQuery = useDebounce(searchQuery, 250);
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
     const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
@@ -108,10 +110,10 @@ function Materials() {
       }, [loadMaterials]);
 
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/material/search`,
-                query: {material: searchQuery },
+                query: {material: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredMaterial(data.materials);
                 },
@@ -121,7 +123,7 @@ function Materials() {
         } else {
             setFilteredMaterial([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     return(
         <>

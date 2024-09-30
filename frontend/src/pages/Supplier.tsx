@@ -22,6 +22,7 @@ import type SupplierType from "@/interface/supplier";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import useDebounce from "@/hooks/useDebounce";
 
 
 
@@ -38,6 +39,7 @@ function Supplier() {
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchSupplier, setSearchSupplier] = useState<SupplierType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const debouncedQuery = useDebounce(searchQuery, 250);
     const [currentPage, setCurrentPage] = useState(1);
     const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
     const [maxPage, setMaxPage] = useState(1);
@@ -106,10 +108,10 @@ function Supplier() {
     };
 
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/supplier/search`,
-                query: {supplier: searchQuery },
+                query: {supplier: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredSupplier(data.suppliers.slice(0, 10));
                 },
@@ -119,7 +121,7 @@ function Supplier() {
         } else {
             setFilteredSupplier([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
 
     const handleSelectSupplier = (supplier: SupplierType) => {
         setSearchSupplier(supplier);

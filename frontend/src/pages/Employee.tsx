@@ -21,6 +21,7 @@ import type EmployeeType from "@/interface/employee";
 import { fetchData, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import useDebounce from "@/hooks/useDebounce";
 
 
 function Employee() {
@@ -39,6 +40,7 @@ function Employee() {
     const [searchEmployee, setSearchEmployee] = useState<EmployeeType | null>(null);
     const [viewEmployee, setViewEmployee] = useState<EmployeeType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const debouncedQuery = useDebounce(searchQuery, 250);
 
     const [filteredEmployees, setFilteredEmployees] = useState<EmployeeType[]>([]);
 
@@ -69,10 +71,10 @@ function Employee() {
     };
 
     useEffect(() => {
-        if (searchQuery.trim() !== "") {
+        if (debouncedQuery.trim() !== "") {
             fetchData({
                 url: `${getVersion()}/employee/search`,
-                query: {employee: searchQuery },
+                query: {employee: debouncedQuery },
                 onSuccess: (data) => {
                     setFilteredEmployees(data.employees.slice(0, 10));
                 },
@@ -82,7 +84,7 @@ function Employee() {
         } else {
             setFilteredEmployees([]);
         }
-    }, [searchQuery, dispatch]);
+    }, [debouncedQuery, dispatch]);
     
 
     const handleSelectEmployee = (employee: EmployeeType) => {
