@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -56,15 +57,20 @@ function Category() {
       }, [loadCategories]);
 
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredCategory([]); 
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/material-category/search`,
+                query: {desc: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredCategory(data.material_categories.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = categories.filter((category) =>
-                category.description.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredCategory(filtered.slice(0, 10)); 
+            setFilteredCategory([]);
         }
-    }, [searchQuery, categories]);
+    }, [searchQuery, dispatch]);
 
     const handleSelectCategory = (category: CategoryType) => {
         setSearchCategory(category);

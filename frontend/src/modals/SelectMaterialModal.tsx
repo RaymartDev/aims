@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -59,15 +60,20 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
     };
 
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredMaterial([]);
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/material/search`,
+                query: {material: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredMaterial(data.materials.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = materials.filter((material) =>
-                material.material_code.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredMaterial(filtered.slice(0, 10));
+            setFilteredMaterial([]);
         }
-    }, [searchQuery, materials]);
+    }, [searchQuery, dispatch]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -106,7 +112,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                                         className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                                         onClick={() => handleSelectMaterial(material)}
                                     >
-                                        {material.material_code} - {material.item_description}  
+                                        {`${material.material_code} - ${material.item_description}`}
                                     </div>
                                 ))}
                             </div>

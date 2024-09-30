@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -42,17 +43,6 @@ function Materials() {
         setCurrentPage(page);
     };
 
-    useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredMaterial([]);
-        } else {
-            const filtered = materials.filter((material) =>
-                material.material_code.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredMaterial(filtered.slice(0, 10));
-        }
-    }, [searchQuery, materials]);
-
     const handleSelectMaterial = (material: MaterialType) => {
         setSearchMaterial(material);
         setOpenSearchModal(true);
@@ -94,6 +84,22 @@ function Materials() {
         loadMaterials();
       }, [loadMaterials]);
 
+    useEffect(() => {
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/material/search`,
+                query: {material: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredMaterial(data.materials.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
+        } else {
+            setFilteredMaterial([]);
+        }
+    }, [searchQuery, dispatch]);
+
     return(
         <>
             <div className="flex flex-col h-full">
@@ -125,7 +131,7 @@ function Materials() {
                                                     className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                                                     onClick={() => handleSelectMaterial(material)}
                                                 >
-                                                    {material.material_code} - {material.item_description}  
+                                                    {material.material_code} - {material.item_description} -  {material.item_code}
                                                 </div>
                                             ))}
                                         </div>

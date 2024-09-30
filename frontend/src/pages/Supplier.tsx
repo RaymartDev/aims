@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -103,16 +104,20 @@ function Supplier() {
     };
 
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredSupplier([]); 
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/supplier/search`,
+                query: {supplier: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredSupplier(data.suppliers.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = suppliers.filter((supplier) =>
-                supplier.supplier_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                supplier.company_name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredSupplier(filtered.slice(0, 10)); 
+            setFilteredSupplier([]);
         }
-    }, [searchQuery, suppliers]);
+    }, [searchQuery, dispatch]);
 
     const handleSelectSupplier = (supplier: SupplierType) => {
         setSearchSupplier(supplier);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -57,15 +58,20 @@ function Types() {
     };
 
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredType([]);
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/material-type/search`,
+                query: {desc: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredType(data.materialTypes.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = types.filter((type) =>
-                type.description.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredType(filtered.slice(0, 10));
+            setFilteredType([]);
         }
-    }, [searchQuery, types]);
+    }, [searchQuery, dispatch]);
 
     const handleSelectType = (type: TypeInterface) => {
         setViewType(type);

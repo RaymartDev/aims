@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -54,15 +55,20 @@ function Department() {
       }, [loadDepartments]);
 
       useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredDepartment([]);
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/department/search`,
+                query: {name: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredDepartment(data.departments.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = departments.filter((department) =>
-                department.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredDepartment(filtered.slice(0, 10));
+            setFilteredDepartment([]);
         }
-    }, [searchQuery, departments]);
+    }, [searchQuery, dispatch]);
 
     const handleSelectDepartment = (department: DepartmentType) => {
         setSearchDepartment(department);

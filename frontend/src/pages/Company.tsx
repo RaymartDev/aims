@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -89,16 +90,22 @@ function Company() {
         loadCompanies();
       }, [loadCompanies]);
 
-      useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredCompany([]);
+
+    useEffect(() => {
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/company/search`,
+                query: {name: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredCompany(data.companies.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = companies.filter((company) =>
-                company.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredCompany(filtered.slice(0, 10)); 
+            setFilteredCompany([]);
         }
-    }, [searchQuery, companies]);
+    }, [searchQuery, dispatch]);
 
     const handleSelectCompany = (company: CompanyType) => {
         setSearchCompany(company);

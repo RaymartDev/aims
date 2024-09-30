@@ -67,17 +67,21 @@ function Employee() {
     };
 
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredEmployees([]); 
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/employee/search`,
+                query: {employee: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredEmployees(data.employees.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = employees.filter((employee) =>
-                employee.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                employee.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                employee.employee_no.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredEmployees(filtered.slice(0, 10));
+            setFilteredEmployees([]);
         }
-    }, [searchQuery, employees]);
+    }, [searchQuery, dispatch]);
+    
 
     const handleSelectEmployee = (employee: EmployeeType) => {
         setSearchEmployee(employee);

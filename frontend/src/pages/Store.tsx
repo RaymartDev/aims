@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -63,17 +64,21 @@ function Store() {
         setCurrentPage(page);
     };
     
-
     useEffect(() => {
-        if (searchQuery.trim() === "") {
-            setFilteredStores([]); 
+        if (searchQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/store/search`,
+                query: {store: searchQuery },
+                onSuccess: (data) => {
+                    setFilteredStores(data.stores.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
         } else {
-            const filtered = stores.filter((store) =>
-                store.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredStores(filtered.slice(0, 10)); 
+            setFilteredStores([]);
         }
-    }, [searchQuery, stores]);
+    }, [searchQuery, dispatch]);
 
     const handleSelectStore = (store: StoreType) => {
         setSearchStore(store);
@@ -141,7 +146,7 @@ function Store() {
                                                     className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                                                     onClick={() => handleSelectStore(store)}
                                                 >
-                                                    {store.name} - {store.company_name}
+                                                    {store.name} - {store.cost_center_code}
                                                 </div>
                                             ))}
                                         </div>
