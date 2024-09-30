@@ -19,6 +19,7 @@ import type MaterialType from "@/interface/material";
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 
 function Materials() {
     const [openAddModal, setOpenAddModal] = useState(false);
@@ -29,7 +30,10 @@ function Materials() {
     const [materials, setMaterials] = useState<MaterialType[]>([]);
     const [viewMaterial, setViewMaterial] = useState<MaterialType | null>(null);
     const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
+    const [deleteMaterial, setDeleteMaterial] = useState<MaterialType | null>(null);
+    const [toggleMaterial, setToggleMaterial] = useState<MaterialType | null>(null);
     const [editMaterial, setEditMaterial] = useState<MaterialType | null>(null);
 
     const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
@@ -49,6 +53,25 @@ function Materials() {
         setSearchQuery("");
         setFilteredMaterial([]);
     };
+
+    const handleDelete = (material: MaterialType | null) => {
+        if (material) {
+            setMaterials((prevMaterials) =>
+                prevMaterials.filter((c) => c.id !== material.id)
+            );
+            setDeleteMaterial(null);
+        }
+    }
+
+    const handleToggle = (material: MaterialType | null) => {
+        if (material) {
+            setMaterials((prevMaterials) =>
+            prevMaterials.map((c) =>
+              c.id === material.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateMaterial = (updatedMaterial: MaterialType | null) => {
         if (updatedMaterial) {
@@ -176,7 +199,10 @@ function Materials() {
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setDeleteMaterial(material);
+                                                setOpenDeleteModal(true);
+                                            }}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -188,7 +214,10 @@ function Materials() {
                                                         setViewMaterial(material);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem>{material.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setToggleMaterial(material);
+                                                        setOpenDeactivateModal(true);
+                                                    }}>{material.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -234,7 +263,8 @@ function Materials() {
                     setViewMaterial(null);
                     setOpenViewModal(false);
             }}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteMaterial)} link={`material/delete/${deleteMaterial?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleMaterial?.active_status || true} handleToggle={() => handleToggle(toggleMaterial)} link={`material/toggle/${toggleMaterial?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
         </>
     );

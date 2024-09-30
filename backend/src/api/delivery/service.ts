@@ -31,7 +31,7 @@ export async function updateDelivery(delivery: any, id: number): Promise<Deliver
 export async function findDeliveryById(id: number): Promise<Delivery | null> {
   try {
     const delivery = await prisma.delivery.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return delivery;
   } catch (error) {
@@ -57,17 +57,27 @@ export async function searchDeliveryByReferenceOrDesc(ref: string = '**--**'): P
   try {
     const deliveries: Delivery[] = await prisma.delivery.findMany({
       where: {
-        OR: [{
-          id: {
-            equals: parseInt(ref),
-          },
-        }, {
-          material: {
-            description: {
-              startsWith: ref,
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
+        },
+        OR: [
+          {
+            id: {
+              equals: parseInt(ref),
             },
           },
-        }],
+          {
+            material: {
+              description: {
+                startsWith: ref,
+              },
+            },
+          },
+        ],
       },
       take: 10,
       orderBy: {

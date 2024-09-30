@@ -8,7 +8,7 @@ interface UserWRole extends User {
 export async function findUserByUsername(username: string): Promise<UserWRole | null> {
   try {
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { username, deleted: false },
       include: {
         role: true,
       },
@@ -71,7 +71,7 @@ export async function updateUser(username: string, props: any): Promise<User | n
 export async function findUserByEmployeeId(id: number): Promise<User | null> {
   try {
     const user = await prisma.user.findFirst({
-      where: { employee_id: id }, // Condition to find the user
+      where: { employee_id: id, deleted: false }, // Condition to find the user
     });
     return user;
   } catch (error) {
@@ -82,7 +82,7 @@ export async function findUserByEmployeeId(id: number): Promise<User | null> {
 export async function findUserByStoreId(id: number): Promise<User | null> {
   try {
     const user = await prisma.user.findFirst({
-      where: { store_id: id }, // Condition to find the user
+      where: { store_id: id, deleted: false }, // Condition to find the user
     });
     return user;
   } catch (error) {

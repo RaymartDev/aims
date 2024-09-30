@@ -32,7 +32,7 @@ export async function updateMaterialCategory(material_category: any, id: number)
 export async function findMaterialCategoryById(id: number): Promise<Material_Category | null> {
   try {
     const materialCategory = await prisma.material_Category.findUniqueOrThrow({
-      where: { id },
+      where: { id, deleted: false },
     });
     return materialCategory;
   } catch (error) {
@@ -59,7 +59,7 @@ export async function findMaterialCategoryByName(description: string): Promise<M
     const materialCategory = await prisma.material_Category.findFirst({
       where: { description: {
         equals: description,
-      } } });
+      }, deleted: false } });
     
     console.log(materialCategory);
     return materialCategory;
@@ -74,6 +74,13 @@ export async function searchMaterialCategoryByName(name: string = '**--**'): Pro
       where: {
         description: {
           startsWith: name,
+        },
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
         },
       },
       take: 10,

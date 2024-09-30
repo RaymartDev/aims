@@ -32,7 +32,7 @@ export async function updateMaterial(material: any, id: number): Promise<Materia
 export async function findMaterialById(id: number): Promise<Material | null> {
   try {
     const material = await prisma.material.findUnique({
-      where: { id },
+      where: { id, deleted: false },
     });
     return material;
   } catch (error) {
@@ -60,6 +60,7 @@ export async function findMaterialBySku(material_code: string, item_code: string
       where: { 
         material_code: material_code || '',
         item_code: item_code || '',
+        deleted: false,
       },
     });
     return material;
@@ -73,7 +74,7 @@ export async function findMaterialByName(name: string): Promise<Material | null>
     const material = await prisma.material.findFirst({
       where: { description: {
         equals: name,
-      } },
+      }, deleted: false },
     });
     return material;
   } catch (error) {
@@ -85,6 +86,13 @@ export async function searchMaterialByNameOrCode(material: string = '**--**'): P
   try {
     const materials: Material[] = await prisma.material.findMany({
       where: {
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
+        },
         OR: [
           {
             description: {

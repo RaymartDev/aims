@@ -27,13 +27,15 @@ function Store() {
     const [stores, setStores] = useState<StoreType[]>([]);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchStore, setSearchStore] = useState<StoreType | null>(null);
     const [viewStore, setViewStore] = useState<StoreType | null>(null);
     const [editStore, setEditStore] = useState<StoreType | null>(null);
     const [regStore, setRegStore] = useState<StoreType | null>(null);
+    const [deleteStore, setDeleteStore] = useState<StoreType | null>(null);
+    const [toggleStore, setToggleStore] = useState<StoreType | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
 
     const [filteredStores, setFilteredStores] = useState<StoreType[]>([]);
@@ -86,6 +88,25 @@ function Store() {
         setSearchQuery(""); 
         setFilteredStores([]); 
     };
+
+    const handleDelete = (store: StoreType | null) => {
+        if (store) {
+            setStores((prevStores) =>
+                prevStores.filter((c) => c.id !== store.id)
+            );
+            setDeleteStore(null);
+        }
+    }
+
+    const handleToggle = (store: StoreType | null) => {
+        if (store) {
+            setStores((prevStores) =>
+            prevStores.map((c) =>
+              c.id === store.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateStore = (updatedStore: StoreType | null) => {
         if (updatedStore) {
@@ -187,7 +208,10 @@ function Store() {
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setDeleteStore(store);
+                                                setOpenDeleteModal(true);
+                                            }}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -199,7 +223,10 @@ function Store() {
                                                         setViewStore(store);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenDeactivateModal(true)}>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                    setToggleStore(store);
+                                                    setOpenDeactivateModal(true);
+                                                }}>{store.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={store.registered_status} onClick={() => {
                                                         setRegStore(store);
                                                         setOpenUserRegModal(true);
@@ -244,8 +271,8 @@ function Store() {
             {openAddModal && <AddStoreModal addStore={addStore} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistrationStore registerStore={registerStore} store={regStore} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditStoreModal updateStore={updateStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteStore)} link={`store/delete/${deleteStore?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleStore?.active_status || true} handleToggle={() => handleToggle(toggleStore)} link={`store/toggle/${toggleStore?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openViewModal && <ViewStoreModal 
                 store={viewStore}
                 onClose={() => {

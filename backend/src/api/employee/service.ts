@@ -62,7 +62,7 @@ export async function updateEmployeeAndUser(employee: any, id: number): Promise<
 export async function findEmployeeById(id: number): Promise<Employee | null> {
   try {
     const employee = await prisma.employee.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return employee;
   } catch (error) {
@@ -77,7 +77,7 @@ export async function deleteEmployeeById(id: number): Promise<Employee | null> {
 export async function findEmployeeByEmployeeNo(employee_no: string): Promise<Employee | null> {
   try {
     const employee = await prisma.employee.findFirst({
-      where: { employee_no },
+      where: { employee_no, deleted: false },
     });
     return employee;
   } catch (error) {
@@ -102,9 +102,13 @@ export async function updateEmployeeRegistration(status: boolean, id: number): P
 export async function searchEmployeeByEmployeeNoOrName(employee: string = '**--**'): Promise<Employee[]> {
   try {
     const employees: Employee[] = await prisma.$queryRaw`
-      SELECT * FROM \`Employee\`
-      WHERE \`employee_no\` LIKE ${employee + '%'}
-      OR CONCAT(\`first_name\`, ' ', \`last_name\`) LIKE ${'%' + employee + '%'}
+      SELECT * 
+      FROM \`Employee\`
+      WHERE 
+        (\`employee_no\` LIKE ${employee + '%'} OR CONCAT(\`first_name\`, ' ', \`last_name\`) LIKE ${'%' + employee + '%'})
+        AND \`deleted\` = 0  -- Use 0 for false in SQL
+        AND \`effective_from\` <= NOW()  
+        AND \`effective_to\` >= NOW()  
       ORDER BY \`employee_no\`
       LIMIT 10
     `;

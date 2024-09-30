@@ -22,13 +22,16 @@ import { logout } from "@/slices/userSlice";
 function Company() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
-    const [openDeactivateModal, setOpenDeativateModal] = useState(false);
+
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
+    
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchCompany, setSearchCompany] = useState<CompanyType | null>(null);
     const [companies, setCompanies] = useState<CompanyType[]>([])
     const [editCompany, setEditCompany] = useState<CompanyType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+
     const [deleteCompany, setDeleteCompany] = useState<CompanyType | null>(null);
     const [toggleCompany, setToggleCompany] = useState<CompanyType | null>(null);
 
@@ -56,7 +59,7 @@ function Company() {
         if (company) {
           setCompanies((prevCompanies) =>
             prevCompanies.map((c) =>
-              c.id === company.id ? { ...c, activate_status: !c.active_status } : c
+              c.id === company.id ? { ...c, active_status: !c.active_status } : c
             )
           );
         }
@@ -184,7 +187,7 @@ function Company() {
                                         </Button>
                                         <Button className="bg-transparent text-black hover:text-white" onClick={() => {
                                             setDeleteCompany(company);
-                                            setopenDeleteModal(true);
+                                            setOpenDeleteModal(true);
                                         }}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
@@ -195,7 +198,7 @@ function Company() {
                                             <DropdownMenuContent>
                                                 <DropdownMenuItem onClick={() => {
                                                     setToggleCompany(company);
-                                                    setOpenDeativateModal(true);
+                                                    setOpenDeactivateModal(true);
                                                 }}>{company.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -235,8 +238,8 @@ function Company() {
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCompany)} link={`company/delete/${deleteCompany?.id || 0}`} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation active_status={toggleCompany?.active_status || true} handleToggle={() => handleToggle(toggleCompany)} link={`company/toggle/${toggleCompany?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCompany)} link={`company/delete/${deleteCompany?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleCompany?.active_status || true} handleToggle={() => handleToggle(toggleCompany)} link={`company/toggle/${toggleCompany?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
         </div>
     );

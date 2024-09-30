@@ -32,8 +32,8 @@ function Supplier() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openNextEditModal, setOpenNextEditModal] = useState(false);
     const [openViewModal, setOpenViewModal] = useState(false);
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
-    const [openDeactivateModal, setOpenDeativateModal] =useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [openNextViewModal, setOpenNextViewModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchSupplier, setSearchSupplier] = useState<SupplierType | null>(null);
@@ -42,6 +42,8 @@ function Supplier() {
     const [editSupplier, setEditSupplier] = useState<SupplierType | null>(null);
     const [maxPage, setMaxPage] = useState(1);
     const [viewSupplier, setViewSupplier] = useState<SupplierType | null>(null);
+    const [deleteSupplier, setDeleteSupplier] = useState<SupplierType | null>(null);
+    const [toggleSupplier, setToggleSupplier] = useState<SupplierType | null>(null);
 
     const [filteredSupplier, setFilteredSupplier] = useState<SupplierType[]>([]);
 
@@ -125,6 +127,26 @@ function Supplier() {
         setSearchQuery("");
         setFilteredSupplier([]);
     };
+
+    const handleDelete = (supplier: SupplierType | null) => {
+        if (supplier) {
+            setSuppliers((prevSuppliers) =>
+                prevSuppliers.filter((c) => c.id !== supplier.id)
+            );
+            setDeleteSupplier(null);
+        }
+    }
+
+    const handleToggle = (supplier: SupplierType | null) => {
+        if (supplier) {
+          setSuppliers((prevSuppliers) =>
+            prevSuppliers.map((c) =>
+              c.id === supplier.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
+
 
     const addSupplier = (supplier: SupplierType | null) => {
         if (supplier) {
@@ -329,8 +351,10 @@ function Supplier() {
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
-                                            <DropdownMenu>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setDeleteSupplier(supplier);
+                                                setOpenDeleteModal(true);
+                                            }}><Trash/></Button><DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
                                                         <MoreHorizontal/>
@@ -341,7 +365,10 @@ function Supplier() {
                                                         setViewSupplier(supplier);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenDeativateModal(true)}>{supplier.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                   <DropdownMenuItem onClick={() => {
+                                                        setToggleSupplier(supplier);
+                                                        setOpenDeactivateModal(true);
+                                                    }}>{supplier.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -419,8 +446,8 @@ function Supplier() {
                     setOpenNextViewModal(false);
                 }} 
                 onBack={handleViewBack}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteSupplier)} link={`supplier/delete/${deleteSupplier?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleSupplier?.active_status || true} handleToggle={() => handleToggle(toggleSupplier)} link={`supplier/toggle/${toggleSupplier?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openSearchModal && <SearchSupplierModal supplier={searchSupplier} onClose={() => {setOpenSearchModal(false); setSearchSupplier(null);}}/>}
         </>
     );

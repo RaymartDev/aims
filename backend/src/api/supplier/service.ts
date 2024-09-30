@@ -59,7 +59,7 @@ export async function updateSupplierContact(supplier_contact: any, id: number): 
 export async function findSupplierById(id: number): Promise<Supplier | null> {
   try {
     const supplier = await prisma.supplier.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return supplier;
   } catch (error) {
@@ -84,7 +84,7 @@ export async function deleteSupplierById(id: number): Promise<Supplier | null> {
 export async function findSupplierByCode(supplier_code: string): Promise<Supplier | null> {
   try {
     const supplier = await prisma.supplier.findFirst({
-      where: { supplier_code },
+      where: { supplier_code, deleted: false },
     });
     return supplier;
   } catch (error) {
@@ -114,6 +114,13 @@ export async function searchSupplierByCode(supplier_query: string = '**--**'): P
   try {
     const suppliers = await prisma.supplier.findMany({
       where: {
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
+        },
         OR: [
           {
             supplier_code: {

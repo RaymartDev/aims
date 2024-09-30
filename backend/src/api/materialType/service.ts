@@ -32,7 +32,7 @@ export async function updateMaterialType(material_type: any, id: number): Promis
 export async function findMaterialTypeById(id: number): Promise<Material_Type | null> {
   try {
     const materialType = await prisma.material_Type.findFirst({
-      where: { id },
+      where: { id, deleted: false },
     });
     return materialType;
   } catch (error) {
@@ -59,7 +59,7 @@ export async function findMaterialTypeByName(name: string): Promise<Material_Typ
     const materialType = await prisma.material_Type.findFirst({
       where: { description: {
         equals: name,
-      } },
+      }, deleted: false },
     });
     return materialType;
   } catch (error) {
@@ -73,6 +73,13 @@ export async function searchMaterialTypeByName(name: string = '**--**'): Promise
       where: {
         description: {
           startsWith: name,
+        },
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
         },
       },
       take: 10,

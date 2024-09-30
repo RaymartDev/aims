@@ -26,7 +26,7 @@ interface DeleteConfirmationProps {
       try {
         const response = await axios.delete(`${getVersion()}/${link || ''}`);
         if (response.status >= 200 && response.status < 300) {
-          toast.success(response.data?.message || 'Successfully deleted company');
+          toast.success(response.data?.message || 'Successfully deleted');
           handleDelete();
           setLoading(false);
           onClose();
