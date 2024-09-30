@@ -22,12 +22,14 @@ function Department() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [editDepartment, setEditDepartment] = useState<DepartmentType | null>(null);
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
-    const [openDeactivateModal, setOpenDeativateModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchDepartment, setSearchDepartment] = useState<DepartmentType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [departments, setDepartments] = useState<DepartmentType[]>([]);
+    const [deleteDepartment, setDeleteDepartment] = useState<DepartmentType | null>(null);
+    const [toggleDepartment, setToggleDepartment] = useState<DepartmentType | null>(null);
 
     const [filteredDepartment, setFilteredDepartment] = useState<DepartmentType[]>([])
 
@@ -70,6 +72,25 @@ function Department() {
         setSearchQuery(""); 
         setFilteredDepartment([]); 
     };
+
+    const handleDelete = (department: DepartmentType | null) => {
+        if (department) {
+            setDepartments((prevDepartment) =>
+                prevDepartment.filter((c) => c.id !== department.id)
+            );
+            setDeleteDepartment(null);
+        }
+    }
+
+    const handleToggle = (department: DepartmentType | null) => {
+        if (department) {
+            setDepartments((prevDepartment) =>
+                prevDepartment.map((c) =>
+              c.id === department.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateDepartment = (updatedDepartment: DepartmentType | null) => {
     if (updatedDepartment) {
@@ -154,16 +175,20 @@ function Department() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
-                                        <DropdownMenu>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                            setDeleteDepartment(department);
+                                            setOpenDeleteModal(true);
+                                        }}><Trash/></Button><DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
                                                     <MoreHorizontal/>
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem onClick={() => setOpenDeativateModal(true)}>{department.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
-                                            </DropdownMenuContent>
+                                            <DropdownMenuItem onClick={() => {
+                                                    setToggleDepartment(department);
+                                                    setOpenDeactivateModal(true);
+                                                }}>{department.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem></DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
@@ -201,9 +226,8 @@ function Department() {
             </div>
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)}/>}
-            {openSearchModal && <SearchDepartmentModal department={searchDepartment} onClose={() => {setOpenSearchModal(false); setSearchDepartment(null);}}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteDepartment)} link={`department/delete/${deleteDepartment?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleDepartment?.active_status || true} handleToggle={() => handleToggle(toggleDepartment)} link={`department/toggle/${toggleDepartment?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}{openSearchModal && <SearchDepartmentModal department={searchDepartment} onClose={() => {setOpenSearchModal(false); setSearchDepartment(null);}}/>}
         </div>
     );
 }

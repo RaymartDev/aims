@@ -33,6 +33,8 @@ function Employee() {
     const [openViewModal, setOpenViewModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
+    const [deleteEmployee, setDeleteEmployee] = useState<EmployeeType | null>(null);
+    const [toggleEmployee, setToggleEmployee] = useState<EmployeeType | null>(null);
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchEmployee, setSearchEmployee] = useState<EmployeeType | null>(null);
     const [viewEmployee, setViewEmployee] = useState<EmployeeType | null>(null);
@@ -85,6 +87,25 @@ function Employee() {
         setSearchQuery("");
         setFilteredEmployees([]);
     };
+
+    const handleDelete = (employee: EmployeeType | null) => {
+        if (employee) {
+            setEmployees((prevEmployees) =>
+                prevEmployees.filter((c) => c.id !== employee.id)
+            );
+            setDeleteEmployee(null);
+        }
+    }
+
+    const handleToggle = (employee: EmployeeType | null) => {
+        if (employee) {
+          setEmployees((prevEmployees) =>
+            prevEmployees.map((c) =>
+              c.id === employee.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateEmployee = (updatedEmployee: EmployeeType | null) => {
         if (updatedEmployee) {
@@ -194,7 +215,10 @@ function Employee() {
                                                 setOpenEditModal(true);
                                             }}><Pencil/>
                                             </Button>
-                                            <Button className="bg-transparent text-black hover:text-white"onClick={() => setOpenDeleteModal(true)}><Trash/></Button>
+                                            <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                                setDeleteEmployee(employee);
+                                                setOpenDeleteModal(true);
+                                            }}><Trash/></Button>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
                                                     <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -206,7 +230,10 @@ function Employee() {
                                                         setViewEmployee(employee);
                                                         setOpenViewModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenDeactivateModal(true)}>{employee.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setToggleEmployee(employee);
+                                                        setOpenDeactivateModal(true);
+                                                    }}>{employee.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                     <DropdownMenuItem disabled={employee.registered_status} onClick={() => {
                                                         setRegEmployee(employee);
                                                         setOpenUserRegModal(true);
@@ -251,8 +278,8 @@ function Employee() {
             {openAddModal && <AddEmployeeModal addEmployee={addEmployee} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistration registerEmployee={registerEmployee} employee={regEmployee} onClose={() => setOpenUserRegModal(false)}/>}
             {openEditModal && <EditEmployeeModal updateEmployee={updateEmployee} employee={editEmployee} onClose={() => setOpenEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeactivateModal (false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteEmployee)} link={`employee/delete/${deleteEmployee?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleEmployee?.active_status || true} handleToggle={() => handleToggle(toggleEmployee)} link={`employee/toggle/${toggleEmployee?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openViewModal && <ViewEmployeeModal 
                 employee={viewEmployee} 
                 onClose={() => {

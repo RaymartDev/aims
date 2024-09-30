@@ -17,6 +17,7 @@ import { fetchData, getVersion } from "@/lib/utils";
 import EditTypeModal from "@/modals/EditTypeModal";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 
 function Types() {
     const [openModal, setOpenModal] = useState(false);
@@ -29,7 +30,10 @@ function Types() {
     const [filteredType, setFilteredType] = useState<TypeInterface[]>([]);
 
     const itemsPerPage = 17;
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
+    const [deleteType, setDeleteType] = useState<TypeInterface | null>(null);
+    const [toggleType, setToggleType] = useState<TypeInterface | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
@@ -73,6 +77,25 @@ function Types() {
         setSearchQuery("");
         setFilteredType([]);
     };
+
+    const handleDelete = (type: TypeInterface | null) => {
+        if (type) {
+            setTypes((prevCompanies) =>
+                prevCompanies.filter((c) => c.id !== type.id)
+            );
+            setDeleteType(null);
+        }
+    }
+
+    const handleToggle = (type: TypeInterface | null) => {
+        if (type) {
+            setTypes((prevCompanies) =>
+            prevCompanies.map((c) =>
+              c.id === type.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateType = (updatedType: TypeInterface | null) => {
         if (updatedType) {
@@ -153,15 +176,20 @@ function Types() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
-                                        <DropdownMenu>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                            setDeleteType(type);
+                                            setOpenDeleteModal(true);
+                                        }}><Trash/></Button><DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
                                                     <MoreHorizontal/>
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>{type.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => {
+                                                    setToggleType(type);
+                                                    setOpenDeactivateModal(true);
+                                                }}>{type.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -200,7 +228,8 @@ function Types() {
             </div>
             {openModal && <AddTypeModal addType={addType} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteType)} link={`material-type/delete/${deleteType?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleType?.active_status || true} handleToggle={() => handleToggle(toggleType)} link={`material-type/toggle/${toggleType?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openViewModal && <SearchTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}}/>}
         </div>
     );

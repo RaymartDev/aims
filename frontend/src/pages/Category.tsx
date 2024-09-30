@@ -16,17 +16,20 @@ import type CategoryType from "@/interface/category";
 import { fetchData, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import DeactivateConfirmation from "@/modals/DeactivateConfirmation";
 
 function Category() {
     const [openModal, setOpenModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [categories, setCategories] = useState<CategoryType[]>([])
-    const [openDeleteModal, setopenDeleteModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
     const [editCategory, setEditCategory] = useState<CategoryType | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [searchCategory, setSearchCategory] = useState<CategoryType | null>(null);
-
+    const [deleteCategory, setDeleteCategory] = useState<CategoryType | null>(null);
+    const [toggleCategory, setToggleCategory] = useState<CategoryType | null>(null);
     const [filteredCategory, setFilteredCategory] = useState<CategoryType[]>([]);
 
     const itemsPerPage = 17;
@@ -73,6 +76,24 @@ function Category() {
         setFilteredCategory([]);
     };
 
+    const handleDelete = (category: CategoryType | null) => {
+        if (category) {
+            setCategories((prevCategories) =>
+                prevCategories.filter((c) => c.id !== category.id)
+            );
+            setDeleteCategory(null);
+        }
+    }
+
+    const handleToggle = (category: CategoryType | null) => {
+        if (category) {
+            setCategories((prevCategories) =>
+                prevCategories.map((c) =>
+              c.id === category.id ? { ...c, active_status: !c.active_status } : c
+            )
+          );
+        }
+      };
 
     const updateCategory = (updatedCategory: CategoryType | null) => {
     if (updatedCategory) {
@@ -153,15 +174,20 @@ function Category() {
                                             setEditModal(true);
                                         }}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setopenDeleteModal(true)}><Trash/></Button>
-                                        <DropdownMenu>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => {
+                                            setDeleteCategory(category);
+                                            setOpenDeleteModal(true);
+                                        }}><Trash/></Button><DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
                                                     <MoreHorizontal/>
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>{category.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => {
+                                                    setToggleCategory(category);
+                                                    setOpenDeactivateModal(true);
+                                                }}>{category.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -200,7 +226,8 @@ function Category() {
             </div>
             {openModal && <AddCategoryModal addCategory={addCategory} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCategory)} link={`material-category/delete/${deleteCategory?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleCategory?.active_status || true} handleToggle={() => handleToggle(toggleCategory)} link={`material-category/toggle/${toggleCategory?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openSearchModal && <SearchCategoryModal category={searchCategory} onClose={() => {setOpenSearchModal(false); setSearchCategory(null);}}/>}
         </div>
     );
