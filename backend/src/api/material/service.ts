@@ -82,46 +82,6 @@ export async function findMaterialByName(name: string): Promise<Material | null>
   }
 }
 
-export async function searchMaterialByNameOrCode(material: string = '**--**'): Promise<Material[]> {
-  try {
-    const materials: Material[] = await prisma.material.findMany({
-      where: {
-        deleted: false,
-        effective_from: {
-          lte: new Date(),
-        },
-        effective_to: {
-          gte: new Date(),
-        },
-        OR: [
-          {
-            description: {
-              startsWith: material,
-            },
-          },
-          {
-            material_code: {
-              startsWith: material,
-            },
-          },
-          {
-            item_code: {
-              startsWith: material,
-            },
-          },
-        ],
-      },
-      take: 10,
-      orderBy: {
-        description: 'asc',
-      },
-    });
-    return materials;
-  } catch (error) {
-    throw new Error('Database error');
-  }
-}
-
 interface MaterialType {
   id: number;
   item_description: string;
@@ -134,6 +94,67 @@ interface MaterialType {
   material_type: string;
   uom: string;
   date_entry: Date;
+}
+
+export async function searchMaterialByNameOrCode(ref: string = '**--**'): Promise<MaterialType[]> {
+  try {
+    const materials = await prisma.material.findMany({
+      where: {
+        deleted: false,
+        effective_from: {
+          lte: new Date(),
+        },
+        effective_to: {
+          gte: new Date(),
+        },
+        OR: [
+          {
+            description: {
+              startsWith: ref,
+            },
+          },
+          {
+            material_code: {
+              startsWith: ref,
+            },
+          },
+          {
+            item_code: {
+              startsWith: ref,
+            },
+          },
+        ],
+      },
+      take: 10,
+      orderBy: {
+        description: 'asc',
+      },
+      include: {
+        category: true,
+        type: true,
+      },
+    });
+    if (materials && materials.length > 0) {
+      const materialsFinal = materials.map((material) => ({
+        id: material.id,
+        item_description: material.description,
+        brand_model: material.brand_model,
+        unit_cost: material.cost,
+        category: material.category.description,
+        material_code: material.material_code,
+        item_code: material.item_code,
+        material_con: material.material_required_yn,
+        material_type: material.type.description,
+        uom: material.unit_of_measure,
+        date_entry: new Date(material.date_entry),
+        active_status: activeStatus(material),
+      }));
+      return materialsFinal;
+    }
+    return [];
+  } catch (error) {
+    throw new Error('Database error');
+  }
 }
 
 export async function listMaterials(page: number, limit: number): Promise<{ materialsFinal: MaterialType[], maxPage: number }> {

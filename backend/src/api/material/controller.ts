@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { Material } from '@prisma/client';
 import { deleteMaterialById, findMaterialById, findMaterialBySku, insertMaterial, listMaterials, searchMaterialByNameOrCode, updateMaterial } from './service';
 import { findMaterialCategoryByName } from '../materialCategory/service';
 import { findMaterialTypeByName } from '../materialType/service';
@@ -104,7 +103,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Name query parameter is required and must be a string' });
     }
 
-    const materials: Material[] = await searchMaterialByNameOrCode(material as string);
+    const materials = await searchMaterialByNameOrCode(material as string);
     if (materials.length > 0) {
       res.status(200).json({ materials, message: 'Successfully found materials' });
     }

@@ -1,15 +1,16 @@
 import express from 'express';
 import { authenticateToken } from '../../middlewares';
+import { create, deleteOne, getOne, list, search, toggleActivate, update } from './controller';
 
 const router = express.Router();
 
-router.post('/', authenticateToken);
-router.put('/update/:id', authenticateToken);
-router.get('/get/:id', authenticateToken);
-router.get('/search', authenticateToken);
-router.get('/list', authenticateToken);
-router.get('/toggle/:id', authenticateToken);
-router.delete('/delete/:id', authenticateToken);
+router.post('/', authenticateToken, create);
+router.put('/update/:id', authenticateToken, update);
+router.get('/get/:id', authenticateToken, getOne);
+router.get('/search', authenticateToken, search);
+router.get('/list', authenticateToken, list);
+router.get('/toggle/:id', authenticateToken, toggleActivate);
+router.delete('/delete/:id', authenticateToken, deleteOne);
 
 
 export default router;

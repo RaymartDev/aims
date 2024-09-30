@@ -68,7 +68,12 @@ export async function findMaterialCategoryByName(description: string): Promise<M
   }
 }
 
-export async function searchMaterialCategoryByName(name: string = '**--**'): Promise<Material_Category[]> {
+interface MaterialCategoryInterface {
+  id: number;
+  description: string;
+}
+
+export async function searchMaterialCategoryByName(name: string = '**--**'): Promise<MaterialCategoryInterface[]> {
   try {
     const materialCategories: Material_Category[] = await prisma.material_Category.findMany({
       where: {
@@ -88,15 +93,18 @@ export async function searchMaterialCategoryByName(name: string = '**--**'): Pro
         description: 'asc',
       },
     });
-    return materialCategories;
+    if (materialCategories && materialCategories.length > 0) {
+      const materialCategoriesFinal = materialCategories.map((materialCategory) => ({
+        id: materialCategory.id,
+        description: materialCategory.description,
+        active_status: activeStatus(materialCategory),
+      }));
+      return materialCategoriesFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }
-}
-
-interface MaterialCategoryInterface {
-  id: number;
-  description: string;
 }
 
 export async function listMaterialCategories(page: number, limit: number): Promise<{ materialCategoriesFinal: MaterialCategoryInterface[], maxPage: number }> {

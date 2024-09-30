@@ -113,7 +113,7 @@ function Materials() {
                 url: `${getVersion()}/material/search`,
                 query: {material: searchQuery },
                 onSuccess: (data) => {
-                    setFilteredMaterial(data.materials.slice(0, 10));
+                    setFilteredMaterial(data.materials);
                 },
                 dispatch,
                 logout: () => dispatch(logout())

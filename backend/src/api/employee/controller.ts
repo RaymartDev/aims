@@ -4,7 +4,6 @@ import { Response, NextFunction } from 'express';
 import { deleteEmployeeById, findEmployeeByEmployeeNo, findEmployeeById, insertEmployee, listEmployees, searchEmployeeByEmployeeNoOrName, updateEmployee, updateEmployeeAndUser } from './service';
 import { findCompanyByName } from '../company/service';
 import { findDepartmentByName } from '../department/service';
-import { Employee } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -135,7 +134,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Employee no or name query parameter is required and must be a string' });
     }
 
-    const employees: Employee[] = await searchEmployeeByEmployeeNoOrName(employee as string);
+    const employees = await searchEmployeeByEmployeeNoOrName(employee as string);
     if (employees.length > 0) {
       res.status(200).json({ employees, message: 'Successfully found employees' });
     }

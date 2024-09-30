@@ -3,7 +3,6 @@ import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { deleteStoreById, findStoreByCostCode, findStoreById, insertStore, listStores, searchStoreByCostCodeOrName, updateStore, updateStoreAndUser } from './service';
 import { findCompanyByName } from '../company/service';
-import { Store } from '@prisma/client';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -108,7 +107,7 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Cost code query parameter is required and must be a string' });
     }
 
-    const stores: Store[] = await searchStoreByCostCodeOrName(store as string);
+    const stores = await searchStoreByCostCodeOrName(store as string);
     if (stores.length > 0) {
       res.status(200).json({ stores, message: 'Successfully found stores' });
     }

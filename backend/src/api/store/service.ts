@@ -98,9 +98,22 @@ export async function findStoreByCostCode(cost_center_code: string): Promise<Sto
   }
 }
 
-export async function searchStoreByCostCodeOrName(store: string = '**--**'): Promise<Store[]> {
+interface StoreType {
+  id: number;
+  company_name: string;
+  name: string;
+  cost_center_code: string;
+  address: string;
+  registered_status: boolean;
+  active_status: boolean;
+}
+
+export async function searchStoreByCostCodeOrName(ref: string = '**--**'): Promise<StoreType[]> {
   try {
-    const stores: Store[] = await prisma.store.findMany({
+    const stores = await prisma.store.findMany({
+      include: {
+        company: true,
+      },
       where: {
         deleted: false,
         effective_from: {
@@ -112,12 +125,12 @@ export async function searchStoreByCostCodeOrName(store: string = '**--**'): Pro
         OR: [
           {
             cost_center_code: {
-              startsWith: store,
+              startsWith: ref,
             },
           },
           {
             name: {
-              startsWith: store,
+              startsWith: ref,
             },
           },
         ],
@@ -127,19 +140,22 @@ export async function searchStoreByCostCodeOrName(store: string = '**--**'): Pro
         cost_center_code: 'asc',
       },
     });
-    return stores;
+    if (stores && stores.length > 0) {
+      const storesFinal: StoreType[] = stores.map((store) => ({
+        id: store.id,
+        company_name: store.company.name,
+        name: store.name,
+        cost_center_code: store.cost_center_code,
+        address: store.address,
+        registered_status: store.registered,
+        active_status: activeStatus(store),
+      }));
+      return storesFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }
-}
-
-interface StoreType {
-  id: number;
-  company_name: string;
-  name: string;
-  cost_center_code: string;
-  address: string;
-  registered_status: boolean;
 }
 
 export async function listStores(page: number, limit: number): Promise<{ storesFinal: StoreType[], totalPages: number }> {
