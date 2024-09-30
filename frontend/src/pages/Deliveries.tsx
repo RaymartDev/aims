@@ -14,6 +14,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import type SupplierType from "@/interface/supplier" 
 import { cn, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 
 const deliveries = [
   {
@@ -349,15 +350,16 @@ function Deliveries() {
   }, [supplierPopOver.searchTerm, fetchData]);
 
 
-  const headerHeight = 72;
+  const headerHeight = 50;
+  const itemHeight = 65;
 
   const getItemsPerPage = (height: number): number => {
     const availableHeight = height - headerHeight;
-    if (availableHeight < 500) return 15;
-    return 15;
+    if (availableHeight <= 0) return 0;
+    return Math.floor(availableHeight / itemHeight);
   };
 
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(
     getItemsPerPage(window.innerHeight)
   );
@@ -371,16 +373,24 @@ function Deliveries() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const filteredDeliveries = deliveries.filter((deliveries) =>
-    deliveries.delivery.toLowerCase().includes(searchQuery.toLowerCase())
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const filteredInventory = deliveries.filter((deliveries) =>
+    deliveries.desc.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const indexOfLastDeliveries = currentPage * itemsPerPage;
-  const indexOfFirstDeliveries = indexOfLastDeliveries - itemsPerPage;
-  const currentDeliveries = filteredDeliveries.slice(
-    indexOfFirstDeliveries,
-    indexOfLastDeliveries
+  const indexOfLastInventory = currentPage * itemsPerPage;
+  const indexOfFirstInventory = indexOfLastInventory - itemsPerPage;
+  const currentDeliveries = filteredInventory.slice(
+    indexOfFirstInventory,
+    indexOfLastInventory
   );
+
+  const totalPages = Math.ceil(filteredInventory.length / itemsPerPage);
+
 
   const handleNextModal = () => {
     setOpenModal(false);
@@ -412,7 +422,7 @@ function Deliveries() {
             </Button>
           </div>
         </div>
-        <div className="mt-6 flex-grow overflow-y-auto px-2">
+        <div className="mt-6 flex-grow overflow-y-auto px-2 ">
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 mb-10">
             <div>
               <Label htmlFor="supplier">
@@ -527,9 +537,9 @@ function Deliveries() {
               />
             </div>
           </div>
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-2 flex flex-col h-full relative">
             <div className="border-2 rounded-lg flex p-2 items-center space-x-3 ">
-              <h1 className="text-sm">Description</h1>
+              <h1 className="text-sm">Deliveries</h1>
               <div className="relative w-1/3">
                 <Input
                   type="search"
@@ -569,6 +579,39 @@ function Deliveries() {
                 </TableBody>
               </Table>
             </div>
+          </div>
+          <div className="mt-5 absolute bottom-5 left-1/2">
+            <Pagination>
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                    />
+                  </PaginationItem>
+                )}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      href="#"
+                      onClick={() => handlePageChange(index + 1)}
+                      className={currentPage === index + 1 ? "bg-gray-200" : ""}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
           </div>
         </div>
       </div>
