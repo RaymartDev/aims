@@ -4,7 +4,6 @@
 import { X, Loader } from "lucide-react";
 import { Button } from "@/Components/ui/button";
 import { useState } from "react";
-import CompanyType from "@/interface/company";
 import axios from "axios";
 import { getVersion } from "@/lib/utils";
 import { toast } from "react-toastify";
@@ -13,11 +12,11 @@ import { toast } from "react-toastify";
 interface DeleteConfirmationProps {
     open: boolean;
     onClose: () => void;
-    company: CompanyType | null;
-    handleDelete: (company: CompanyType | null) => void;
+    link: string;
+    handleDelete: () => void;
   }
   
-  function DeleteConfirmation({ open, onClose, company, handleDelete }: DeleteConfirmationProps) {
+  function DeleteConfirmation({ open, onClose, handleDelete, link }: DeleteConfirmationProps) {
     const [loading, setLoading] = useState(false);
 
     const handleDeleteConfirmation = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -25,10 +24,10 @@ interface DeleteConfirmationProps {
       setLoading(true);
 
       try {
-        const response = await axios.delete(`${getVersion()}/company/delete/${company?.id || 0}`);
+        const response = await axios.delete(`${getVersion()}/${link || ''}`);
         if (response.status >= 200 && response.status < 300) {
           toast.success(response.data?.message || 'Successfully deleted company');
-          handleDelete(company);
+          handleDelete();
           setLoading(false);
           onClose();
         } else {

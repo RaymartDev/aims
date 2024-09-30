@@ -214,7 +214,7 @@ function Company() {
             </div>
             {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
-            {openDeleteModal && <DeleteConfirmation handleDelete={handleDelete} company={deleteCompany} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCompany)} link={`company/${deleteCompany?.id || 0}`} open={openDeleteModal} onClose={() => setopenDeleteModal(false)}/>}
             {openDeactivateModal && <DeactivateConfirmation open={openDeactivateModal} onClose={() => setOpenDeativateModal(false)} />}
             {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
         </div>
