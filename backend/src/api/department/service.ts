@@ -59,7 +59,7 @@ export async function findDepartmentByName(name: string): Promise<Department | n
     const dept = await prisma.department.findFirst({
       where: { name: {
         equals: name,
-      } },
+      }, deleted: false },
     });
     return dept;
   } catch (error) {
