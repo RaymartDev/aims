@@ -54,7 +54,7 @@ function EditSupplierModal ({ onClose, onNext, getEditDataByKey, handleEditDetai
             const source = axios.CancelToken.source();
             setCancelTokenSource(source);
 
-            const response = await axios.get(`${getVersion()}/company/search?name=${term}`, {
+            const response = await axios.get(`${getVersion()}/company/search?company=${term}`, {
                 cancelToken: source.token,
                 timeout: 5000,
             });

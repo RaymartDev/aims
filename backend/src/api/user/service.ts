@@ -22,9 +22,10 @@ export async function findUserByUsername(username: string): Promise<UserWRole | 
 export async function findUserByUsernameLogin(username: string): Promise<UserWRole | null> {
   try {
     const today = new Date();
+    console.log(today)
     const user = await prisma.user.findUnique({
-      where: { 
-        username,
+      where: {
+        username: username.trim(),
         deleted: false,
         effective_to: {
           gte: today,

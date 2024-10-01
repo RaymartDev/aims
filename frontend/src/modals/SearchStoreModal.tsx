@@ -17,13 +17,25 @@ import {
     TableRow,
 } from "@/Components/ui/table";
 import type StoreType from "@/interface/store";
+import EditStoreModal from "./EditStoreModal";
+import DeactivateConfirmation from "./DeactivateConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 interface SearchStoreModalProps {
     onClose: () => void;
     store: StoreType | null;
+    handleDelete: () => void;
+    handleToggle: () => void;
+    updatedStore: (updatedStore: StoreType | null) => void;
 }
 
-function SearchStoreModal({ onClose, store }: SearchStoreModalProps) {
+function SearchStoreModal({ onClose, store, handleDelete, handleToggle, updatedStore }: SearchStoreModalProps) {
+
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-2/5 2xl:w-2/3 bg-slate-50 rounded-2xl p-6">
@@ -60,9 +72,9 @@ function SearchStoreModal({ onClose, store }: SearchStoreModalProps) {
                                     <TableCell>{store?.registered_status ? 'Registered' : 'Not Registered' || ""}</TableCell>
                                     <TableCell>{store?.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
-                                        <Button className="bg-transparent text-black hover:text-white"><Pencil/>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsEditOpen(true)}><Pencil/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsDeleteOpen(true)}><Trash/></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -70,7 +82,7 @@ function SearchStoreModal({ onClose, store }: SearchStoreModalProps) {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem>{store?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => setIsDeactivateOpen(true)}>{store?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                                 <DropdownMenuItem>Register</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
@@ -80,6 +92,33 @@ function SearchStoreModal({ onClose, store }: SearchStoreModalProps) {
                     </Table>
                 </div>
             </div>
+            <DeactivateConfirmation
+                open={isDeactivateOpen}
+                onClose={() => setIsDeactivateOpen(false)}
+                active_status={store?.active_status || false}
+                link={`store/toggle/${store?.id}`}
+                handleToggle={handleToggle}
+            />
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmation
+                open={isDeleteOpen}
+                onClose={() => {
+                setIsDeleteOpen(false);
+                onClose();
+                }}
+                link={`store/delete/${store?.id}`}
+                handleDelete={handleDelete}
+            />
+
+            {/* Edit Company Modal */}
+            {isEditOpen && (
+                <EditStoreModal
+                updateStore={updatedStore} // Pass the updateCompany function
+                store={store} // Pass the current company
+                onClose={() => setIsEditOpen(false)} // Close edit modal
+                />
+            )}
         </div>
     );
 }
