@@ -16,13 +16,25 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import type CompanyType from "@/interface/company";
+import DeactivateConfirmation from "./DeactivateConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation";
+import EditCompanyModal from './EditCompanyModal';
+import { useState } from "react";
 
 interface SearchCompanyModalProps {
   onClose: () => void;
-  company: CompanyType | null;
+  company: CompanyType | null;  
+  handleDelete: () => void;
+  handleToggle: () => void;
+  updateCompany: (updatedCompany: CompanyType | null) => void;
 }
 
-function SearchCompanyModal({ onClose, company }: SearchCompanyModalProps) {
+function SearchCompanyModal({ onClose, company, handleDelete, handleToggle, updateCompany }: SearchCompanyModalProps) {
+  
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -55,9 +67,9 @@ function SearchCompanyModal({ onClose, company }: SearchCompanyModalProps) {
                             <TableCell>{company?.name || ""}</TableCell>
                             <TableCell>{company?.active_status ? 'Active' : 'Inactive'}</TableCell>
                             <TableCell align="center">
-                                <Button className="bg-transparent text-black hover:text-white"><Pencil/>
+                                <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsEditOpen(true)}><Pencil/>
                                 </Button>
-                                <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsDeleteOpen(true)}><Trash/></Button>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>
                                         <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -65,7 +77,7 @@ function SearchCompanyModal({ onClose, company }: SearchCompanyModalProps) {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem>{company?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setIsDeactivateOpen(true)}>{company?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
@@ -74,6 +86,30 @@ function SearchCompanyModal({ onClose, company }: SearchCompanyModalProps) {
             </Table>   
         </div>
       </div>
+      <DeactivateConfirmation
+        open={isDeactivateOpen}
+        onClose={() => setIsDeactivateOpen(false)}
+        active_status={company?.active_status || false}
+        link={`company/toggle/${company?.id}`}
+        handleToggle={handleToggle}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmation
+        open={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        link={`company/delete/${company?.id}`}
+        handleDelete={handleDelete}
+      />
+
+      {/* Edit Company Modal */}
+      {isEditOpen && (
+        <EditCompanyModal
+          updateCompany={updateCompany} // Pass the updateCompany function
+          company={company} // Pass the current company
+          onClose={() => setIsEditOpen(false)} // Close edit modal
+        />
+      )}
     </div>
   );
 }

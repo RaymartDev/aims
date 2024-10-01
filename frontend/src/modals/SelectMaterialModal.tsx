@@ -12,20 +12,17 @@ import type MaterialType from "@/interface/material"
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
-import MaterialsDetailsModal from "./MaterialsDetailsModal";
 
 interface SelectMaterialModalProps {
     open: boolean;
     onClose: () => void;
-    onNext: () => void;
+    onNext: (selectedMaterial: MaterialType | null) => void;
 }
 
 
 function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
-    const [searchMaterial, setSearchMaterial] = useState<MaterialType | null>(null);
-    const [openSearchModal, setOpenSearchModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
 
     const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
@@ -53,10 +50,9 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
 
 
       const handleSelectMaterial = (material: MaterialType) => {
-        setSearchMaterial(material);
-        setOpenSearchModal(true);
         setSearchQuery("");
         setFilteredMaterial([]);
+        onNext(material);  // Directly call onNext with the selected material
     };
 
     useEffect(() => {
@@ -177,10 +173,10 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                 </div>
                 <div className="flex justify-end space-x-5">
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}>Cancel</Button>
-                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onNext}>Select</Button>
+                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => { const material = materials.find(m => m.id === selectedMaterial);
+                        onNext(material || null); }}>Select</Button>
                 </div>
             </div>
-            {openSearchModal && <MaterialsDetailsModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
         </div>
         
     );
