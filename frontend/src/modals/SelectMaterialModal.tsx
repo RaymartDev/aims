@@ -12,6 +12,7 @@ import type MaterialType from "@/interface/material"
 import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import './design.css';
 
 interface SelectMaterialModalProps {
     open: boolean;
@@ -131,7 +132,7 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                         <TableBody>
                             {materials.map(material => (
                                 <TableRow key={material.id} onClick={() => handleRowClick(material.id)}
-                                    className={selectedMaterial === material.id ? "bg-hoverCream" : "cursor-pointer"}>
+                                    className={selectedMaterial === material.id ? "bg-cream" : "cursor-pointer"}>
                                     <TableCell>{material.material_code}</TableCell>
                                     <TableCell>{material.item_description}</TableCell>
                                     <TableCell>{material.item_code}</TableCell>
