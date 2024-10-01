@@ -143,7 +143,7 @@ function EditMaterialModal ({ onClose, material, updateMaterial }: EditMaterialM
               const source = axios.CancelToken.source();
               setCancelTokenSource(source);
     
-              const response = await axios.get(`${getVersion()}/material-category/search?desc=${term}`, {
+              const response = await axios.get(`${getVersion()}/material-category/search?category=${term}`, {
                 cancelToken: source.token,
                 timeout: 5000,
               });
