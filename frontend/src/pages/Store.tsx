@@ -129,6 +129,16 @@ function Store() {
               : store  // Return the original object if no changes are needed
           )
         );
+        if (searchStore) {
+            setSearchStore((prevState) => {
+                if (!prevState) return null; // Handle the case where prevState is null
+                
+                return {
+                  ...prevState, // Spread the previous state
+                  registered_status: true, // Toggle active_status
+                };
+              });
+        }
         setRegStore(null);
       };
 

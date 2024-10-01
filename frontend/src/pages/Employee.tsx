@@ -132,6 +132,16 @@ function Employee() {
               : employee  // Return the original object if no changes are needed
           )
         );
+        if (searchEmployee) {
+            setSearchEmployee((prevState) => {
+                if (!prevState) return null; // Handle the case where prevState is null
+                
+                return {
+                  ...prevState, // Spread the previous state
+                  registered_status: true, // Toggle active_status
+                };
+              });
+        }
         setRegEmployee(null);
       };
 
