@@ -12,7 +12,6 @@ import { useCallback, useEffect, useState } from "react";
 import AddTypeModal from "@/modals/AddTypesModal";
 import DeleteConfirmation from "@/modals/DeleteConfirmation";
 import SearchTypeModal from "@/modals/SearchTypeModal";
-// import EditTypeModal from "@/modals/EditTypeModal";
 import type TypeInterface from "@/interface/types";
 import { fetchData, getVersion } from "@/lib/utils";
 import EditTypeModal from "@/modals/EditTypeModal";
@@ -88,32 +87,44 @@ function Types() {
 
     const handleDelete = (type: TypeInterface | null) => {
         if (type) {
-            setTypes((prevCompanies) =>
-                prevCompanies.filter((c) => c.id !== type.id)
+            setTypes((prevTypes) =>
+                prevTypes.filter((c) => c.id !== type.id)
             );
+            if (viewType && viewType.id === type.id) {
+                setViewType(null);
+                setOpenViewModal(false);
+            }
             setDeleteType(null);
         }
     }
 
     const handleToggle = (type: TypeInterface | null) => {
         if (type) {
-            setTypes((prevCompanies) =>
-            prevCompanies.map((c) =>
-              c.id === type.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+            const updatedType = { ...type, active_status: !type.active_status };
+            setTypes((prevTypes) =>
+                prevTypes.map((c) =>
+                    c.id === type.id ? updatedType : c
+                )
+            );
+            // If the toggled company is currently being viewed, update its status
+            if (viewType && viewType.id === type.id) {
+                setViewType(updatedType);
+            }
         }
       };
 
     const updateType = (updatedType: TypeInterface | null) => {
-        if (updatedType) {
-            setTypes(prevTypes =>
-                prevTypes.map(type =>
-                    type.id === updatedType.id ? updatedType : type
-                )
-            );
-            setEditType(null);
+    if (updatedType) {
+        setTypes(prevTypes =>
+            prevTypes.map(type =>
+                type.id === updatedType.id ? updatedType : type
+            )
+        );
+        if (viewType && viewType.id === updatedType.id) {
+            setViewType(updatedType);
         }
+        setEditType(null);
+    }
     };
 
     const addType = (type: TypeInterface | null) => {
@@ -238,7 +249,7 @@ function Types() {
             {editModal && <EditTypeModal updateType={updateType} type={editType} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteType)} link={`material-type/delete/${deleteType?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
             {openDeactivateModal && <DeactivateConfirmation active_status={toggleType?.active_status || true} handleToggle={() => handleToggle(toggleType)} link={`material-type/toggle/${toggleType?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
-            {openViewModal && <SearchTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}}/>}
+            {openViewModal && <SearchTypeModal type={viewType} onClose={() => {setOpenViewModal(false); setViewType(null);}} handleDelete={() => handleDelete(viewType)} handleToggle={() => handleToggle(viewType)} updateType={updateType}/>}
         </div>
     );
 }

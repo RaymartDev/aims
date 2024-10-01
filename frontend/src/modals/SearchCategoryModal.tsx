@@ -16,13 +16,24 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import type CategoryType from "@/interface/category";
+import DeactivateConfirmation from "./DeactivateConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation";
+import EditCategoryModal from "./EditCategoryModal";
+import { useState } from "react";
 
 interface SearchCategoryModalProps {
   onClose: () => void;
   category: CategoryType | null;
+  handleDelete: () => void;
+  handleToggle: () => void;
+  updateCategory: (updatedCategory: CategoryType | null) => void;
 }
 
-function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
+function SearchCategoryModal({ onClose, category, handleDelete, handleToggle, updateCategory }: SearchCategoryModalProps) {
+  
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -58,10 +69,10 @@ function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
                 <TableCell>{category?.active_status ? 'Active' : 'Inactive'}</TableCell>
                 <TableCell align="center">
                   <Button
-                    className="bg-transparent text-black hover:text-white">
+                    className="bg-transparent text-black hover:text-white" onClick={() => setIsEditOpen(true)}>
                     <Pencil />
                   </Button>
-                  <Button className="bg-transparent text-black hover:text-white">
+                  <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsDeleteOpen(true)}>
                     <Trash />
                   </Button>
                   <DropdownMenu>
@@ -71,7 +82,7 @@ function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setIsDeactivateOpen(true)}>{category?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -80,6 +91,30 @@ function SearchCategoryModal({ onClose, category }: SearchCategoryModalProps) {
           </Table>
         </div>
       </div>
+      <DeactivateConfirmation
+        open={isDeactivateOpen}
+        onClose={() => setIsDeactivateOpen(false)}
+        active_status={category?.active_status || false}
+        link={`material-category/toggle/${category?.id}`}
+        handleToggle={handleToggle}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmation
+        open={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        link={`material-category/delete/${category?.id}`}
+        handleDelete={handleDelete}
+      />
+
+      {/* Edit Company Modal */}
+      {isEditOpen && (
+        <EditCategoryModal
+          updateCategory={updateCategory} // Pass the updateCompany function
+          category={category} // Pass the current company
+          onClose={() => setIsEditOpen(false)} // Close edit modal
+        />
+      )}
     </div>
   );
 }

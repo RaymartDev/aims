@@ -35,7 +35,6 @@ function SearchCompanyModal({ onClose, company, handleDelete, handleToggle, upda
   const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   
-  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
       <div className="flex flex-col w-2/5 2xl:w-1/3 bg-slate-50 rounded-2xl p-6">
