@@ -97,7 +97,10 @@ function SearchCompanyModal({ onClose, company, handleDelete, handleToggle, upda
       {/* Delete Confirmation Modal */}
       <DeleteConfirmation
         open={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
+        onClose={() => {
+          setIsDeleteOpen(false);
+          onClose();
+        }}
         link={`company/delete/${company?.id}`}
         handleDelete={handleDelete}
       />

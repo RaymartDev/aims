@@ -53,10 +53,6 @@ function Company() {
             setCompanies((prevCompanies) =>
                 prevCompanies.filter((c) => c.id !== company.id)
             );
-            if (searchCompany && searchCompany.id === company.id) {
-                setSearchCompany(null);
-                setOpenSearchModal(false);
-            }
             setDeleteCompany(null);
         }
     }
@@ -69,10 +65,16 @@ function Company() {
                     c.id === company.id ? updatedCompany : c
                 )
             );
-            // If the toggled company is currently being viewed, update its status
-            if (searchCompany && searchCompany.id === company.id) {
-                setSearchCompany(updatedCompany);
-            }
+        }
+        if (searchCompany) {
+            setSearchCompany((prevState) => {
+                if (!prevState) return null; // Handle the case where prevState is null
+                
+                return {
+                  ...prevState, // Spread the previous state
+                  active_status: !prevState.active_status, // Toggle active_status
+                };
+              });
         }
       };
 
@@ -83,10 +85,10 @@ function Company() {
                     company.id === updatedCompany.id ? updatedCompany : company
                 )
             );
-            if (searchCompany && searchCompany.id === updatedCompany.id) {
-                setSearchCompany(updatedCompany);
-            }
             setEditCompany(null);
+        }
+        if (searchCompany) {
+            setSearchCompany(updatedCompany);
         }
       };
 
