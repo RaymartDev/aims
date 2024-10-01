@@ -21,9 +21,12 @@ import type SupplierType from "@/interface/supplier";
 interface SearchSupplierModalProps {
     onClose: () => void;
     supplier: SupplierType | null;
+    handleDelete: () => void;
+    handleEdit: () => void;
+    handleToggle: () => void;
 }
 
-function SearchSupplierModal({ onClose, supplier }: SearchSupplierModalProps) {
+function SearchSupplierModal({ onClose, supplier, handleDelete, handleToggle, handleEdit }: SearchSupplierModalProps) {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-2/5 2xl:w-2/3 bg-slate-50 rounded-2xl p-6">
@@ -60,9 +63,9 @@ function SearchSupplierModal({ onClose, supplier }: SearchSupplierModalProps) {
                                     <TableCell>{supplier?.mobile_number || ""}</TableCell>
                                     <TableCell>{supplier?.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell align="center">
-                                        <Button className="bg-transparent text-black hover:text-white"><Pencil/>
+                                        <Button className="bg-transparent text-black hover:text-white"><Pencil onClick={() => handleEdit()}/>
                                         </Button>
-                                        <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                        <Button className="bg-transparent text-black hover:text-white"><Trash onClick={() => handleDelete()} /></Button>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
                                                 <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -70,7 +73,9 @@ function SearchSupplierModal({ onClose, supplier }: SearchSupplierModalProps) {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent >
-                                                <DropdownMenuItem>{supplier?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => {
+                                                    handleToggle();
+                                                }}>{supplier?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>

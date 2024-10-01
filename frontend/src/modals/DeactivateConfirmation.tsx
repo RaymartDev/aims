@@ -54,7 +54,7 @@ function DeactivateConfirmation({ open, onClose, active_status, link, handleTogg
         </div>
         <div className="flex flex-col gap-2 p-4">
           <div className="text-center">
-            <h1 className="text-lg font-bold">{`Are you sure you want to ${active_status ? 'deactivate' : 'activate'} this?`}</h1>
+            <h1 className="text-lg font-bold">{`Toggle activate/deactivate?`}</h1>
           </div>
         </div>
         <div className="w-full flex justify-center gap-5 px-3 py-2">

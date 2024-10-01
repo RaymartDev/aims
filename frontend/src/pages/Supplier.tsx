@@ -448,9 +448,34 @@ function Supplier() {
                     setOpenNextViewModal(false);
                 }} 
                 onBack={handleViewBack}/>}
-            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteSupplier)} link={`supplier/delete/${deleteSupplier?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
+            {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteSupplier)} link={`supplier/delete/${deleteSupplier?.id || 0}`} open={openDeleteModal} onClose={() => {
+                setOpenDeleteModal(false);
+                setOpenSearchModal(false);
+            }}/>}
             {openDeactivateModal && <DeactivateConfirmation active_status={toggleSupplier?.active_status || true} handleToggle={() => handleToggle(toggleSupplier)} link={`supplier/toggle/${toggleSupplier?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
-            {openSearchModal && <SearchSupplierModal supplier={searchSupplier} onClose={() => {setOpenSearchModal(false); setSearchSupplier(null);}}/>}
+            {openSearchModal && <SearchSupplierModal
+                handleDelete={() => {
+                        setDeleteSupplier(searchSupplier);
+                        setOpenDeleteModal(true);
+                        setOpenSearchModal(false);
+                    }
+                } 
+                handleEdit={() => {
+                    setEditSupplier(searchSupplier);
+                    setOpenEditModal(true);
+                    setOpenSearchModal(false);
+                }}
+                handleToggle={() => {
+                    setToggleSupplier(searchSupplier);
+                    setOpenDeactivateModal(true);
+                    setOpenSearchModal(false);
+                }}
+                supplier={searchSupplier} 
+                onClose={() => {
+                    setOpenSearchModal(false); setSearchSupplier(null);
+                    }
+                }/>
+            }
         </>
     );
 }
