@@ -160,7 +160,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     // Check if username exists
     const findUser = await findUserByUsernameLogin(username);
     if (!findUser) {
-      return res.status(401).json({ message: 'User Could not be found' });
+      return res.status(401).json({ message: 'Invalid username or password' });
     }
 
     // Hash the password before comparing it to the stored hash
