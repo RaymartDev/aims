@@ -18,13 +18,25 @@ import {
 } from "@/Components/ui/table";
 import type MaterialType from "@/interface/material";
 import { formatCurrency, formatDateAsString } from "@/lib/utils";
+import EditMaterialModal from "./EditMaterialModal";
+import DeactivateConfirmation from "./DeactivateConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 interface SearchProuctModalProps {
     onClose: () => void;
     material: MaterialType | null;
+    handleDelete: () => void;
+    handleToggle: () => void;
+    updateMaterial: (updatedMaterial: MaterialType | null) => void;
 }
 
-function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
+function SearchProductModal({ onClose, material, handleDelete, handleToggle, updateMaterial }: SearchProuctModalProps) {
+
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
             <div className="flex flex-col w-2/5 2xl:w-2/3 bg-slate-50 rounded-2xl p-6">
@@ -77,11 +89,11 @@ function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
                                 <TableCell>{material?.active_status ? 'Active' : 'Inactive'}</TableCell>
                                 <TableCell align="center">
                                     <Button
-                                        className="bg-transparent text-black hover:text-white">
+                                        className="bg-transparent text-black hover:text-white" onClick={() => setIsEditOpen(true)}>
                                         <Pencil />
                                     </Button>
                                     <Button
-                                        className="bg-transparent text-black hover:text-white">
+                                        className="bg-transparent text-black hover:text-white" onClick={() => setIsDeleteOpen(true)}>
                                         <Trash />
                                     </Button>
                                     <DropdownMenu>
@@ -91,7 +103,7 @@ function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setIsDeactivateOpen(true)}>
                                                 {material?.active_status
                                                     ? "Deactivate"
                                                     : "Activate"}
@@ -104,6 +116,36 @@ function SearchProductModal({ onClose, material }: SearchProuctModalProps) {
                     </Table>
                 </div>
             </div>
+
+            <DeactivateConfirmation
+                open={isDeactivateOpen}
+                onClose={() => setIsDeactivateOpen(false)}
+                active_status={material?.active_status || false}
+                link={`material/toggle/${material?.id}`}
+                handleToggle={handleToggle}
+            />
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmation
+                open={isDeleteOpen}
+                onClose={() => {
+                setIsDeleteOpen(false);
+                onClose();
+                }}
+                link={`material/delete/${material?.id}`}
+                handleDelete={handleDelete}
+            />
+
+            {/* Edit Company Modal */}
+            {isEditOpen && (
+                <EditMaterialModal
+                updateMaterial={updateMaterial} // Pass the updateCompany function
+                material={material} // Pass the current company
+                onClose={() => setIsEditOpen(false)} // Close edit modal
+                />
+            )}
+
+
         </div>
     );
 }
