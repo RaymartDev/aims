@@ -15,6 +15,7 @@ import type SupplierType from "@/interface/supplier"
 import { cn, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
+import type MaterialType from "@/interface/material"
 
 const deliveries = [
   {
@@ -282,6 +283,7 @@ const deliveries = [
 function Deliveries() {
   const [openModal, setOpenModal] = useState(false);
   const [openNextModal, setOpenNextModal] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState<MaterialType | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [supplierPopOver, setSupplierPopOver] = useState<{searchTerm: string, isOpen: boolean, results: SupplierType[], selected: string}>({
@@ -349,6 +351,11 @@ function Deliveries() {
     }
   }, [supplierPopOver.searchTerm, fetchData]);
 
+  const handleSelectMaterial = (material: MaterialType | null) => {
+    setSelectedMaterial(material);
+    setOpenModal(false);
+    setOpenNextModal(true); // Open Assign To modal after selecting material
+};
 
   const headerHeight = 50;
   const itemHeight = 65;
@@ -390,12 +397,6 @@ function Deliveries() {
   );
 
   const totalPages = Math.ceil(filteredInventory.length / itemsPerPage);
-
-
-  const handleNextModal = () => {
-    setOpenModal(false);
-    setOpenNextModal(true);
-  };
 
   const handleBack = () => {
     setOpenNextModal(false);
@@ -618,11 +619,12 @@ function Deliveries() {
       <SelectMaterialModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onNext={handleNextModal}
+        onNext={handleSelectMaterial} 
       />
       <AssignToModal
         open={openNextModal}
         onClose={() => setOpenNextModal(false)}
+        material={selectedMaterial}
         onBack={handleBack}
       />
     </>

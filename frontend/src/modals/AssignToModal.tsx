@@ -15,14 +15,16 @@ import type EmployeeType from "@/interface/employee"
 import type StoreType from "@/interface/store"
 import { cn, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
+import type MaterialType from "@/interface/material"
 
 interface DestinationModalProps {
   open: boolean;
   onClose: () => void;
+  material: MaterialType | null;
   onBack: () => void;
 }
 
-function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
+function AssignToModal({ open, onClose, material, onBack }: DestinationModalProps) {
   const [selectedOption, setSelectedOption] = useState("employee");
 
   const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string}>({
@@ -330,26 +332,26 @@ function AssignToModal({ open, onClose, onBack }: DestinationModalProps) {
             </div>
             <div className="space-y-1 w-full">
                 <Label htmlFor="user">Material Description</Label>
-                <Input id="user" type="Text" className="focus:border-none" disabled  />
+                <Input id="user" value={material?.item_description || ""} className="focus:border-none" readOnly  />
             </div>
             <div className="flex flex-row w-full space-x-2">
               <div className="space-y-1 w-full">
                 <Label htmlFor="request">Category</Label>
-                <Input id="request" type="Text" className="focus:border-none" disabled  />
+                <Input id="request" value={material?.category || ""} className="focus:border-none " readOnly  />
               </div>
               <div className="space-y-1 w-full">
                 <Label htmlFor="user">Type</Label>
-                <Input id="user" type="Text" className="focus:border-none" disabled  />
+                <Input id="user" value={material?.material_type || ""} className="focus:border-none" readOnly  />
               </div>
             </div>
             <div className="flex flex-row w-full space-x-2">
               <div className="space-y-1 w-full">
                 <Label htmlFor="request">Quantity</Label>
-                <Input id="request" type="Number" className="focus:border-none w-1/2" />
+                <Input id="request" className="focus:border-none w-1/2" />
               </div>
               <div className="space-y-1 w-full">
                 <Label htmlFor="user">Remarks</Label>
-                <Input id="user" type="Text" className="focus:border-none" />
+                <Input id="user" className="focus:border-none" />
               </div>
             </div>
           </div>
