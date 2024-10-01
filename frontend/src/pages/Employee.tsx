@@ -105,22 +105,36 @@ function Employee() {
 
     const handleToggle = (employee: EmployeeType | null) => {
         if (employee) {
-          setEmployees((prevEmployees) =>
-            prevEmployees.map((c) =>
-              c.id === employee.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+            const updatedEmployees = { ...employee, active_status: !employee.active_status };
+            setEmployees((prevEmployees) =>
+                prevEmployees.map((c) =>
+                    c.id === employee.id ? updatedEmployees : c
+                )
+            );
+        }
+        if (searchEmployee) {
+            setSearchEmployee((prevState) => {
+                if (!prevState) return null; // Handle the case where prevState is null
+                
+                return {
+                  ...prevState, // Spread the previous state
+                  active_status: !prevState.active_status, // Toggle active_status
+                };
+              });
         }
       };
 
-    const updateEmployee = (updatedEmployee: EmployeeType | null) => {
-        if (updatedEmployee) {
-            setEmployees(prevEmployees =>
-                prevEmployees.map(employee =>
-                    employee.id === updatedEmployee.id ? updatedEmployee : employee
+    const updateEmployee = (updatedEmployees: EmployeeType | null) => {
+        if (updatedEmployees) {
+            setEmployees(prevCompanies =>
+                prevCompanies.map(employee =>
+                    employee.id === updatedEmployees.id ? updatedEmployees : employee
                 )
             );
             setEditEmployee(null);
+        }
+        if (searchEmployee) {
+            setSearchEmployee(updatedEmployees);
         }
       };
 
@@ -302,7 +316,7 @@ function Employee() {
                     setOpenViewModal(false);
                     setViewEmployee(null);  
                 }}/>}
-            {openSearchModal && <SearchEmployeeModal employee={searchEmployee} onClose={() => {setOpenSearchModal(false); setSearchEmployee(null);}}/>}
+            {openSearchModal && <SearchEmployeeModal employee={searchEmployee} onClose={() => {setOpenSearchModal(false); setSearchEmployee(null);}} handleDelete={() => handleDelete(searchEmployee)} handleToggle={() => handleToggle(searchEmployee)} updateEmployee={updateEmployee} registerEmployee={registerEmployee}/>}
         </>
     );
 }

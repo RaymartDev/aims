@@ -23,7 +23,7 @@ export async function findUserByUsernameLogin(username: string): Promise<UserWRo
   try {
     const today = new Date();
     const user = await prisma.user.findUnique({
-      where: { 
+      where: {
         username: username.trim(),
         deleted: false,
         effective_to: {

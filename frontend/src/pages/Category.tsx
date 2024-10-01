@@ -89,30 +89,42 @@ function Category() {
             setCategories((prevCategories) =>
                 prevCategories.filter((c) => c.id !== category.id)
             );
+            if (searchCategory && searchCategory.id === category.id) {
+                setSearchCategory(null);
+                setOpenSearchModal(false);
+            }
             setDeleteCategory(null);
         }
     }
 
     const handleToggle = (category: CategoryType | null) => {
         if (category) {
+            const updatedCategory = { ...category, active_status: !category.active_status };
             setCategories((prevCategories) =>
                 prevCategories.map((c) =>
-              c.id === category.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+                    c.id === category.id ? updatedCategory : c
+                )
+            );
+            // If the toggled company is currently being viewed, update its status
+            if (searchCategory && searchCategory.id === category.id) {
+                setSearchCategory(updatedCategory);
+            }
         }
       };
 
-    const updateCategory = (updatedCategory: CategoryType | null) => {
-    if (updatedCategory) {
-        setCategories(prevCategories =>
-            prevCategories.map(category =>
-                category.id === updatedCategory.id ? updatedCategory : category
-            )
-        );
-        setEditCategory(null);
-    }
-    };
+      const updateCategory = (updatedCategory: CategoryType | null) => {
+        if (updatedCategory) {
+            setCategories(prevCategories =>
+                prevCategories.map(category =>
+                    category.id === updatedCategory.id ? updatedCategory : category
+                )
+            );
+            if (searchCategory && searchCategory.id === updatedCategory.id) {
+                setSearchCategory(updatedCategory);
+            }
+            setEditCategory(null);
+        }
+      };
 
     const addCategory = (category: CategoryType | null) => {
         if (category) {
@@ -236,7 +248,7 @@ function Category() {
             {editModal && <EditCategoryModal category={editCategory} updateCategory={updateCategory} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCategory)} link={`material-category/delete/${deleteCategory?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
             {openDeactivateModal && <DeactivateConfirmation active_status={toggleCategory?.active_status || true} handleToggle={() => handleToggle(toggleCategory)} link={`material-category/toggle/${toggleCategory?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
-            {openSearchModal && <SearchCategoryModal category={searchCategory} onClose={() => {setOpenSearchModal(false); setSearchCategory(null);}}/>}
+            {openSearchModal && <SearchCategoryModal category={searchCategory} onClose={() => {setOpenSearchModal(false); setSearchCategory(null);}} handleDelete={() => handleDelete(searchCategory)} handleToggle={() => handleToggle(searchCategory)} updateCategory={updateCategory}/>}
         </div>
     );
 }

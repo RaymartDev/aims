@@ -102,15 +102,26 @@ function Store() {
 
     const handleToggle = (store: StoreType | null) => {
         if (store) {
+            const updatedStore = { ...store, active_status: !store.active_status };
             setStores((prevStores) =>
-            prevStores.map((c) =>
-              c.id === store.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+                prevStores.map((c) =>
+                    c.id === store.id ? updatedStore : c
+                )
+            );
+        }
+        if (searchStore) {
+            setSearchStore((prevState) => {
+                if (!prevState) return null; // Handle the case where prevState is null
+                
+                return {
+                  ...prevState, // Spread the previous state
+                  active_status: !prevState.active_status, // Toggle active_status
+                };
+              });
         }
       };
 
-    const updateStore = (updatedStore: StoreType | null) => {
+    const updatedStore = (updatedStore: StoreType | null) => {
         if (updatedStore) {
             setStores(prevStores =>
                 prevStores.map(store =>
@@ -118,6 +129,9 @@ function Store() {
                 )
             );
             setEditStore(null);
+        }
+        if (searchStore) {
+            setSearchStore(updatedStore);
         }
       };
 
@@ -282,7 +296,7 @@ function Store() {
             </div>
             {openAddModal && <AddStoreModal addStore={addStore} onClose={() => setOpenAddModal(false)}/>}
             {openUserRegModal && <UserRegistrationStore registerStore={registerStore} store={regStore} onClose={() => setOpenUserRegModal(false)}/>}
-            {openEditModal && <EditStoreModal updateStore={updateStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
+            {openEditModal && <EditStoreModal updateStore={updatedStore} store={editStore} onClose={() => setOpenEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteStore)} link={`store/delete/${deleteStore?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
             {openDeactivateModal && <DeactivateConfirmation active_status={toggleStore?.active_status || true} handleToggle={() => handleToggle(toggleStore)} link={`store/toggle/${toggleStore?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
             {openViewModal && <ViewStoreModal 
@@ -291,7 +305,7 @@ function Store() {
                     setViewStore(null);
                     setOpenViewModal(false);
             }}/>}
-            {openSearchModal && <SearchStoreModal store={searchStore} onClose={() => {setOpenSearchModal(false); setSearchStore(null);}}/>}
+            {openSearchModal && <SearchStoreModal store={searchStore} onClose={() => {setOpenSearchModal(false); setSearchStore(null);}} handleDelete={() => handleDelete(searchStore)} handleToggle={() => handleToggle(searchStore)} updatedStore={updatedStore}/>}
         </>
     );
 }

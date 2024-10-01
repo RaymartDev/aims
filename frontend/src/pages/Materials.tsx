@@ -67,22 +67,36 @@ function Materials() {
 
     const handleToggle = (material: MaterialType | null) => {
         if (material) {
+            const updatedMaterial = { ...material, active_status: !material.active_status };
             setMaterials((prevMaterials) =>
-            prevMaterials.map((c) =>
-              c.id === material.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+                prevMaterials.map((c) =>
+                    c.id === material.id ? updatedMaterial : c
+                )
+            );
+        }
+        if (searchMaterial) {
+            setSearchMaterial((prevState) => {
+                if (!prevState) return null; // Handle the case where prevState is null
+                
+                return {
+                  ...prevState, // Spread the previous state
+                  active_status: !prevState.active_status, // Toggle active_status
+                };
+              });
         }
       };
 
     const updateMaterial = (updatedMaterial: MaterialType | null) => {
         if (updatedMaterial) {
             setMaterials(prevMaterials =>
-                prevMaterials.map(material =>
-                    material.id === updatedMaterial.id ? updatedMaterial : material
+                prevMaterials.map(materials =>
+                    materials.id === updatedMaterial.id ? updatedMaterial : materials
                 )
             );
             setEditMaterial(null);
+        }
+        if (searchMaterial) {
+            setSearchMaterial(updatedMaterial);
         }
       };
 
@@ -267,7 +281,7 @@ function Materials() {
             }}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteMaterial)} link={`material/delete/${deleteMaterial?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
             {openDeactivateModal && <DeactivateConfirmation active_status={toggleMaterial?.active_status || true} handleToggle={() => handleToggle(toggleMaterial)} link={`material/toggle/${toggleMaterial?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
-            {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}}/>}
+            {openSearchModal && <SearchProductModal material={searchMaterial} onClose={() => {setOpenSearchModal(false); setSearchMaterial(null);}} handleDelete={() => handleDelete(searchMaterial)} handleToggle={() => handleToggle(searchMaterial)} updateMaterial={updateMaterial}/>}
         </>
     );
 }
