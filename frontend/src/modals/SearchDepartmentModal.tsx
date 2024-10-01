@@ -16,13 +16,24 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import type DepartmentType from "@/interface/department";
+import { useState } from "react";
+import DeactivateConfirmation from "./DeactivateConfirmation";
+import DeleteConfirmation from "./DeleteConfirmation";
+import EditDepartmentModal from "./EditDepartmentModal";
 
 interface SearchDepartmentModalProps {
   onClose: () => void;
   department: DepartmentType | null;
+  handleDelete: () => void;
+  handleToggle: () => void;
+  updateDepartment: (updatedDepartment: DepartmentType | null) => void;
 }
 
-function SearchDepartmentModal({ onClose, department }: SearchDepartmentModalProps) {
+function SearchDepartmentModal({ onClose, department, handleDelete, handleToggle, updateDepartment }: SearchDepartmentModalProps) {
+  
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -55,9 +66,9 @@ function SearchDepartmentModal({ onClose, department }: SearchDepartmentModalPro
                             <TableCell>{department?.name}</TableCell>
                             <TableCell>{department?.active_status ? 'Active' : 'Inactive'}</TableCell>
                             <TableCell align="center">
-                                <Button className="bg-transparent text-black hover:text-white"><Pencil/>
+                                <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsEditOpen(true)}><Pencil/>
                                 </Button>
-                                <Button className="bg-transparent text-black hover:text-white"><Trash/></Button>
+                                <Button className="bg-transparent text-black hover:text-white" onClick={() => setIsDeleteOpen(true)}><Trash/></Button>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>
                                         <Button className="bg-transparent text-fontHeading hover:text-white">
@@ -65,7 +76,7 @@ function SearchDepartmentModal({ onClose, department }: SearchDepartmentModalPro
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem>{department?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
+                                      <DropdownMenuItem onClick={() => setIsDeactivateOpen(true)}>{department?.active_status ? 'Deactivate' : 'Activate'}</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
@@ -74,6 +85,32 @@ function SearchDepartmentModal({ onClose, department }: SearchDepartmentModalPro
             </Table>
         </div>
       </div>
+
+      <DeactivateConfirmation
+        open={isDeactivateOpen}
+        onClose={() => setIsDeactivateOpen(false)}
+        active_status={department?.active_status || false}
+        link={`department/toggle/${department?.id}`}
+        handleToggle={handleToggle}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmation
+        open={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        link={`department/delete/${department?.id}`}
+        handleDelete={handleDelete}
+      />
+
+      {/* Edit Company Modal */}
+      {isEditOpen && (
+        <EditDepartmentModal
+          updateDepartment={updateDepartment} // Pass the updateCompany function
+          department={department} // Pass the current company
+          onClose={() => setIsEditOpen(false)} // Close edit modal
+        />
+      )}
+      
     </div>
   );
 }

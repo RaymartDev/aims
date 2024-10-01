@@ -83,33 +83,45 @@ function Department() {
 
     const handleDelete = (department: DepartmentType | null) => {
         if (department) {
-            setDepartments((prevDepartment) =>
-                prevDepartment.filter((c) => c.id !== department.id)
+            setDepartments((prevDepartments) =>
+                prevDepartments.filter((c) => c.id !== department.id)
             );
+            if (searchDepartment && searchDepartment.id === department.id) {
+                setSearchDepartment(null);
+                setOpenSearchModal(false);
+            }
             setDeleteDepartment(null);
         }
     }
 
     const handleToggle = (department: DepartmentType | null) => {
         if (department) {
-            setDepartments((prevDepartment) =>
-                prevDepartment.map((c) =>
-              c.id === department.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+            const updatedDepartment = { ...department, active_status: !department.active_status };
+            setDepartments((prevDepartments) =>
+                prevDepartments.map((c) =>
+                    c.id === department.id ? updatedDepartment : c
+                )
+            );
+            // If the toggled company is currently being viewed, update its status
+            if (searchDepartment && searchDepartment.id === department.id) {
+                setSearchDepartment(updatedDepartment);
+            }
         }
       };
 
     const updateDepartment = (updatedDepartment: DepartmentType | null) => {
-    if (updatedDepartment) {
-        setDepartments(prevDepartments =>
-            prevDepartments.map(department =>
-                department.id === updatedDepartment.id ? updatedDepartment : department
-            )
-        );
-        setEditDepartment(null);
+        if (updatedDepartment) {
+            setDepartments(prevDepartments =>
+                prevDepartments.map(department =>
+                    department.id === updatedDepartment.id ? updatedDepartment : department
+                )
+            );
+            if (searchDepartment && searchDepartment.id === updatedDepartment.id) {
+                setSearchDepartment(updatedDepartment);
+            }
+            setEditDepartment(null);
         }
-    };
+      };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -235,7 +247,8 @@ function Department() {
             {openModal && <AddDepartmentModal addDepartment={addDepartment} onClose={() => setOpenModal(false)}/>}
             {editModal && <EditDepartmentModal updateDepartment={updateDepartment} department={editDepartment} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteDepartment)} link={`department/delete/${deleteDepartment?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
-            {openDeactivateModal && <DeactivateConfirmation active_status={toggleDepartment?.active_status || true} handleToggle={() => handleToggle(toggleDepartment)} link={`department/toggle/${toggleDepartment?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}{openSearchModal && <SearchDepartmentModal department={searchDepartment} onClose={() => {setOpenSearchModal(false); setSearchDepartment(null);}}/>}
+            {openDeactivateModal && <DeactivateConfirmation active_status={toggleDepartment?.active_status || true} handleToggle={() => handleToggle(toggleDepartment)} link={`department/toggle/${toggleDepartment?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
+            {openSearchModal && <SearchDepartmentModal department={searchDepartment} onClose={() => {setOpenSearchModal(false); setSearchDepartment(null);}} handleDelete={() => handleDelete(searchDepartment)} handleToggle={() => handleToggle(searchDepartment)} updateDepartment={updateDepartment}/>}
         </div>
     );
 }

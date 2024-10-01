@@ -53,17 +53,26 @@ function Company() {
             setCompanies((prevCompanies) =>
                 prevCompanies.filter((c) => c.id !== company.id)
             );
+            if (searchCompany && searchCompany.id === company.id) {
+                setSearchCompany(null);
+                setOpenSearchModal(false);
+            }
             setDeleteCompany(null);
         }
     }
 
     const handleToggle = (company: CompanyType | null) => {
         if (company) {
-          setCompanies((prevCompanies) =>
-            prevCompanies.map((c) =>
-              c.id === company.id ? { ...c, active_status: !c.active_status } : c
-            )
-          );
+            const updatedCompany = { ...company, active_status: !company.active_status };
+            setCompanies((prevCompanies) =>
+                prevCompanies.map((c) =>
+                    c.id === company.id ? updatedCompany : c
+                )
+            );
+            // If the toggled company is currently being viewed, update its status
+            if (searchCompany && searchCompany.id === company.id) {
+                setSearchCompany(updatedCompany);
+            }
         }
       };
 
@@ -74,6 +83,9 @@ function Company() {
                     company.id === updatedCompany.id ? updatedCompany : company
                 )
             );
+            if (searchCompany && searchCompany.id === updatedCompany.id) {
+                setSearchCompany(updatedCompany);
+            }
             setEditCompany(null);
         }
       };
@@ -238,11 +250,11 @@ function Company() {
                     </PaginationContent>
                 </Pagination>
             </div>
-            {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)}/>}
+            {openModal && <AddCompanyModal addCompany={addCompany} onClose={() => setOpenModal(false)} /> }
             {editModal && <EditCompanyModal updateCompany={updateCompany} company={editCompany} onClose={() => setEditModal(false)}/>}
             {openDeleteModal && <DeleteConfirmation handleDelete={() => handleDelete(deleteCompany)} link={`company/delete/${deleteCompany?.id || 0}`} open={openDeleteModal} onClose={() => setOpenDeleteModal(false)}/>}
             {openDeactivateModal && <DeactivateConfirmation active_status={toggleCompany?.active_status || true} handleToggle={() => handleToggle(toggleCompany)} link={`company/toggle/${toggleCompany?.id || 0}`} open={openDeactivateModal} onClose={() => setOpenDeactivateModal(false)} />}
-            {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}}/>}
+            {openSearchModal && <SearchCompanyModal company={searchCompany} onClose={() => {setOpenSearchModal(false); setSearchCompany(null);}} handleDelete={() => handleDelete(searchCompany)} handleToggle={() => handleToggle(searchCompany)} updateCompany={updateCompany}/>}
         </div>
     );
 }
