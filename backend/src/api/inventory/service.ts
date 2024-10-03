@@ -93,9 +93,24 @@ export async function findInventoryById(id: number): Promise<Inventory | null> {
   }
 }
 
-export async function searchInventory(ref: string = '**--**'): Promise<Inventory[]> {
+interface InventoryType {
+  id: number;
+  material_code: string;
+  description: string;
+  total_balance: number;
+  remaining_balance: number;
+  quantity_out: number;
+  available: number;
+  return: number;
+  unit: string;
+  material_type: string;
+  cost: number;
+  date_entry: Date;
+}
+
+export async function searchInventory(ref: string = '**--**'): Promise<InventoryType[]> {
   try {
-    const inventories: Inventory[] = await prisma.inventory.findMany({
+    const inventories = await prisma.inventory.findMany({
       where: {
         effective_from: {
           lte: new Date(),
@@ -131,26 +146,35 @@ export async function searchInventory(ref: string = '**--**'): Promise<Inventory
       orderBy: {
         id: 'asc',
       },
+      include: {
+        material: {
+          include: {
+            type: true,
+          },
+        },
+      },
     });
-    return inventories;
+    if (inventories && inventories.length > 0) {
+      const inventoriesFinal = inventories.map((inventory) => ({
+        id: inventory.id,
+        material_code: inventory.material.material_code,
+        description: inventory.material.description,
+        total_balance: inventory.total_balance,
+        remaining_balance: inventory.remaining_balance,
+        quantity_out: inventory.quantity_out,
+        available: inventory.available,
+        return: inventory.return,
+        unit: inventory.material.unit_of_measure,
+        material_type: inventory.material.type.description,
+        cost: inventory.material.cost,
+        date_entry: inventory.material.date_entry,
+      }));
+      return inventoriesFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }
-}
-
-interface InventoryType {
-  id: number;
-  material_code: string;
-  description: string;
-  total_balance: number;
-  remaining_balance: number;
-  quantity_out: number;
-  available: number;
-  return: number;
-  unit: string;
-  material_type: string;
-  cost: number;
-  date_entry: Date;
 }
 
 export async function listInventories(page: number, limit: number): Promise<{ inventoriesFinal: InventoryType[], maxPage: number }> {
