@@ -63,6 +63,7 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
   const [itemCode, setItemCode] = useState('');
   const [materialCon, setMaterialCon] = useState('');
   const [uom, setUOM] = useState('');
+  const [endWarranty, setEndWarranty] = useState('')
   const [dateEntry, setDateEntry] = useState('');
 
   const clearData = () => {
@@ -75,7 +76,8 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
         results: [],
         selected: ''})
     setDesc('');
-    setModel('')
+    setModel('');
+    setEndWarranty('');
     setUnitCost(0);
     setMaterialCode('');
     setItemCode('');
@@ -102,6 +104,7 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
       const response = await axios.post(`${getVersion()}/material`, {
         description: desc,
         brand_model: model,
+        end_warranty: new Date(endWarranty),
         cost: unitCost,
         category: categoryPopOver.selected,
         material_code: materialCode,
@@ -118,6 +121,7 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
           id: response.data?.material.id || 1,
           item_description: desc,
           brand_model: model,
+          end_warranty: new Date(endWarranty),
           unit_cost: unitCost,
           category: categoryPopOver.selected,
           material_code: materialCode,
@@ -251,11 +255,17 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
             <Input value={desc} onChange={(e) => setDesc(e.target.value)} className="focus:border-none border-black"></Input>
           </div>
           <div className="flex flex-row w-full space-x-2">
-            <div className="space-y-1 w-full">
+            <div className="space-y-1 w-1/2">
               <p className="text-sm text-[#697386]">
                 Brand Model <span className=" text-red-500">*</span>
               </p>
               <Input value={model} onChange={(e) => setModel(e.target.value)} className="focus:border-none border-black"></Input>
+            </div>
+            <div className="space-y-1 w-1/2">
+              <p className="text-sm text-[#697386]">
+                End Warranty <span className=" text-red-500">*</span>
+              </p>
+              <Input value={endWarranty} type="Date" onChange={(e) => setEndWarranty(e.target.value)} className="focus:border-none border-black"></Input>
             </div>
           </div>
           <div className="flex flex-row w-full space-x-2">
