@@ -8,6 +8,8 @@ export default interface Material {
     item_code: string;
     material_con: string;
     material_type: string;
+    serial_number: string;
+    asset_number: string;
     uom: string;
     date_entry: Date;
     active_status: boolean;

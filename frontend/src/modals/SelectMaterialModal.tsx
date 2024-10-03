@@ -17,14 +17,15 @@ import './design.css';
 interface SelectMaterialModalProps {
     open: boolean;
     onClose: () => void;
-    onNext: (selectedMaterial: MaterialType | null) => void;
+    onNext: () => void;
+    selectedMaterial: MaterialType | null;
+    selectMaterial: React.Dispatch<React.SetStateAction<MaterialType | null>>;
 }
 
 
-function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps) {
+function SelectMaterialModal({ open, onClose, onNext, selectedMaterial, selectMaterial }: SelectMaterialModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<MaterialType[]>([]);
-    const [selectedMaterial, setSelectedMaterial] = useState<number | null>(null);
 
     const [filteredMaterial, setFilteredMaterial] = useState<MaterialType[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,7 +54,8 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
       const handleSelectMaterial = (material: MaterialType) => {
         setSearchQuery("");
         setFilteredMaterial([]);
-        onNext(material);  // Directly call onNext with the selected material
+        selectMaterial(material);  // Directly call onNext with the selected material
+        onNext();
     };
 
     useEffect(() => {
@@ -74,10 +76,6 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-    };
-
-    const handleRowClick = (id: number) => {
-        setSelectedMaterial(id);
     };
 
     
@@ -131,8 +129,10 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                         </TableHeader>
                         <TableBody>
                             {materials.map(material => (
-                                <TableRow key={material.id} onClick={() => handleRowClick(material.id)}
-                                    className={selectedMaterial === material.id ? "bg-cream" : "cursor-pointer"}>
+                                <TableRow key={`${material.id}${material.material_code}`} onClick={() => {
+                                    selectMaterial(material);
+                                }}
+                                    className={(selectedMaterial?.id || 0) === material.id ? "bg-cream cursor-default" : "cursor-pointer"}>
                                     <TableCell>{material.material_code}</TableCell>
                                     <TableCell>{material.item_description}</TableCell>
                                     <TableCell>{material.item_code}</TableCell>
@@ -174,8 +174,11 @@ function SelectMaterialModal({ open, onClose, onNext }: SelectMaterialModalProps
                 </div>
                 <div className="flex justify-end space-x-5">
                     <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}>Cancel</Button>
-                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => { const material = materials.find(m => m.id === selectedMaterial);
-                        onNext(material || null); }}>Select</Button>
+                    <Button className="w-32 bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={() => { 
+                        const material = materials.find(m => m.id === selectedMaterial?.id || 0);
+                        selectMaterial(material || null);
+                        onNext(); 
+                    }}>Select</Button>
                 </div>
             </div>
         </div>

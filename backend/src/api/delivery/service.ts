@@ -134,6 +134,7 @@ export async function listDeliveries(page: number, limit: number): Promise<{ del
         description: delivery.material.description,
         serial_number: delivery.material.serial_number || '',
         asset_number: delivery.material.asset_number || '',
+        quantity: delivery.quantity || 0,
         unit: delivery.material.unit_of_measure,
         remarks: delivery.remarks,
       }));

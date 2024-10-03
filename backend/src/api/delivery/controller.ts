@@ -2,11 +2,67 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { deleteDeliveryById, findDeliveryById, insertDelivery, listDeliveries, searchDeliveryByReferenceOrDesc, updateDelivery } from './service';
+import { findSupplierById } from '../supplier/service';
+import { findEmployeeById } from '../employee/service';
+import { findStoreById } from '../store/service';
+import { findUserTypeByName } from '../user/service';
+import { upsertInventoryIncrement } from '../inventory/service';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
-    const newDelivery = await insertDelivery({ modified_by_id: req.user?.id || 1, ...req.body });
-    if (newDelivery) {
+
+    const findSupplier = await findSupplierById(req.body.supplier_id || -1);
+    if (!findSupplier) {
+      res.status(404).json({ message: 'Supplier not found' });
+      return;
+    }
+
+    if (req.body.user_type === 'employee') {
+      const findEmployee = await findEmployeeById(req.body.requestor_id || -1);
+      if (!findEmployee) {
+        res.status(404).json({ message: 'Employee not found' });
+        return;
+      }
+    } else {
+      const findStore = await findStoreById(req.body.requestor_id || -1);
+      if (!findStore) {
+        res.status(404).json({ message: 'Store not found' });
+        return;
+      }
+    }
+    
+    const findUserType = await findUserTypeByName(req.body.user_type || '**-**');
+    if (!findUserType) {
+      res.status(404).json({ message: `User type ${req.body.user_type} could not be found` });
+      return;
+    }
+
+    const result = {
+      material_id: req.body.material_id,
+      remarks: req.body.remarks,
+      quantity: req.body.quantity,
+      user_id: req.user?.id || 0,
+      modified_by_id: req.user?.id || 0,
+      supplier_id: req.body.supplier_id,
+      requestor_id: req.body.supplier_id,
+      user_type_id: findUserType?.id || 0,
+      capex_number: req.body.capex_number,
+      delivery_receipt_number: req.body.delivery_receipt_number,
+      product_order_number: req.body.product_order_number,
+      purchase_request_number: req.body.purchase_request_number,
+    };
+
+    const newDelivery = await insertDelivery({ ...result });
+    const newInventory = await upsertInventoryIncrement({
+      material_id: req.body.material_id,
+      total_balance: req.body.quantity,
+      remaining_balance: req.body.quantity,
+      available: req.body.quantity,
+      quantity_out: 0,
+      return: 0,
+      modified_by_id: req.user?.id || 0,
+    }, parseInt(req.body.material_id), parseInt(req.body.quantity));
+    if (newDelivery && newInventory) {
       res.status(200).json({ delivery: newDelivery, message: 'Successfully created delivery' });
     } else {
       res.status(500).json({ message: 'Server error' });

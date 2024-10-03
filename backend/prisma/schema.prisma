@@ -51,6 +51,19 @@ model Store {
   @@index([name, cost_center_code])
 }
 
+model UserType {
+  id          Int       @id @default(autoincrement())
+  name        String
+  deliveries Delivery[]
+  deleted Boolean @default(false)
+  effective_from DateTime @default(now())
+  effective_to DateTime @default("2099-12-01T00:00:00Z")
+  modified_on DateTime @updatedAt
+  modified_by_id Int? 
+  modified_by User? @relation("UserTypeModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+
 model User {
   id Int @id @default(autoincrement())
   employee_id Int?  // nullable foreign key to Employee
@@ -85,12 +98,12 @@ model User {
   modified_supplier_contacts Supplier_Contact_Details[] @relation("SupplierContactModifiedBy")
   modified_deliveries Delivery[] @relation("DeliveryModifiedBy")
   modified_releases Release[] @relation("ReleaseModifiedBy")
-  requestors_delivery Delivery[] @relation("RequestorDelivery")
   users_delivery Delivery[] @relation("UserDelivery")
   shipped_by_release Release[] @relation("ShippedByRelease")
   received_by_release Release[] @relation("ReceivedByRelease")
   material_categories Material_Category[] @relation("MaterialCategoryModifiedBy")
   material_types Material_Type[] @relation("MaterialTypeModifiedBy")
+  modified_user_types UserType[] @relation("UserTypeModifiedBy")
 }
 
 // TODO store, user
@@ -192,8 +205,8 @@ model Material {
   category Material_Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   date_entry DateTime
   deleted Boolean @default(false)
-  serial_number String?
-  asset_number String?
+  serial_number String @default("")
+  asset_number String @default("")
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt
@@ -208,7 +221,7 @@ model Material {
 model Inventory {
   id Int @id @default(autoincrement())
   material  Material  @relation(fields: [material_id], references: [id], onDelete: Cascade)
-  material_id  Int
+  material_id  Int @unique
   total_balance Int
   remaining_balance Int
   quantity_out Int
@@ -223,19 +236,22 @@ model Inventory {
 
 model Delivery {
   id Int @id @default(autoincrement())
-  supplier Supplier @relation(fields: [supplier_user_id], references: [id], onDelete: Cascade)
-  supplier_user_id Int
+  supplier Supplier @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+  supplier_id Int
   material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
+  user_type_id Int 
+  user_type UserType @relation(fields: [user_type_id], references: [id], onDelete: Cascade)
   material_id Int
   remarks String
   quantity Int
-  requestor User @relation("RequestorDelivery", fields: [requestor_user_id], references: [id], onDelete: Cascade)
-  requestor_user_id Int
   user User @relation("UserDelivery", fields: [user_id], references: [id], onDelete: Cascade)
   user_id Int
+  requestor_id Int
+  delivery_receipt_number String
+  product_order_number String
+  purchase_request_number String
+  capex_number String
   deleted Boolean @default(false)
-  date_entry DateTime
-  end_warranty DateTime
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt

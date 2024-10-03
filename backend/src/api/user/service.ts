@@ -1,4 +1,4 @@
-import { User, UserRole } from '@prisma/client';
+import { User, UserRole, UserType } from '@prisma/client';
 import prisma from '../../lib/prisma';
 
 interface UserWRole extends User {
@@ -14,6 +14,21 @@ export async function findUserByUsername(username: string): Promise<UserWRole | 
       },
     });
     return user;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function findUserTypeByName(name: string): Promise<UserType | null> {
+  try {
+    const userType = await prisma.userType.findFirst({
+      where: { 
+        name: {
+          startsWith: name,
+        },
+      },
+    });
+    return userType;
   } catch (error) {
     throw new Error('Database error');
   }

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-types */
-import { useCallback, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
@@ -11,35 +12,82 @@ import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Check, ChevronDown, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
-import type EmployeeType from "@/interface/employee"
-import type StoreType from "@/interface/store"
 import { cn, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
 import type MaterialType from "@/interface/material"
+import type EmployeeType from "@/interface/employee";
+import type StoreType from "@/interface/store";
 
 interface DestinationModalProps {
   open: boolean;
   onClose: () => void;
   material: MaterialType | null;
   onBack: () => void;
+  employeePopOver: {
+    searchTerm: string;
+    isOpen: boolean;
+    results: EmployeeType[];
+    selected: string;
+    selected_detail: {
+      name: string;
+      company: string;
+    };
+  }
+  storePopOver: {
+    searchTerm: string;
+    isOpen: boolean;
+    results: StoreType[];
+    selected: string;
+    selected_detail: {
+      id: number;
+      name: string;
+      company: string;
+    };
+  };
+  setEmployeePopOver: React.Dispatch<React.SetStateAction<{
+    searchTerm: string;
+    isOpen: boolean;
+    results: EmployeeType[];
+    selected: string;
+    selected_detail: {
+      id: number;
+      name: string;
+      company: string;
+    };
+  }>>
+  setStorePopOver: React.Dispatch<React.SetStateAction<{
+    searchTerm: string;
+    isOpen: boolean;
+    results: StoreType[];
+    selected: string;
+    selected_detail: {
+      id: number;
+      name: string;
+      company: string;
+    };
+  }>>;
+  selectedOption: string;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+  delivery: {
+    remarks: string;
+    quantity: number;
+    delivery_receipt_number: string;
+    product_order_number: string;
+    purchase_request_number: string;
+    capex_number: string;
+};
+setDelivery: React.Dispatch<React.SetStateAction<{
+    remarks: string;
+    quantity: number;
+    delivery_receipt_number: string;
+    product_order_number: string;
+    purchase_request_number: string;
+    capex_number: string;
+  }>>;
+  handleDelivery: () => Promise<void>
 }
 
-function AssignToModal({ open, onClose, material, onBack }: DestinationModalProps) {
-  const [selectedOption, setSelectedOption] = useState("employee");
-
-  const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string}>({
-    searchTerm: '',
-    isOpen: false,
-    results: [],
-    selected: '',
-  });
-
-  const [storePopOver, setStorePopOver] = useState<{searchTerm: string, isOpen: boolean, results: StoreType[], selected: string}>({
-    searchTerm: '',
-    isOpen: false,
-    results: [],
-    selected: '',
-  });
+function AssignToModal({ handleDelivery, open, onClose, material, onBack, employeePopOver, setEmployeePopOver, storePopOver, setStorePopOver, selectedOption, setSelectedOption, delivery, setDelivery }: DestinationModalProps) {
 
   const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
 
@@ -91,6 +139,14 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
     }, 500), // Adjust debounce delay as needed (500ms)
     []
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChange = (name: any, value: any) => {
+    setDelivery(prevState => ({
+      ...prevState,
+      [name]: value, // Update the property based on the input's name
+    }));
+  };
 
   const fetchStoreData = useCallback(
     debounce(async (term: string) => {
@@ -148,14 +204,28 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
     setSelectedOption(value);
     
     if (value === "employee") {
-      setStorePopOver({ searchTerm: '', isOpen: false, results: [], selected: '' }); // Clear store selection
+      setStorePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_detail: {
+        id: 0,
+        name: '',
+        company: ''
+      }}); // Clear store selection
     } else {
-      setEmployeePopOver({ searchTerm: '', isOpen: false, results: [], selected: '' }); // Clear employee selection
+      setEmployeePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_detail: {
+        id: 0,
+        name: '',
+        company: ''
+      }}); // Clear employee selection
     }
   };
 
 
   if (!open) return null;
+
+  const handleSave = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    e.preventDefault();
+    await handleDelivery();
+    onClose();
+  }
 
   return (
     <>
@@ -227,7 +297,7 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
                               <CommandItem
                                 key={employee.id}
                                 value={`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
-                                onSelect={(selected) => setEmployeePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                onSelect={(selected) => setEmployeePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_detail: { id: employee.id, name: `${employee.first_name} ${employee.last_name}`, company: employee.company_name } }))}
                               >
                                 <Check
                                   className={cn(
@@ -277,7 +347,7 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
                               <CommandItem
                                 key={store.id}
                                 value={`${store.cost_center_code} - ${store.name}`}
-                                onSelect={(selected) => setStorePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                onSelect={(selected) => setStorePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_detail: { id: store.id, name: store.name, company: store.company_name } }))}
                               >
                                 <Check
                                   className={cn(
@@ -305,25 +375,20 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
                     ? "Employee Name"
                     : "Store Name"}
                 </Label>
-                <Input id="name" className="focus:border-none" readOnly/>
+                <Input id="name" value={selectedOption === "employee"
+                    ? employeePopOver.selected_detail.name
+                    : storePopOver.selected_detail.name} className="focus:border-none" disabled/>
               </div>
               <div className="space-y-1 w-1/2">
                 <Label htmlFor="company">Company</Label>
                 <Input
                   id="company"
-                  readOnly
+                  value={selectedOption === "employee"
+                    ? employeePopOver.selected_detail.company
+                    : storePopOver.selected_detail.company}
+                  disabled
                   className="focus:border-none active:border-none"
                 />
-              </div>
-            </div>
-            <div className="flex flex-row w-full space-x-2">
-              <div className="space-y-1 w-full">
-                <Label htmlFor="request">Requestor Name</Label>
-                <Input id="request" type="Text" className="focus:border-none" />
-              </div>
-              <div className="space-y-1 w-full">
-                <Label htmlFor="user">Username</Label>
-                <Input id="user" type="Text" className="focus:border-none" />
               </div>
             </div>
             <div>
@@ -332,26 +397,26 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
             </div>
             <div className="space-y-1 w-full">
                 <Label htmlFor="user">Material Description</Label>
-                <Input id="user" value={material?.item_description || ""} className="focus:border-none" readOnly  />
+                <Input id="user" value={material?.item_description || ""} className="focus:border-none" disabled  />
             </div>
             <div className="flex flex-row w-full space-x-2">
               <div className="space-y-1 w-full">
                 <Label htmlFor="request">Category</Label>
-                <Input id="request" value={material?.category || ""} className="focus:border-none " readOnly  />
+                <Input id="request" value={material?.category || ""} className="focus:border-none " disabled  />
               </div>
               <div className="space-y-1 w-full">
                 <Label htmlFor="user">Type</Label>
-                <Input id="user" value={material?.material_type || ""} className="focus:border-none" readOnly  />
+                <Input id="user" value={material?.material_type || ""} className="focus:border-none" disabled  />
               </div>
             </div>
             <div className="flex flex-row w-full space-x-2">
               <div className="space-y-1 w-full">
                 <Label htmlFor="request">Quantity</Label>
-                <Input id="request" className="focus:border-none w-1/2" />
+                <Input id="request" value={delivery.quantity} onChange={(e) => handleChange('quantity', e.target.value)} disabled={material?.material_con === 'y'} className="focus:border-none w-1/2" />
               </div>
               <div className="space-y-1 w-full">
                 <Label htmlFor="user">Remarks</Label>
-                <Input id="user" className="focus:border-none" />
+                <Input id="user" value={delivery.remarks} onChange={(e) => handleChange('remarks', e.target.value)} className="focus:border-none" />
               </div>
             </div>
           </div>
@@ -362,7 +427,7 @@ function AssignToModal({ open, onClose, material, onBack }: DestinationModalProp
             >
               <span>Back</span>
             </Button>
-            <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white">
+            <Button onClick={(e) => handleSave(e)} className="bg-hoverCream text-fontHeading font-semibold hover:text-white">
               <span>Save</span>
             </Button>
           </div>

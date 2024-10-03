@@ -14,6 +14,60 @@ export async function insertInventory(inventory: any): Promise<Inventory | null>
   }
 }
 
+export async function upsertInventoryIncrement(inventory: any, id: number, quantity: number): Promise<Inventory | null> {
+  try {
+    const createInventory = await prisma.inventory.upsert({
+      create: {
+        ...inventory,
+      },
+      where: {
+        material_id: id,
+      },
+      update: {
+        total_balance: {
+          increment: quantity,
+        },
+        remaining_balance: {
+          increment: quantity,
+        },
+        available: {
+          increment: quantity,
+        },
+      },
+    });
+    return createInventory;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
+export async function upsertInventoryDecrement(inventory: any, material_id: number, quantity: number): Promise<Inventory | null> {
+  try {
+    const createInventory = await prisma.inventory.upsert({
+      where: {
+        material_id,
+      },
+      update: {
+        total_balance: {
+          decrement: quantity,
+        },
+        remaining_balance: {
+          decrement: quantity,
+        },
+        available: {
+          decrement: quantity,
+        },
+      },
+      create: {
+        ...inventory,
+      },
+    });
+    return createInventory;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function updateInventory(inventory: any, id: number): Promise<Inventory | null> {
   try {
     const updatedInventory = await prisma.inventory.update({
@@ -59,6 +113,15 @@ export async function searchInventory(ref: string = '**--**'): Promise<Inventory
             material: {
               description: {
                 startsWith: ref,
+              },
+            },
+          },
+          {
+            material: {
+              type: {
+                description: {
+                  startsWith: ref,
+                },
               },
             },
           },
