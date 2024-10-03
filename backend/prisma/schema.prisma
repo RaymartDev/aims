@@ -204,6 +204,7 @@ model Material {
   category_id Int
   category Material_Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   date_entry DateTime
+  end_warranty DateTime
   deleted Boolean @default(false)
   serial_number String @default("")
   asset_number String @default("")

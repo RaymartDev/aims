@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
@@ -22,9 +23,11 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { Skeleton } from "@/Components/ui/skeleton";
 import type InventoryType from "@/interface/inventory";
-import { formatDateAsString, getVersion, fetchData as myFetch } from "@/lib/utils";
+import { formatDateAsString, getVersion, fetchData } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import SearchInventoryModal from "@/modals/SearchInventoryModal";
+import useDebounce from "@/hooks/useDebounce";
 
 function InventoryOverview() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,13 +36,18 @@ function InventoryOverview() {
   const [maxPage, setMaxPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [openSearchModal, setOpenSearchModal] = useState(false);
+  const [searchInventory, setSearchInventory] = useState<InventoryType | null>(null);
+  const debouncedQuery = useDebounce(searchQuery, 250);
+  const [filteredInventory, setFilteredInventory] = useState<InventoryType[]>([]);
+
   const itemsPerPage = 17;
   const dispatch = useAppDispatch();
 
   const loadInventories = useCallback(() => {
     setLoading(true);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    myFetch({
+    fetchData({
       url: `${getVersion()}/inventory/list`,
       query: { limit: itemsPerPage, page: currentPage },
       onSuccess: (data) => {
@@ -60,6 +68,31 @@ function InventoryOverview() {
     setCurrentPage(page);
   };
 
+  useEffect(() => {
+      if (debouncedQuery.trim() !== "") {
+        fetchData({
+              url: `${getVersion()}/inventory/search`,
+              query: {inventory: debouncedQuery },
+              onSuccess: (data) => {
+                  setFilteredInventory(data.inventories);
+              },
+              dispatch,
+              logout: () => dispatch(logout())
+          });
+      } else {
+          setFilteredInventory([]);
+      }
+  }, [debouncedQuery, dispatch]);
+
+  const handleSelectInventory = (inventory: InventoryType) => {
+      setSearchInventory(inventory);
+      setOpenSearchModal(true);
+      setSearchQuery("");
+      setFilteredInventory([]);
+  }
+
+  
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-col h-full relative">
@@ -76,14 +109,27 @@ function InventoryOverview() {
             </div>
             <div className="flex flex-row w-6/12 space-x-2">
               <div className="relative w-10/12 ">
-                <Input
-                  type="search"
-                  placeholder="Search by Product Description / Type"
-                  className="pl-12 border-2 focus:border-none"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                <Input
+                                    type="search"
+                                    placeholder="Search Inventory"
+                                    className="pl-12 border-2 focus:border-none"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                {filteredInventory.length > 0 && (
+                                    <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                        {filteredInventory.map((inventory) => (
+                                            <div
+                                                key={inventory.id}
+                                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                onClick={() => handleSelectInventory(inventory)}
+                                            >
+                                                {inventory.id} - {inventory.material_code} - {inventory.description} 
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
               </div>
               <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
                 <Download size={20} />
@@ -199,6 +245,8 @@ function InventoryOverview() {
           </PaginationContent>
         </Pagination>
       </div>
+
+      {openSearchModal && <SearchInventoryModal inventory={searchInventory} onClose={() => {setOpenSearchModal(false); setSearchInventory(null);}} />}
     </div>
   );
 }
