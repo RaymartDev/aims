@@ -53,9 +53,18 @@ export async function deleteDeliveryById(id: number): Promise<Delivery | null> {
   }
 }
 
-export async function searchDeliveryByReferenceOrDesc(ref: string = '**--**'): Promise<Delivery[]> {
+interface DeliveryType {
+  id: number;
+  description: string,
+  serial_number: string,
+  asset_number: string,
+  unit: string,
+  remarks: string,
+}
+
+export async function searchDeliveryByReferenceOrDesc(ref: string = '**--**'): Promise<DeliveryType[]> {
   try {
-    const deliveries: Delivery[] = await prisma.delivery.findMany({
+    const deliveries = await prisma.delivery.findMany({
       where: {
         deleted: false,
         effective_from: {
@@ -83,20 +92,26 @@ export async function searchDeliveryByReferenceOrDesc(ref: string = '**--**'): P
       orderBy: {
         id: 'asc',
       },
+      include: {
+        material: true,
+      },
     });
-    return deliveries;
+    if (deliveries && deliveries.length > 0) {
+      const deliveriesFinal = deliveries.map((delivery) => ({
+        id: delivery.id,
+        description: delivery.material.description,
+        serial_number: delivery.material.serial_number || '',
+        asset_number: delivery.material.asset_number || '',
+        quantity: delivery.quantity || 0,
+        unit: delivery.material.unit_of_measure,
+        remarks: delivery.remarks,
+      }));
+      return deliveriesFinal;
+    }
+    return [];
   } catch (error) {
     throw new Error('Database error');
   }
-}
-
-interface DeliveryType {
-  id: number;
-  description: string,
-  serial_number: string,
-  asset_number: string,
-  unit: string,
-  remarks: string,
 }
 
 export async function listDeliveries(page: number, limit: number): Promise<{ deliveriesFinal: DeliveryType[], maxPage: number }> {
