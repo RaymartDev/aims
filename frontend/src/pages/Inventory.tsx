@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { MoreHorizontal, Search, Download } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,12 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/Components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
 import {
   Pagination,
   PaginationContent,
@@ -166,19 +160,6 @@ function InventoryOverview() {
                       <TableCell>{inventory.material_type}</TableCell>
                       <TableCell>{inventory.cost}</TableCell>
                       <TableCell>{formatDateAsString(new Date(inventory.date_entry))}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger>
-                            <Button className="bg-transparent text-fontHeading hover:text-white">
-                              <MoreHorizontal />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
                     </TableRow>
                   ))}
             </TableBody>

@@ -60,21 +60,17 @@ function CancelModal({ open, onClose }: CancelModalProps) {
                 </div>
                 <div className="overflow-y-auto px-2">
                     <div className="flex flex-col justify-start mt-5 space-y-2">
-                        <div className="space-y-1 w-1/2">
-                            <h1>DR Number</h1>
-                            <Input className="h-14" disabled></Input>
-                        </div>
-
-                        <div className="flex flex-row justify-between mt-3 space-x-2">
+                        <div className="flex space-x-2">
                             <div className="space-y-1 w-1/2">
-                                <h1>Status</h1>
-                                <Input className="focus:border-none"></Input>
+                                <h1>DR Number</h1>
+                                <Input className="h-14" disabled></Input>
                             </div>
                             <div className="space-y-1 w-1/2">
                                 <h1>Date Out</h1>
-                                <Input className="focus:border-none"></Input>
+                                <Input className="focus:border-none" type="Date"></Input>
                             </div>
                         </div>
+                        
                         <div className="space-y-1">
                             <h1>Relead To</h1>
                             <Input className="focus:border-none"></Input>

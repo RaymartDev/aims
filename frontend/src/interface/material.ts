@@ -2,6 +2,7 @@ export default interface Material {
     id: number;
     item_description: string;
     brand_model: string;
+    end_warranty: Date;
     unit_cost: number;
     category: string;
     material_code: string;
