@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -15,7 +16,7 @@ import AssignToModal from "@/modals/AssignToModal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
 import type SupplierType from "@/interface/supplier" 
-import { cn, getVersion, fetchData as myFetch } from "@/lib/utils";
+import { cn, getVersion, fetchData as myFetch, fetchData as fetchDeliveryData } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import type MaterialType from "@/interface/material"
@@ -25,6 +26,8 @@ import { logout } from "@/slices/userSlice";
 import type EmployeeType from "@/interface/employee"
 import type StoreType from "@/interface/store"
 import { toast } from "react-toastify";
+import useDebounce from "@/hooks/useDebounce";
+import SearchDeliveriesModal from "@/modals/SearchDeliveriesModal";
 
 function Deliveries() {
   const [openModal, setOpenModal] = useState(false);
@@ -36,6 +39,11 @@ function Deliveries() {
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useAppDispatch();
 
+  const debouncedQuery = useDebounce(searchQuery, 250);
+  const [filteredDelivery, setFilteredDelivery] = useState<DeliveryType[]>([]);
+  const [searchDelivery, setSearchDelivery] = useState<DeliveryType | null>(null);
+  const [openSearchModal, setOpenSearchModal] = useState(false);
+  
   const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string, selected_detail: {
     id: number;
     name: string;
@@ -240,6 +248,30 @@ function Deliveries() {
     setOpenModal(true);
   };
 
+  useEffect(() => {
+    if (debouncedQuery.trim() !== "") {
+        fetchDeliveryData({
+            url: `${getVersion()}/delivery/search`,
+            query: {delivery: debouncedQuery },
+            onSuccess: (data) => {
+                setFilteredDelivery(data.deliveries);
+            },
+            dispatch,
+            logout: () => dispatch(logout())
+        });
+    } else {
+      setFilteredDelivery([]);
+    }
+}, [debouncedQuery, dispatch]);
+
+
+  const handleSelectDelivery = (delivery: DeliveryType) => {
+    setSearchDelivery(delivery);
+    setOpenSearchModal(true);
+    setSearchQuery("");
+    setFilteredDelivery([]);
+  };
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -370,12 +402,25 @@ function Deliveries() {
               <div className="relative w-1/3">
                 <Input
                   type="search"
-                  placeholder="Search Delivery Number / Product Description"
+                  placeholder="Search Delivery Number"
                   className="pl-12 border-2 focus:border-none"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  {filteredDelivery.length > 0 && (
+                    <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                        {filteredDelivery.map((delivery) => (
+                            <div
+                                key={delivery.id}
+                                className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                onClick={() => handleSelectDelivery(delivery)}
+                            >
+                                {delivery.id} - {delivery.description}
+                            </div>
+                        ))}
+                    </div>
+                  )}
               </div>
             </div>
             <div className="border-2 rounded-lg">
@@ -517,6 +562,7 @@ function Deliveries() {
         setDelivery={setDelivery}
         handleDelivery={handleDelivery}
       />}
+      {openSearchModal && <SearchDeliveriesModal delivery={searchDelivery} onClose={() => {setOpenSearchModal(false); setSearchDelivery(null);}}/>}
     </>
   );
 }
