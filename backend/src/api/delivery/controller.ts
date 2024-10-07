@@ -40,7 +40,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const result = {
       material_id: req.body.material_id,
       remarks: req.body.remarks,
-      quantity: req.body.quantity,
+      quantity: parseInt(req.body.quantity),
       user_id: req.user?.id || 0,
       modified_by_id: req.user?.id || 0,
       supplier_id: req.body.supplier_id,
@@ -55,9 +55,9 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     const newDelivery = await insertDelivery({ ...result });
     const newInventory = await upsertInventoryIncrement({
       material_id: req.body.material_id,
-      total_balance: req.body.quantity,
-      remaining_balance: req.body.quantity,
-      available: req.body.quantity,
+      total_balance: parseInt(req.body.quantity),
+      remaining_balance: parseInt(req.body.quantity),
+      available: parseInt(req.body.quantity),
       quantity_out: 0,
       return: 0,
       modified_by_id: req.user?.id || 0,

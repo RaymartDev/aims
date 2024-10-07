@@ -67,16 +67,13 @@ export async function searchDeliveryByReferenceOrDesc(ref: string = '**--**'): P
     const deliveries = await prisma.delivery.findMany({
       where: {
         deleted: false,
-        effective_from: {
-          lte: new Date(),
-        },
         effective_to: {
           gte: new Date(),
         },
         OR: [
           {
             id: {
-              equals: parseInt(ref),
+              equals: isNaN(parseInt(ref)) ? -1 : parseInt(ref),
             },
           },
           {

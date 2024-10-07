@@ -81,9 +81,6 @@ export async function searchDepartmentByName(name: string = '**--**'): Promise<D
           startsWith: name,
         },
         deleted: false,
-        effective_from: {
-          lte: new Date(),
-        },
         effective_to: {
           gte: new Date(),
         },

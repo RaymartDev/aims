@@ -44,9 +44,6 @@ export async function findUserByUsernameLogin(username: string): Promise<UserWRo
         effective_to: {
           gte: today,
         },
-        effective_from: {
-          lte: today,
-        },
       },
       include: {
         role: true,

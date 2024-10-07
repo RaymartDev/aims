@@ -81,9 +81,6 @@ export async function searchCompanyByName(name: string = '**--**'): Promise<Comp
           startsWith: name,
         },
         deleted: false,
-        effective_from: {
-          lte: new Date(),
-        },
         effective_to: {
           gte: new Date(),
         },

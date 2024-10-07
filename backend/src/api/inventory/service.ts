@@ -112,18 +112,10 @@ export async function searchInventory(ref: string = '**--**'): Promise<Inventory
   try {
     const inventories = await prisma.inventory.findMany({
       where: {
-        effective_from: {
-          lte: new Date(),
-        },
         effective_to: {
           gte: new Date(),
         },
         OR: [
-          {
-            id: {
-              equals: parseInt(ref),
-            },
-          },
           {
             material: {
               description: {
@@ -137,6 +129,20 @@ export async function searchInventory(ref: string = '**--**'): Promise<Inventory
                 description: {
                   startsWith: ref,
                 },
+              },
+            },
+          },
+          {
+            material: {
+              material_code: {
+                startsWith: ref,
+              },
+            },
+          },
+          {
+            material: {
+              item_code: {
+                startsWith: ref,
               },
             },
           },
