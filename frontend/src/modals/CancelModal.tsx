@@ -44,6 +44,25 @@ function CancelModal({ open, onClose }: CancelModalProps) {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    const [selectAll, setSelectAll] = useState(false);
+    const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
+
+    const handleRowClick = (id: number) => {
+        if (selectedMaterials.includes(id)) {
+            setSelectedMaterials(selectedMaterials.filter(item => item !== id));
+        } else {
+            setSelectedMaterials([...selectedMaterials, id]);
+        }
+    };
+
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedMaterials([]);
+        } else {
+            setSelectedMaterials(currentItem.map(item => item.id));
+        }
+        setSelectAll(!selectAll);
+    };
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -92,7 +111,7 @@ function CancelModal({ open, onClose }: CancelModalProps) {
                         </div>
                     </div>
                     <div className="mt-5 flex justify-end">
-                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Select All</span></Button>
+                        <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={handleSelectAll}><span>{selectAll ? "Unselect All" : "Select All"}</span></Button>
                     </div>
                     <div className="overflow-y-auto mt-5" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
@@ -109,8 +128,10 @@ function CancelModal({ open, onClose }: CancelModalProps) {
                             </TableHeader>
                             <TableBody>
                                 {currentItem.map(item => (
-                                    <TableRow key={item.id}>
-                                        <TableCell><Checkbox id="item"></Checkbox></TableCell>
+                                    <TableRow key={item.id}
+                                        onClick={() => handleRowClick(item.id)}
+                                        className={selectedMaterials.includes(item.id) ? "bg-hoverCream" : "cursor-pointer"}>
+                                        <TableCell><Checkbox id="item" checked={selectedMaterials.includes(item.id)}></Checkbox></TableCell>
                                         <TableCell>{item.itemNumber}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
                                         <TableCell>{item.itemDesc}</TableCell>
