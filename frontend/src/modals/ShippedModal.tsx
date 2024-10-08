@@ -1,6 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/Components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/Components/ui/popover";
+import { cn, getVersion } from "@/lib/utils";
+import type CompanyType from "@/interface/company"
+import type DepartmentType from "@/interface/department"
+import { useCallback, useEffect, useState } from "react";
+import axios, { CancelTokenSource } from "axios";
 
 interface ShippedModalProps {
     open: boolean;
@@ -8,6 +29,123 @@ interface ShippedModalProps {
 }
 
 function ShippedModal({ open, onClose }: ShippedModalProps) {
+    const [companyPopOver, setCompanyPopOver] = useState<{searchTerm: string, isOpen: boolean, results: CompanyType[], selected: string}>({
+        searchTerm: '',
+        isOpen: false,
+        results: [],
+        selected: '',
+      });
+    
+      const [departmentPopOver, setDepartmentPopOver] = useState<{searchTerm: string, isOpen: boolean, results: DepartmentType[], selected: string}>({
+        searchTerm: '',
+        isOpen: false,
+        results: [],
+        selected: '',
+      });
+
+      // eslint-disable-next-line @typescript-eslint/ban-types
+  const debounce = (func: Function, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: unknown[]) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchData = useCallback(
+    debounce(async (term: string) => {
+      if (term) {
+        try {
+          // Cancel previous request if it exists
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+          }
+
+          // Create a new CancelTokenSource
+          const source = axios.CancelToken.source();
+          setCancelTokenSource(source);
+
+          const response = await axios.get(`${getVersion()}/company/search?company=${term}`, {
+            cancelToken: source.token,
+            timeout: 5000,
+          });
+          setCompanyPopOver((prevState) => ({
+            ...prevState,
+            results: response.data.companies, // Assuming 'response.data' is an array of CategoryType
+          }));
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request canceled:', error.message);
+          } else {
+            console.error('Error fetching search results:', error);
+          }
+        }
+      } else {
+        setCompanyPopOver((prevState) => ({
+          ...prevState,
+          results: [], // Clear results if no search term
+        }));
+      }
+    }, 500), // Adjust debounce delay as needed (500ms)
+    []
+  );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchDepartmentData = useCallback(
+        debounce(async (term: string) => {
+        if (term) {
+            try {
+            // Cancel previous request if it exists
+            if (cancelTokenSource) {
+                cancelTokenSource.cancel();
+            }
+
+            // Create a new CancelTokenSource
+            const source = axios.CancelToken.source();
+            setCancelTokenSource(source);
+
+            const response = await axios.get(`${getVersion()}/department/search?department=${term}`, {
+                cancelToken: source.token,
+                timeout: 5000,
+            });
+            setDepartmentPopOver((prevState) => ({
+                ...prevState,
+                results: response.data.departments, // Assuming 'response.data' is an array of CategoryType
+            }));
+            } catch (error) {
+            if (axios.isCancel(error)) {
+                console.log('Request canceled:', error.message);
+            } else {
+                console.error('Error fetching search results:', error);
+            }
+            }
+        } else {
+            setDepartmentPopOver((prevState) => ({
+            ...prevState,
+            results: [], // Clear results if no search term
+            }));
+        }
+        }, 500), // Adjust debounce delay as needed (500ms)
+        []
+    );
+
+    useEffect(() => {
+        if (companyPopOver.searchTerm) {
+          fetchData(companyPopOver.searchTerm);
+        }
+      }, [companyPopOver.searchTerm, fetchData]);
+    
+      useEffect(() => {
+        if (departmentPopOver.searchTerm) {
+          fetchDepartmentData(departmentPopOver.searchTerm);
+        }
+      }, [departmentPopOver.searchTerm, fetchDepartmentData]);
+      
     if (!open) return null;
 
     return(
@@ -38,15 +176,105 @@ function ShippedModal({ open, onClose }: ShippedModalProps) {
                     </div>
                     <div className="space-y-1">
                         <h1>Cost Number</h1>
-                        <Input disabled></Input>
+                        <Input ></Input>
                     </div>
                     <div className="space-y-1">
                         <h1>Department</h1>
-                        <Input disabled></Input>
+                        <Popover open={departmentPopOver.isOpen} onOpenChange={(isOpen) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                            <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={departmentPopOver.isOpen}
+                                className="w-full justify-between border-black"
+                            >
+                                {departmentPopOver.selected || "Select Department"}
+                                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                            <Command>
+                                <CommandInput
+                                placeholder="Search Department"
+                                value={departmentPopOver.searchTerm}
+                                onValueChange={(searchTerm) => setDepartmentPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                                />
+                                <CommandList>
+                                <CommandEmpty>No department found.</CommandEmpty>
+                                {departmentPopOver.results.length > 0 && (
+                                    <CommandGroup>
+                                    {departmentPopOver.results.map((department) => (
+                                        <CommandItem
+                                        key={department.id}
+                                        value={department.name}
+                                        onSelect={(selected) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                        >
+                                        <Check
+                                            className={cn(
+                                            "mr-2 h-4 w-4",
+                                            departmentPopOver.selected === department.name
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                            )}
+                                        />
+                                        {department.name}
+                                        </CommandItem>
+                                    ))}
+                                    </CommandGroup>
+                                )}
+                                </CommandList>
+                            </Command>
+                            </PopoverContent>
+                        </Popover>
                     </div>
                     <div className="space-y-1">
                         <h1>Company</h1>
-                        <Input disabled></Input>
+                        <Popover open={companyPopOver.isOpen} onOpenChange={(isOpen) => setCompanyPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                        <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={companyPopOver.isOpen}
+                            className="w-full justify-between border-black"
+                        >
+                            {companyPopOver.selected || "Select Company"}
+                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                        <Command>
+                            <CommandInput
+                            placeholder="Search Company"
+                            value={companyPopOver.searchTerm}
+                            onValueChange={(searchTerm) => setCompanyPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                            />
+                            <CommandList>
+                            <CommandEmpty>No company found.</CommandEmpty>
+                            {companyPopOver.results.length > 0 && (
+                                <CommandGroup>
+                                {companyPopOver.results.map((company) => (
+                                    <CommandItem
+                                    key={company.id}
+                                    value={company.name}
+                                    onSelect={(selected) => setCompanyPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                    >
+                                    <Check
+                                        className={cn(
+                                        "mr-2 h-4 w-4",
+                                        companyPopOver.selected === company.name
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                    />
+                                    {company.name}
+                                    </CommandItem>
+                                ))}
+                                </CommandGroup>
+                            )}
+                            </CommandList>
+                        </Command>
+                        </PopoverContent>
+                    </Popover>
                     </div>
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
