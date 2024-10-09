@@ -115,6 +115,62 @@ export async function findReleaseByNumber(id: number): Promise<Release | null> {
   }
 }
 
+export async function createAndCancelRelease(id: number, materialIds: number[], relead_to: string, date_out: Date): Promise<void> {
+  try {
+    const release = await prisma.release.findUnique({
+      where: { id },
+      include: {
+        release_detail: true,
+      },
+    });
+    
+    if (!release) {
+      throw new Error('Release not found');
+    }
+
+    const releaseDetails = release.release_detail;
+    const isFullCancellation = releaseDetails.every(detail => materialIds.includes(detail.material_id));
+
+    if (isFullCancellation) {
+      // Full cancellation
+      await prisma.release.update({
+        where: { id },
+        data: { status: 4 }, // Status 4: Cancelled
+      });
+    } else {
+      // Partial cancellation
+      const newRelease = await prisma.release.create({
+        data: {
+          release_number: release.release_number,
+          status: 4, // Status 4: Cancelled
+          requestor_id: release.requestor_id,
+          release_shipped_id: release.release_shipped_id,
+          release_receiver_id: release.release_receiver_id,
+          date_out,
+          relead_to,
+          modified_by_id: release.modified_by_id,
+          // Add any other fields as needed
+        },
+      });
+    
+      // Update the selected `release_detail` to reference the new release
+      await prisma.release_Detail.updateMany({
+        where: {
+          release_number: release.release_number,
+          material_id: {
+            in: materialIds,
+          },
+        },
+        data: {
+          release_number: newRelease.id,
+        },
+      });
+    }
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function insertRelease(release: any, detail: DetailedRelease, user_id: number): Promise<Release | null> {
   try {
     if (detail.detail.length > 0) {

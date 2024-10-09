@@ -131,6 +131,8 @@ function AddMaterialModal({ addMaterial, onClose }: AddMaterialModalProps) {
           uom,
           date_entry: new Date(dateEntry),
           active_status: getActiveStatus(response.data?.material),
+          serial_number: '',
+          asset_number: '',
         })
         clearData();
         onClose();
