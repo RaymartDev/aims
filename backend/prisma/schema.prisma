@@ -99,11 +99,11 @@ model User {
   modified_deliveries Delivery[] @relation("DeliveryModifiedBy")
   modified_releases Release[] @relation("ReleaseModifiedBy")
   users_delivery Delivery[] @relation("UserDelivery")
-  shipped_by_release Release[] @relation("ShippedByRelease")
-  received_by_release Release[] @relation("ReceivedByRelease")
   material_categories Material_Category[] @relation("MaterialCategoryModifiedBy")
   material_types Material_Type[] @relation("MaterialTypeModifiedBy")
   modified_user_types UserType[] @relation("UserTypeModifiedBy")
+
+  releases Release[]
 }
 
 // TODO store, user
@@ -132,6 +132,8 @@ model Department {
   modified_by_id Int?  @default(1)
   modified_by User? @relation("DepartmentModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   @@index([name])
+  release_shipped Release_Shipped[]
+  release_receivers Release_Receiver[]
 }
 
 model Company {
@@ -147,6 +149,8 @@ model Company {
   modified_by_id Int? @default(1)
   modified_by    User? @relation("CompanyModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
   @@index([name])
+  release_shipped Release_Shipped[]
+  release_receivers Release_Receiver[]
 }
 
 model Supplier {
@@ -260,13 +264,41 @@ model Delivery {
   modified_by User? @relation("DeliveryModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 }
 
+model Release_Shipped {
+  id Int @id @default(autoincrement())
+  employee_no String
+  name String
+  cost_center_code String
+  department_id Int
+  department Department @relation(fields: [department_id], references: [id])
+  company_id Int
+  company Company @relation(fields: [company_id], references: [id])
+  supplied_date DateTime @default(now())
+
+  releases Release[]
+}
+
+model Release_Receiver {
+  id Int @id @default(autoincrement())
+  employee_no String
+  name String
+  cost_center_code String
+  department_id Int
+  department Department @relation(fields: [department_id], references: [id])
+  company_id Int
+  company Company @relation(fields: [company_id], references: [id])
+  receive_date DateTime @default(now())
+
+  releases Release[]
+}
+
 model Release_Detail {
-  release_number BigInt
+  release_number Int
   material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
   material_id Int 
   quantity Int
   remarks String
-  release Release?  @relation(fields: [release_number], references: [release_number])
+  release Release?  @relation(fields: [release_number], references: [id])
 
   @@id([release_number, material_id])
   @@index([release_number])
@@ -275,13 +307,14 @@ model Release_Detail {
 model Release {
   id Int @id @default(autoincrement())
   release_detail Release_Detail[]
-  release_number BigInt @unique
-  shipped_by User @relation("ShippedByRelease", fields: [shipped_by_id], references: [id], onDelete: Cascade)
-  shipped_by_id Int
-  received_by User @relation("ReceivedByRelease", fields: [received_by_id], references: [id], onDelete: Cascade)
-  received_by_id Int
-  received_date DateTime
-  status Int
+  release_number Int
+  release_shipped_id Int?
+  release_shipped Release_Shipped? @relation(fields: [release_shipped_id], references: [id])
+  release_receiver_id Int?
+  release_receiver Release_Receiver? @relation(fields: [release_receiver_id], references: [id])
+  requestor_id Int
+  requestor User @relation(fields: [requestor_id], references: [id])
+  status Int // status 0: Pending, 1: Shipped, 2: Received, 3: Completed ( received and shipped )
   remarks String
   deleted Boolean @default(false)
   effective_from DateTime @default(now())

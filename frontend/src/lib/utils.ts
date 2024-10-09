@@ -33,6 +33,28 @@ export const formatCurrency = (amount: number): string => {
   return `₱ ${formattedAmount}`;
 }
 
+export const formatReleaseStatus = (status: number): string => {
+  let finalStatus = '';
+  switch (status) {
+    case 0: 
+      finalStatus = 'Pending';
+      break;
+    case 1:
+      finalStatus = 'Shipped';
+      break;
+    case 2:
+      finalStatus = 'Received';
+      break;
+    case 3: 
+      finalStatus = 'Completed';
+      break;
+    default:
+      finalStatus = '';
+      break;
+  }
+  return finalStatus;
+}
+
 interface FetchDataParams {
   url: string;
   query?: Record<string, unknown>; // Renamed from `params` to `query`

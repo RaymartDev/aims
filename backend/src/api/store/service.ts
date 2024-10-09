@@ -23,6 +23,31 @@ export async function updateStore(store: any, id: number): Promise<Store | null>
       },
       where: { id },
     });
+
+    // Find the associated user
+    const user = await prisma.user.findFirst({
+      where: {
+        store_id: id,
+      },
+    });
+
+    // If a user is found and there are specific fields in req.body, update the user
+    if (user) {
+      const userUpdateData: any = {};
+
+      // Update fields conditionally if present in the store data (from req.body)
+      if (store.name) userUpdateData.name = store.name;
+      if (store.cost_center_code) userUpdateData.cost_center_code = store.cost_center_code;
+      if (store.department_id) userUpdateData.department_id = store.department_id;
+
+      // Only proceed with update if there are fields to update
+      if (Object.keys(userUpdateData).length > 0) {
+        await prisma.user.update({
+          data: userUpdateData,
+          where: { id: user.id },
+        });
+      }
+    }
     return updatedStore;
   } catch (error) {
     throw new Error('Database error');

@@ -17,13 +17,39 @@ export async function insertEmployee(employee: any): Promise<Employee | null> {
 
 export async function updateEmployee(employee: any, id: number): Promise<Employee | null> {
   try {
-    const createEmployee = await prisma.employee.update({
+    const updatedEmployee = await prisma.employee.update({
       data: {
         ...employee,
       },
       where: { id },
     });
-    return createEmployee;
+
+    // Find the associated user
+    const user = await prisma.user.findFirst({
+      where: {
+        employee_id: id,
+      },
+    });
+
+    // If a user is found and there are specific fields in req.body, update the user
+    if (user) {
+      const userUpdateData: any = {};
+
+      // Update fields conditionally if present in the store data (from req.body)
+      if (employee.name) userUpdateData.name = employee.name;
+      if (employee.cost_center_code) userUpdateData.cost_center_code = employee.cost_center_code;
+      if (employee.employee_no) userUpdateData.employee_no = employee.employee;
+      if (employee.department_id) userUpdateData.department_id = employee.department_id;
+
+      // Only proceed with update if there are fields to update
+      if (Object.keys(userUpdateData).length > 0) {
+        await prisma.user.update({
+          data: userUpdateData,
+          where: { id: user.id },
+        });
+      }
+    }
+    return updatedEmployee;
   } catch (error) {
     throw new Error('Database error');
   }
