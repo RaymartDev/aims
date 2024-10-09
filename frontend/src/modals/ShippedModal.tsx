@@ -17,31 +17,42 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/Components/ui/popover";
-import { cn, getVersion } from "@/lib/utils";
+import { cn, formatReference, getVersion } from "@/lib/utils";
 import type CompanyType from "@/interface/company"
 import type DepartmentType from "@/interface/department"
 import { useCallback, useEffect, useState } from "react";
 import axios, { CancelTokenSource } from "axios";
+import type ReleaseType from "@/interface/release";
 
 interface ShippedModalProps {
     open: boolean;
     onClose: () => void;
+    release: ReleaseType | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    handleShip: (request: any, id: number) => Promise<void>;
 }
 
-function ShippedModal({ open, onClose }: ShippedModalProps) {
-    const [companyPopOver, setCompanyPopOver] = useState<{searchTerm: string, isOpen: boolean, results: CompanyType[], selected: string}>({
+function ShippedModal({ open, onClose, release, handleShip }: ShippedModalProps) {
+    const [companyPopOver, setCompanyPopOver] = useState<{searchTerm: string, isOpen: boolean, results: CompanyType[], selected: string, selected_id: number}>({
         searchTerm: '',
         isOpen: false,
         results: [],
         selected: '',
+        selected_id: 0,
       });
     
-      const [departmentPopOver, setDepartmentPopOver] = useState<{searchTerm: string, isOpen: boolean, results: DepartmentType[], selected: string}>({
+      const [departmentPopOver, setDepartmentPopOver] = useState<{searchTerm: string, isOpen: boolean, results: DepartmentType[], selected: string, selected_id: number}>({
         searchTerm: '',
         isOpen: false,
         results: [],
         selected: '',
+        selected_id: 0,
       });
+
+      const [employeeNo, setEmployeeNo] = useState('');
+      const [name, setName] = useState('');
+      const [costCode, setCostCode] = useState('');
+      const [date, setDate] = useState('');
 
       // eslint-disable-next-line @typescript-eslint/ban-types
   const debounce = (func: Function, delay: number) => {
@@ -159,24 +170,24 @@ function ShippedModal({ open, onClose }: ShippedModalProps) {
                     <div className="space-x-2 flex">
                         <div className="space-y-1 w-3/5">
                             <h1>DR Number</h1>
-                            <Input disabled></Input>
+                            <Input disabled value={formatReference(release?.release_number || 0)}></Input>
                         </div>
                         <div className="space-y-1 w-2/5">
                             <h1>Shipped Date</h1>
-                            <Input type="date"></Input>
+                            <Input type="date" value={date} onChange={(e) => setDate(e.target.value)}></Input>
                         </div>
                     </div>
                     <div className="space-y-1">
                         <h1>Employee Number</h1>
-                        <Input></Input>
+                        <Input value={employeeNo} onChange={(e) => setEmployeeNo(e.target.value)}></Input>
                     </div>
                     <div className="space-y-1">
                         <h1>Name</h1>
-                        <Input></Input>
+                        <Input value={name} onChange={(e) => setName(e.target.value)}></Input>
                     </div>
                     <div className="space-y-1">
-                        <h1>Cost Number</h1>
-                        <Input ></Input>
+                        <h1>Cost Center Code</h1>
+                        <Input value={costCode} onChange={(e) => setCostCode(e.target.value)}></Input>
                     </div>
                     <div className="space-y-1">
                         <h1>Department</h1>
@@ -207,7 +218,7 @@ function ShippedModal({ open, onClose }: ShippedModalProps) {
                                         <CommandItem
                                         key={department.id}
                                         value={department.name}
-                                        onSelect={(selected) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                        onSelect={(selected) => setDepartmentPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_id: prevState.selected === selected ? 0 : department.id }))}
                                         >
                                         <Check
                                             className={cn(
@@ -256,7 +267,7 @@ function ShippedModal({ open, onClose }: ShippedModalProps) {
                                     <CommandItem
                                     key={company.id}
                                     value={company.name}
-                                    onSelect={(selected) => setCompanyPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                    onSelect={(selected) => setCompanyPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_id: prevState.selected === selected ? 0 : company.id }))}
                                     >
                                     <Check
                                         className={cn(
@@ -279,7 +290,33 @@ function ShippedModal({ open, onClose }: ShippedModalProps) {
                 </div>
                 <div className="space-x-2 mt-5 flex justify-end">
                 <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Update</span></Button>
+                <Button onClick={(e) => {
+                  e.preventDefault();
+                  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                  handleShip({
+                    employee_no: employeeNo,
+                    date,
+                    name,
+                    cost_code: costCode,
+                    department_id: departmentPopOver.selected_id,
+                    company_id: companyPopOver.selected_id,
+                  }, release?.id || 0);
+                  setEmployeeNo('');
+                  setDate('');
+                  setName('');
+                  setCostCode('');
+                  setCompanyPopOver({searchTerm: '',
+                    isOpen: false,
+                    results: [],
+                    selected: '',
+                    selected_id: 0,});
+                  setDepartmentPopOver({searchTerm: '',
+                    isOpen: false,
+                    results: [],
+                    selected: '',
+                    selected_id: 0,});
+                  onClose();
+                }} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Update</span></Button>
                 </div>
             </div>
         </div>

@@ -1,15 +1,15 @@
 import express from 'express';
 import { authenticateToken } from '../../middlewares';
+import { list, getReference, create, ship, receive } from './controller';
 
 const router = express.Router();
 
-router.post('/', authenticateToken);
-router.put('/update/:id', authenticateToken);
-router.get('/get/:id', authenticateToken);
+router.post('/', create, authenticateToken);
 router.get('/search', authenticateToken);
-router.get('/list', authenticateToken);
-router.get('/toggle/:id', authenticateToken);
-router.delete('/delete/:id', authenticateToken);
+router.put('/ship/:id', ship, authenticateToken);
+router.put('/receive/:id', receive, authenticateToken);
+router.get('/list', list, authenticateToken);
+router.get('/reference', getReference, authenticateToken);
 
 
 export default router;

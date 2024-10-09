@@ -15,6 +15,8 @@ export default interface Release {
       date: Date;
     } | null;
     details: {
+      detail_id: number;
+      material_id: number;
       release_number: number;
       desc: string;
       quantity: number;

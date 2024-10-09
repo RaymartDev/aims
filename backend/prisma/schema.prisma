@@ -273,8 +273,7 @@ model Release_Shipped {
   department Department @relation(fields: [department_id], references: [id])
   company_id Int
   company Company @relation(fields: [company_id], references: [id])
-  supplied_date DateTime @default(now())
-
+  shipped_date DateTime
   releases Release[]
 }
 
@@ -287,12 +286,13 @@ model Release_Receiver {
   department Department @relation(fields: [department_id], references: [id])
   company_id Int
   company Company @relation(fields: [company_id], references: [id])
-  receive_date DateTime @default(now())
+  receive_date DateTime
 
   releases Release[]
 }
 
 model Release_Detail {
+  id Int @id @default(autoincrement())
   release_number Int
   material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
   material_id Int 
@@ -300,7 +300,6 @@ model Release_Detail {
   remarks String
   release Release?  @relation(fields: [release_number], references: [id])
 
-  @@id([release_number, material_id])
   @@index([release_number])
 }
 
@@ -314,9 +313,10 @@ model Release {
   release_receiver Release_Receiver? @relation(fields: [release_receiver_id], references: [id])
   requestor_id Int
   requestor User @relation(fields: [requestor_id], references: [id])
-  status Int // status 0: Pending, 1: Shipped, 2: Received, 3: Completed ( received and shipped )
-  remarks String
+  status Int // status 0: Pending, 1: Shipped, 2: Received, 3: Completed, 4: Cancelled ( received and shipped )
   deleted Boolean @default(false)
+  date_out DateTime?
+  relead_to String?
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt

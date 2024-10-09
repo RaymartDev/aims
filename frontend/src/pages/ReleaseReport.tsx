@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -13,12 +16,18 @@ import ReceivedModal from "@/modals/ReceivedModal";
 import CancelModal from "@/modals/CancelModal";
 import ViewDetailsModal from "@/modals/ViewDetailsModal";
 import type ReleaseType from "@/interface/release";
-import { formatDateAsString, formatReleaseStatus, fetchData as fetchItem, getVersion } from "@/lib/utils";
+import { formatDateAsString, formatReleaseStatus, fetchData as fetchItem, getVersion, formatReference } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 
 function ReleaseReport() {
+    const [cancelRelease, setCancelRelease] = useState<ReleaseType | null>(null);
+    const [receiveRelease, setReceiveRelease] = useState<ReleaseType | null>(null);
+    const [shipRelease, setShipRelease] = useState<ReleaseType | null>(null);
+    const [viewRelease, setViewRelease] = useState<ReleaseType | null>(null);
     const [openViewDetailsModal, setOpenViewDetailsModal] = useState(false);
     const [openShippedModal, setOpenShippedModal] = useState(false);
     const [openReceivedModal, setOpenReceivedModal] = useState(false);
@@ -30,6 +39,66 @@ function ReleaseReport() {
     const itemsPerPage = 17;
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
+
+  const handleShip = async (request: any, id: number) => {
+    try {
+      const response = await axios.put(`${getVersion()}/release-receipt/ship/${id}`, {
+        ...request,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        toast.success(response.data?.message || 'Successfully shipped!.');
+        setReleases((prevReleases) => {
+            return prevReleases.map(release => {
+              if (release.id === id) {
+                const newStatus = request.received_by ? 3 : 1; // Check if received_by is not null
+                return {
+                  ...release,
+                  status: newStatus,
+                  shipped_by: { name: request.name, date: new Date(request.date) }
+                };
+              }
+              return release; // Return the release unchanged
+            });
+          });
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+        } else {
+          toast.error('Something went wrong');
+      }
+    }
+  }
+
+  const handleReceive = async (request: any, id: number) => {
+    try {
+      const response = await axios.put(`${getVersion()}/release-receipt/receive/${id}`, {
+        ...request,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        toast.success(response.data?.message || 'Successfully received!.');
+        setReleases((prevReleases) => {
+            return prevReleases.map(release => {
+              if (release.id === id) {
+                const newStatus = request.received_by ? 3 : 2; // Check if received_by is not null
+                return {
+                  ...release,
+                  status: newStatus,
+                  received_by: { name: request.name, date: new Date(request.date) }
+                };
+              }
+              return release; // Return the release unchanged
+            });
+          });
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+        } else {
+          toast.error('Something went wrong');
+      }
+    }
+  }
 
     const loadReleases = useCallback(() => {
         fetchItem({
@@ -96,14 +165,14 @@ function ReleaseReport() {
                             <TableBody>
                                 {releases.map(release => (
                                     <TableRow key={release.id}>
-                                        <TableCell>{release.release_number}</TableCell>
+                                        <TableCell>{formatReference(release.release_number)}</TableCell>
                                         <TableCell>{release.requestor.name}</TableCell>
                                         <TableCell>{release.requestor.employee_no}</TableCell>
                                         <TableCell>{release.requestor.cost_center_code}</TableCell>
                                         <TableCell>{release.shipped_by ? release.shipped_by.name : ''}</TableCell>
-                                        <TableCell>{release.shipped_by ? formatDateAsString(release.shipped_by.date) : ''}</TableCell>
+                                        <TableCell>{release.shipped_by ? formatDateAsString(new Date(release.shipped_by.date)) : ''}</TableCell>
                                         <TableCell>{release.received_by ? release.received_by.name : ''}</TableCell>
-                                        <TableCell>{release.received_by ? formatDateAsString(release.received_by.date) : ''}</TableCell>
+                                        <TableCell>{release.received_by ? formatDateAsString(new Date(release.received_by.date)) : ''}</TableCell>
                                         <TableCell>{formatReleaseStatus(release.status)}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
@@ -113,10 +182,22 @@ function ReleaseReport() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => setOpenViewDetailsModal(true)}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenShippedModal(true)}>Shipped</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenReceivedModal(true)}>Received</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => setOpenCancelModal(true)}>DR Cancel</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewRelease(release);
+                                                        setOpenViewDetailsModal(true);
+                                                    }}>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem disabled={release.status === 1 || release.status === 3 || release.status === 4} onClick={() => {
+                                                        setShipRelease(release);
+                                                        setOpenShippedModal(true);
+                                                    }}>Shipped</DropdownMenuItem>
+                                                    <DropdownMenuItem disabled={release.status === 2 || release.status === 3 || release.status === 4} onClick={() => {
+                                                        setReceiveRelease(release);
+                                                        setOpenReceivedModal(true);
+                                                    }}>Received</DropdownMenuItem>
+                                                    <DropdownMenuItem disabled={release.status === 4} onClick={() => {
+                                                        setCancelRelease(release);
+                                                        setOpenCancelModal(true);
+                                                    }}>Cancel</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -154,10 +235,22 @@ function ReleaseReport() {
                     </Pagination>
                 </div>
             </div>
-            <ViewDetailsModal open={openViewDetailsModal} onClose={() => setOpenViewDetailsModal(false)}/>
-            <ShippedModal open={openShippedModal} onClose={() => setOpenShippedModal(false)}/>
-            <ReceivedModal open={openReceivedModal} onClose={() => setOpenReceivedModal(false)}/>
-            <CancelModal open={openCancelModal} onClose={() => setOpenCancelModal(false)}/>
+            {openViewDetailsModal && <ViewDetailsModal release={viewRelease} open={openViewDetailsModal} onClose={() => {
+                setViewRelease(null);
+                setOpenViewDetailsModal(false);
+            }}/>}
+            {openShippedModal && <ShippedModal handleShip={handleShip} release={shipRelease} open={openShippedModal} onClose={() => {
+                setShipRelease(null);
+                setOpenShippedModal(false);
+            }}/>}
+            {openReceivedModal && <ReceivedModal handleReceive={handleReceive} release={receiveRelease} open={openReceivedModal} onClose={() => {
+                setReceiveRelease(null);
+                setOpenReceivedModal(false);
+            }}/>}
+            {openCancelModal && <CancelModal release={cancelRelease} open={openCancelModal} onClose={() => {
+                setCancelRelease(null);
+                setOpenCancelModal(false);
+            }}/>}
         </>
     );
 }

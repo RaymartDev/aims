@@ -1,53 +1,20 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
+import ReleaseType from "@/interface/release";
+import { formatDateAsString, formatReference, formatReleaseStatus } from "@/lib/utils";
 
 interface ViewDetailsModalProps {
     open: boolean;
     onClose: () => void;
+    release: ReleaseType | null;
 }
 
-const item = [
-    { id: 1, itemNumber: "Leansel Nico", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
-    { id: 2, itemNumber: "100230457", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
-    { id: 3, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A"  },
-    { id: 4, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 5, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 6, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 7, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
-    { id: 8, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 9, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 10, itemNumber: "100230458", itemDesc: "HP Probook 8GB RAM / 512GB SSD", quantity: "503604218", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-];
-
-
-function ViewDetailsModal({ open, onClose }: ViewDetailsModalProps) {
+function ViewDetailsModal({ open, onClose, release }: ViewDetailsModalProps) {
 
     const headerHeight = 72;
 
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight < 500) return 10;
-        return 10;
-    };
-    const [currentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
-
-    useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItem= item.slice(indexOfFirstItem, indexOfLastItem);
 
     if (!open) return null;
 
@@ -62,31 +29,31 @@ function ViewDetailsModal({ open, onClose }: ViewDetailsModalProps) {
                     <div className="space-x-2 flex justify-between">
                         <div className="space-y-1 w-1/2">
                             <h1>DR Number</h1>
-                            <Input className="h-14" disabled></Input>
+                            <Input className="h-14" disabled value={formatReference(release?.release_number || 0)}></Input>
                         </div>
                         <div className="space-y-1 w-1/2">
                             <h1>Status</h1>
-                            <Input disabled></Input>
+                            <Input disabled value={formatReleaseStatus(release?.status || 0)}></Input>
                         </div>
                     </div>
                     <div className="space-x-2 flex">
                         <div className="space-y-1 w-3/5">
                             <h1>Shipped By</h1>
-                            <Input disabled></Input>
+                            <Input disabled value={release?.shipped_by?.name || ''}></Input>
                         </div>
                         <div className="space-y-1 w-2/5">
                             <h1>Shipped Date</h1>
-                            <Input disabled></Input>
+                            <Input disabled value={release?.shipped_by ? formatDateAsString(new Date(release.shipped_by.date)) : ''}></Input>
                         </div>
                     </div>
                     <div className="space-x-2 flex">
                         <div className="space-y-1 w-3/5">
                             <h1>Received By</h1>
-                            <Input disabled></Input>
+                            <Input disabled value={release?.received_by?.name || ''}></Input>
                         </div>
                         <div className="space-y-1 w-2/5">
                             <h1>Received Date</h1>
-                            <Input disabled></Input>
+                            <Input disabled value={release?.received_by ? formatDateAsString(new Date(release.received_by.date)) : ''}></Input>
                         </div>
                     </div>
                 </div>
@@ -95,21 +62,17 @@ function ViewDetailsModal({ open, onClose }: ViewDetailsModalProps) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>DR Number</TableHead>
-                                <TableHead>Item Code</TableHead>
                                 <TableHead>Description</TableHead>
                                 <TableHead>Quantity</TableHead>
-                                <TableHead>Serial Number</TableHead>
                                 <TableHead>Remarks</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {currentItem.map(item => (
-                                <TableRow key={item.id}>
-                                    <TableCell>{item.itemNumber}</TableCell>
+                            {release && release.details.map(item => (
+                                <TableRow key={item.detail_id}>
+                                    <TableCell>{formatReference(release.release_number)}</TableCell>
+                                    <TableCell>{item.desc}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>{item.itemDesc}</TableCell>
-                                    <TableCell>{item.unit}</TableCell>
-                                    <TableCell>{item.serialNumber}</TableCell>
                                     <TableCell>{item.remarks}</TableCell>
                                 </TableRow>
                             ))}

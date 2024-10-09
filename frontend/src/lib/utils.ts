@@ -96,6 +96,19 @@ export async function fetchData({
   }
 }
 
+export function formatReference(number: number): string {
+  const maxDigits = 8; // Target length for formatting
+  const numberString = number.toString();
+
+  // If the number is less than 8 digits, pad with leading zeros
+  if (numberString.length < maxDigits) {
+    return numberString.padStart(maxDigits, '0');
+  }
+
+  // If the number has 8 or more digits, return it as is
+  return numberString;
+}
+
 export const getActiveStatus = (obj: any) => {
   if (!obj) return false;
   const today = new Date();

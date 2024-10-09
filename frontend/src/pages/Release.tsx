@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -24,7 +27,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
 import type EmployeeType from "@/interface/employee"
 import type StoreType from "@/interface/store"
-import { cn, getVersion } from "@/lib/utils";
+import { cn, formatReference, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
 
 function DeliveryReceipt() {
@@ -32,7 +35,91 @@ function DeliveryReceipt() {
   const [selectedOption, setSelectedOption] = useState("employee");
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+  const [reference, setReference] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Function to fetch the maximum release number
+    const fetchMaxReleaseNumber = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${getVersion()}/release-receipt/reference`); // API endpoint to fetch the release number
+        setReference(response.data.reference); // Set the release number in state
+      } catch (err) {
+        toast.error('Failed to fetch release number'); // Set error if the API call fails
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMaxReleaseNumber(); // Call the function on component mount
+  }, []);
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    if (loading) {
+      toast.error('Please wait for reference number to generate!');
+      return;
+    }
+    const release = {
+      status: 0,
+      release_number: reference,
+    }
+
+    const releaseDetails = selectedItems.map(item => ({
+      material_id: item.id,
+      quantity: item.quantity || 1,
+      remarks: item.remarks || '',
+    }));
+
+    try {
+      const response = await axios.post(`${getVersion()}/release-receipt`, {
+        option: selectedOption,
+        release: { ...release },
+        release_detail: releaseDetails,
+        id: selectedOption === "employee" ? employeePopOver.selected_id : storePopOver.selected_id,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        toast.success(response.data?.message || 'Successfully created delivery!.');
+
+        setReference((prevReference) => prevReference + 1);
+        setSelectedItems([]);
+        if (selectedOption === "employee") {
+          setEmployeePopOver({
+            searchTerm: '',
+            isOpen: false,
+            results: [],
+            selected: '',
+            selected_id: 0,
+          })
+        } else {
+          setStorePopOver({
+            searchTerm: '',
+            isOpen: false,
+            results: [],
+            selected: '',
+            selected_id: 0,
+          })
+        }
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+        } else {
+          toast.error('Something went wrong');
+      }
+    }
+  }
+
   const handleItemSelect = (material: SelectedItem) => {
+    const exists = selectedItems.some(
+      (item) => item.item_code === material.item_code || item.material_code === material.material_code
+    );
+  
+    if (exists) {
+      toast.error("This item already exists in the selection.");
+      return; // Exit early if the item already exists
+    }
     if (selectedItems.length < 11) {
       setSelectedItems((prevItems) => [...prevItems, material]);
       setOpenModal(false);
@@ -41,18 +128,20 @@ function DeliveryReceipt() {
     }
   };
 
-  const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string}>({
+  const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string, selected_id: number}>({
     searchTerm: '',
     isOpen: false,
     results: [],
     selected: '',
+    selected_id: 0,
   });
 
-  const [storePopOver, setStorePopOver] = useState<{searchTerm: string, isOpen: boolean, results: StoreType[], selected: string}>({
+  const [storePopOver, setStorePopOver] = useState<{searchTerm: string, isOpen: boolean, results: StoreType[], selected: string, selected_id: number}>({
     searchTerm: '',
     isOpen: false,
     results: [],
     selected: '',
+    selected_id: 0,
   });
 
   const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
@@ -171,10 +260,30 @@ function DeliveryReceipt() {
     setSelectedOption(value);
     
     if (value === "employee") {
-      setStorePopOver({ searchTerm: '', isOpen: false, results: [], selected: '' }); // Clear store selection
+      setStorePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_id: 0 }); // Clear store selection
     } else {
-      setEmployeePopOver({ searchTerm: '', isOpen: false, results: [], selected: '' }); // Clear employee selection
+      setEmployeePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_id: 0 }); // Clear employee selection
     }
+  };
+
+  const handleQuantityChange = (index: number, value: number) => {
+    // Create a new array with the updated quantity for the selected item
+    const updatedItems = selectedItems.map((item, i) =>
+      i === index ? { ...item, quantity: value } : item
+    );
+
+    // Update the state with the new array
+    setSelectedItems(updatedItems);
+  };
+
+  const handleRemarksChange = (index: number, value: string) => {
+    // Create a new array with the updated quantity for the selected item
+    const updatedItems = selectedItems.map((item, i) =>
+      i === index ? { ...item, remarks: value } : item
+    );
+
+    // Update the state with the new array
+    setSelectedItems(updatedItems);
   };
 
   return (
@@ -192,7 +301,7 @@ function DeliveryReceipt() {
             <Input
               className="border-none w-full h-16 text-4xl text-red-700"
               disabled
-              value={10012021}
+              value={formatReference(reference)}
             />
           </div>
           <div className="flex flex-row space-x-5 mt-5">
@@ -253,7 +362,7 @@ function DeliveryReceipt() {
                               <CommandItem
                                 key={employee.id}
                                 value={`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
-                                onSelect={(selected) => setEmployeePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                onSelect={(selected) => setEmployeePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_id: prevState.selected === selected ? 0 : employee.id }))}
                               >
                                 <Check
                                   className={cn(
@@ -303,7 +412,7 @@ function DeliveryReceipt() {
                               <CommandItem
                                 key={store.id}
                                 value={`${store.cost_center_code} - ${store.name}`}
-                                onSelect={(selected) => setStorePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                onSelect={(selected) => setStorePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_id: prevState.selected === selected ? 0 : store.id }))}
                               >
                                 <Check
                                   className={cn(
@@ -349,9 +458,9 @@ function DeliveryReceipt() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Item Number</TableHead>
+                <TableHead>Item Code</TableHead>
+                <TableHead>Material Code</TableHead>
                 <TableHead>Item Description</TableHead>
-                <TableHead>Available</TableHead>
                 <TableHead>Quantity</TableHead>
                 <TableHead>Unit</TableHead>
                 <TableHead>Serial Number</TableHead>
@@ -364,20 +473,24 @@ function DeliveryReceipt() {
             <TableBody>
               {selectedItems.map((item, index) => (
                   <TableRow className="h-8" key={index}>
+                      <TableCell>{item.item_code}</TableCell>
                       <TableCell>{item.material_code}</TableCell>
                       <TableCell>{item.item_description}</TableCell>
-                      <TableCell>10</TableCell>
                       <TableCell>
-                          <Input
+                          {item.material_con === 'y' ? 1 : <Input
                               type="number"
                               className="w-16 focus:border-none h-7"
-                          />
+                              value={item.quantity || 1}
+                              onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
+                          />}
                       </TableCell>
-                      <TableCell>{item.category}</TableCell>
-                      <TableCell>{item.item_code}</TableCell>
+                      <TableCell>{item.uom}</TableCell>
+                      <TableCell>{item.serial_number}</TableCell>
                       <TableCell>
                           <Input
                               className="focus:border-none h-7"
+                              value={item.remarks || ''}
+                              onChange={(e) => handleRemarksChange(index, e.target.value)}
                           />
                       </TableCell>
                       <TableCell>
@@ -392,13 +505,13 @@ function DeliveryReceipt() {
         </div>
         <div className="space-x-2 flex items-end mt-5">
           <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36"
-          onClick={handlePrint}>
-            Print
+          onClick={(e) => handleSubmit(e)}>
+            Submit
           </Button>
         </div>
       </div>
 
-      <SelectItemModal open={openModal} onClose={() => setOpenModal(false)} onItemSelect={handleItemSelect}/>
+      { openModal && <SelectItemModal open={openModal} onClose={() => setOpenModal(false)} onItemSelect={handleItemSelect}/> }
     </>
   );
 }

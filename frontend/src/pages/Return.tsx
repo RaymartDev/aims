@@ -320,7 +320,19 @@ function AcknowledgementReceipt() {
           </div>
           <div className="space-y-2 w-1/3">
             <p className="text-sm">
-              {selectedType === "store" ? "Cost Center Code" : "Employee ID"}{" "}
+              Employee No.
+              <span className=" text-red-500">*</span>
+            </p>
+            <Input
+              className="focus:border-none text-black"
+              value={getCodeOrId()}
+              readOnly
+              disabled
+            />
+          </div>
+          <div className="space-y-2 w-1/3">
+            <p className="text-sm">
+              Cost Center Code
               <span className=" text-red-500">*</span>
             </p>
             <Input

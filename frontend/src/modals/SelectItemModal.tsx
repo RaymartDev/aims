@@ -1,17 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { useCallback, useEffect, useState } from "react"
-import { Button } from "@/Components/ui/button";
+import { useCallback, useEffect, useState } from "react"; // React and hooks
+
+import { Search, X } from "lucide-react"; // Third-party libraries
+
+import { Button } from "@/Components/ui/button"; // Local component imports
 import { Input } from "@/Components/ui/input";
-import { Search, X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
-import type DrReleaseItem from "@/interface/drReleaseItem"
-import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils";
-import { useAppDispatch } from "@/store/store";
-import { logout } from "@/slices/userSlice";
-import ProductDetailsModal from "./ProductDetailsModal";
+
+import type DrReleaseItem from "@/interface/drReleaseItem"; // Local type imports
+import { fetchData, formatCurrency, formatDateAsString, getVersion } from "@/lib/utils"; // Local utility imports
+import { useAppDispatch } from "@/store/store"; // Redux imports
+import { logout } from "@/slices/userSlice"; // Slice imports
+
+import ProductDetailsModal from "./ProductDetailsModal"; // Local component imports
+import './design.css'; // Styles import
 
 interface SelectItemModalProps {
     open: boolean;
@@ -103,7 +108,7 @@ function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) 
                     <div className="relative w-5/6">
                         <Input
                             type="search"
-                            placeholder="Search Material Code"
+                            placeholder="Search Material Code / Material Desc / Item Code"
                             className="pl-12 border-2 focus:border-none"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -141,7 +146,7 @@ function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) 
                         <TableBody>
                             {materials.map(material => (
                                 <TableRow key={material.id} onClick={() => handleRowClick(material)}
-                                    className={selectedMaterial?.id === material.id ? "bg-hoverCream" : "cursor-pointer"}>
+                                    className={selectedMaterial?.id === material.id ? "bg-cream cursor-default" : "cursor-pointer"}>
                                     <TableCell>{material.material_code}</TableCell>
                                     <TableCell>{material.item_description}</TableCell>
                                     <TableCell>{material.item_code}</TableCell>

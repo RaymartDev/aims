@@ -2,47 +2,21 @@ import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "@/Components/ui/checkbox";
+import type ReleaseType from "@/interface/release";
+import { formatReference } from "@/lib/utils";
+import './design.css';
 
 interface CancelModalProps {
     open: boolean;
     onClose: () => void;
+    release: ReleaseType | null;
 }
 
-const item = [
-    { id: 1, itemNumber: "Leansel Nico", itemDesc: "IT Department", quantity: "503604218", unit: "IT Asset", serialNumber: "Registered", remarks: "N/A" },
-    { id: 2, itemNumber: "100230457", itemDesc: "Jane Doe", quantity: "Finance", unit: "503604219", serialNumber: "Registered", remarks: "N/A" },
-    { id: 3, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"  },
-    { id: 4, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 5, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 6, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 7, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A"   },
-    { id: 8, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 9, itemNumber: "100230458", itemDesc: "John Smith", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-    { id: 10, itemNumber: "100230458", itemDesc: "kMAOTE", quantity: "Marketing", unit: "503604220", serialNumber: "Registered", remarks: "N/A" },
-];
-
-function CancelModal({ open, onClose }: CancelModalProps) {
+function CancelModal({ open, onClose, release }: CancelModalProps) {
 
     const headerHeight = 72;
-
-    const getItemsPerPage = (height: number): number => {
-        const availableHeight = height - headerHeight;
-        if (availableHeight < 500) return 10;
-        return 10;
-    };
-    const [currentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage(window.innerHeight));
-
-    useEffect(() => {
-        const handleResize = () => {
-            setItemsPerPage(getItemsPerPage(window.innerHeight));
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     const [selectAll, setSelectAll] = useState(false);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
@@ -59,14 +33,10 @@ function CancelModal({ open, onClose }: CancelModalProps) {
         if (selectAll) {
             setSelectedMaterials([]);
         } else {
-            setSelectedMaterials(currentItem.map(item => item.id));
+            setSelectedMaterials(release ? release?.details.map(item => item.detail_id) : [0]);
         }
         setSelectAll(!selectAll);
     };
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItem= item.slice(indexOfFirstItem, indexOfLastItem);
 
     if (!open) return null;
 
@@ -82,61 +52,46 @@ function CancelModal({ open, onClose }: CancelModalProps) {
                         <div className="flex space-x-2">
                             <div className="space-y-1 w-1/2">
                                 <h1>DR Number</h1>
-                                <Input className="h-14" disabled></Input>
+                                <Input value={formatReference(release?.release_number || 0)} className="h-14" disabled></Input>
                             </div>
                             <div className="space-y-1 w-1/2">
                                 <h1>Date Out</h1>
-                                <Input className="focus:border-none" type="Date"></Input>
+                                <Input disabled={release?.status === 4} className="focus:border-none" type="Date"></Input>
                             </div>
                         </div>
                         
                         <div className="space-y-1">
-                            <h1>Relead To</h1>
-                            <Input className="focus:border-none"></Input>
-                        </div>
-                    
-                        <div className="flex flex-row justify-between mt-3 space-x-2">
-                            <div className="space-y-1 w-1/2">
-                                <h1>Item Balance</h1>
-                                <Input className="focus:border-none"></Input>
-                            </div>
-                            <div className="space-y-1 w-1/2">
-                                <h1>Res Balance</h1>
-                                <Input className="focus:border-none"></Input>
-                            </div>
-                        </div>
-                        <div className="space-y-1 w-1/2">
-                            <h1>Available Balance</h1>
-                            <Input className="focus:border-none"></Input>
+                            <h1>ReLead To</h1>
+                            <Input disabled={release?.status === 4} className="focus:border-none"></Input>
                         </div>
                     </div>
-                    <div className="mt-5 flex justify-end">
+                    {release?.status !== 4 && (<div className="mt-5 flex justify-end">
                         <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={handleSelectAll}><span>{selectAll ? "Unselect All" : "Select All"}</span></Button>
-                    </div>
+                    </div>)}
                     <div className="overflow-y-auto mt-5" style={{ maxHeight: `calc(100vh - ${headerHeight + 270}px)` }}>
                         <Table>
                             <TableHeader>
                                 <TableRow>
                                     <Table><span className="sr-only">Checkbox</span></Table>
                                     <TableHead>DR Number</TableHead>
-                                    <TableHead>Item Code</TableHead>
                                     <TableHead>Description</TableHead>
                                     <TableHead>Quantity</TableHead>
-                                    <TableHead>Serial Number</TableHead>
                                     <TableHead>Remarks</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {currentItem.map(item => (
-                                    <TableRow key={item.id}
-                                        onClick={() => handleRowClick(item.id)}
-                                        className={selectedMaterials.includes(item.id) ? "bg-hoverCream" : "cursor-pointer"}>
-                                        <TableCell><Checkbox id="item" checked={selectedMaterials.includes(item.id)}></Checkbox></TableCell>
-                                        <TableCell>{item.itemNumber}</TableCell>
+                                {release && release?.details.map(item => (
+                                    <TableRow key={item.detail_id}
+                                        onClick={() => {
+                                          if (release.status !== 4) {
+                                            handleRowClick(item.detail_id);
+                                          }
+                                        }}
+                                        className={selectedMaterials.includes(item.detail_id) ? "bg-cream cursor-default" : "cursor-pointer"}>
+                                        {release.status !== 4 && <TableCell><Checkbox id="item" checked={selectedMaterials.includes(item.detail_id)}></Checkbox></TableCell>}
+                                        <TableCell>{formatReference(release.release_number)}</TableCell>
+                                        <TableCell>{item.desc}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>{item.itemDesc}</TableCell>
-                                        <TableCell>{item.unit}</TableCell>
-                                        <TableCell>{item.serialNumber}</TableCell>
                                         <TableCell>{item.remarks}</TableCell>
                                     </TableRow>
                                 ))}
@@ -145,10 +100,10 @@ function CancelModal({ open, onClose }: CancelModalProps) {
                     </div>
                 </div>
                 
-                <div className="space-x-2 mt-5 flex justify-end">
+                {release?.status !== 4 && <div className="space-x-2 mt-5 flex justify-end">
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
-                </div>
+                </div>}
             </div>
         </div>
     );
