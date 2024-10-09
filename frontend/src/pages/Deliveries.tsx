@@ -402,7 +402,7 @@ function Deliveries() {
               <div className="relative w-1/3">
                 <Input
                   type="search"
-                  placeholder="Search Delivery Number"
+                  placeholder="Search Delivery Number / Product Description"
                   className="pl-12 border-2 focus:border-none"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
