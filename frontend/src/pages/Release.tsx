@@ -387,7 +387,11 @@ function DeliveryReceipt() {
                       </TableCell>
                       <TableCell>{item.category}</TableCell>
                       <TableCell>{item.item_code}</TableCell>
-                      <TableCell>N/A</TableCell>
+                      <TableCell>
+                          <Input
+                              className="focus:border-none h-7"
+                          />
+                      </TableCell>
                       <TableCell>
                           <Button className="bg-white text-red-500 hover:text-white" onClick={() => handleItemDelete(index)}>
                               <Trash />
