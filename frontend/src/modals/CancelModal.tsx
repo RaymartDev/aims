@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 import { X } from "lucide-react";
@@ -12,14 +14,19 @@ interface CancelModalProps {
     open: boolean;
     onClose: () => void;
     release: ReleaseType | null;
+    handleCancel: (request: any, id: number) => Promise<void>;
 }
 
-function CancelModal({ open, onClose, release }: CancelModalProps) {
+function CancelModal({ open, onClose, release, handleCancel }: CancelModalProps) {
 
     const headerHeight = 72;
 
     const [selectAll, setSelectAll] = useState(false);
     const [selectedMaterials, setSelectedMaterials] = useState<number[]>([]);
+    const [releadTo, setReleadTo] = useState(release?.relead_to || '');
+    const [date, setDate] = useState(
+        release?.date_out ? new Date(release.date_out).toISOString().split("T")[0] : ""
+      );
 
     const handleRowClick = (id: number) => {
         if (selectedMaterials.includes(id)) {
@@ -33,7 +40,7 @@ function CancelModal({ open, onClose, release }: CancelModalProps) {
         if (selectAll) {
             setSelectedMaterials([]);
         } else {
-            setSelectedMaterials(release ? release?.details.map(item => item.detail_id) : [0]);
+            setSelectedMaterials(release ? release?.details.map(item => item.material_id) : [0]);
         }
         setSelectAll(!selectAll);
     };
@@ -56,13 +63,13 @@ function CancelModal({ open, onClose, release }: CancelModalProps) {
                             </div>
                             <div className="space-y-1 w-1/2">
                                 <h1>Date Out</h1>
-                                <Input disabled={release?.status === 4} className="focus:border-none" type="Date"></Input>
+                                <Input value={date} onChange={(e) => setDate(e.target.value)} disabled={release?.status === 4} className="focus:border-none" type="Date"></Input>
                             </div>
                         </div>
                         
                         <div className="space-y-1">
                             <h1>ReLead To</h1>
-                            <Input disabled={release?.status === 4} className="focus:border-none"></Input>
+                            <Input value={releadTo} onChange={(e) => setReleadTo(e.target.value)} disabled={release?.status === 4} className="focus:border-none"></Input>
                         </div>
                     </div>
                     {release?.status !== 4 && (<div className="mt-5 flex justify-end">
@@ -84,11 +91,11 @@ function CancelModal({ open, onClose, release }: CancelModalProps) {
                                     <TableRow key={item.detail_id}
                                         onClick={() => {
                                           if (release.status !== 4) {
-                                            handleRowClick(item.detail_id);
+                                            handleRowClick(item.material_id);
                                           }
                                         }}
-                                        className={selectedMaterials.includes(item.detail_id) ? "bg-cream cursor-default" : "cursor-pointer"}>
-                                        {release.status !== 4 && <TableCell><Checkbox id="item" checked={selectedMaterials.includes(item.detail_id)}></Checkbox></TableCell>}
+                                        className={selectedMaterials.includes(item.material_id) ? "bg-cream cursor-default" : "cursor-pointer"}>
+                                        {release.status !== 4 && <TableCell><Checkbox id="item" checked={selectedMaterials.includes(item.material_id)}></Checkbox></TableCell>}
                                         <TableCell>{formatReference(release.release_number)}</TableCell>
                                         <TableCell>{item.desc}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
@@ -101,7 +108,17 @@ function CancelModal({ open, onClose, release }: CancelModalProps) {
                 </div>
                 
                 {release?.status !== 4 && <div className="space-x-2 mt-5 flex justify-end">
-                    <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        handleCancel({
+                            materialIds: selectedMaterials,
+                            relead_to: releadTo,
+                            date_out: date,
+                        }, release?.id || 0);
+                        setReleadTo('');
+                        setDate('');
+                        setSelectedMaterials([]);
+                    }} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Save</span></Button>
                     <Button className="bg-hoverCream text-fontHeading font-semibold hover:text-white" onClick={onClose}><span>Cancel</span></Button>
                 </div>}
             </div>

@@ -315,7 +315,6 @@ function ShippedModal({ open, onClose, release, handleShip }: ShippedModalProps)
                     results: [],
                     selected: '',
                     selected_id: 0,});
-                  onClose();
                 }} className="bg-hoverCream text-fontHeading font-semibold hover:text-white"><span>Update</span></Button>
                 </div>
             </div>

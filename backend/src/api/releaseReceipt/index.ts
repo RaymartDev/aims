@@ -1,6 +1,6 @@
 import express from 'express';
 import { authenticateToken } from '../../middlewares';
-import { list, getReference, create, ship, receive, search } from './controller';
+import { list, getReference, create, ship, receive, search, cancel } from './controller';
 
 const router = express.Router();
 
@@ -10,6 +10,7 @@ router.put('/ship/:id', ship, authenticateToken);
 router.put('/receive/:id', receive, authenticateToken);
 router.get('/list', list, authenticateToken);
 router.get('/reference', getReference, authenticateToken);
+router.put('/cancel/:id', cancel, authenticateToken);
 
 
 export default router;

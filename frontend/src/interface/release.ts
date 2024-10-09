@@ -23,4 +23,6 @@ export default interface Release {
       remarks: string;
     }[]
     status: number;
+    relead_to: string | null;
+    date_out: Date | null;
   }

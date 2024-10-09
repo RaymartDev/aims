@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -40,6 +41,65 @@ function ReleaseReport() {
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
 
+    const handleCancel = async (request: any, id: number) => {
+        try {
+            const response = await axios.put(`${getVersion()}/release-receipt/cancel/${id}`, {
+              ...request,
+            });
+            if (response.status >= 200 && response.status < 300) {
+                toast.success(response.data?.message || 'Successfully cancelled!');
+    
+                const { materialIds, relead_to, date_out } = request;
+    
+                setReleases((prevReleases) => {
+                    return prevReleases.map((release) => {
+                        if (release.id === id) {
+                            const isFullCancel = release.details.every((item: any) => materialIds.includes(item.material_id));
+    
+                            if (isFullCancel) {
+                                // Full cancellation
+                                return {
+                                    ...release,
+                                    status: 4,
+                                    relead_to,
+                                    date_out: new Date(date_out),
+                                };
+                            } else {
+                                // Partial cancellation: Create a new release for the cancelled items
+                                const newRelease = {
+                                    ...release,
+                                    id: Date.now(), // Temporary ID, could be updated after actual creation
+                                    status: 4,
+                                    relead_to,
+                                    date_out: new Date(date_out),
+                                    details: release.details.filter((item: any) => materialIds.includes(item.material_id)),
+                                };
+    
+                                // Update the existing release by removing the cancelled items
+                                const updatedRelease = {
+                                    ...release,
+                                    details: release.details.filter((item: any) => !materialIds.includes(item.material_id)),
+                                };
+    
+                                // Return both releases
+                                return [updatedRelease, newRelease];
+                            }
+                        }
+                        return release; // Return unchanged release
+                    }).flat(); // Flatten the array in case we return two releases for partial cancellation
+                });
+                setCancelRelease(null);
+                setOpenCancelModal(false);
+            }
+          } catch (err) {
+            if (axios.isAxiosError(err)) {
+                toast.error(err.response?.data?.message || 'Something went wrong');
+              } else {
+                toast.error('Something went wrong');
+            }
+          }
+    }
+
   const handleShip = async (request: any, id: number) => {
     try {
       const response = await axios.put(`${getVersion()}/release-receipt/ship/${id}`, {
@@ -60,6 +120,8 @@ function ReleaseReport() {
               return release; // Return the release unchanged
             });
           });
+        setShipRelease(null);
+        setOpenShippedModal(false);
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -90,6 +152,8 @@ function ReleaseReport() {
               return release; // Return the release unchanged
             });
           });
+          setReceiveRelease(null);
+          setOpenReceivedModal(false);
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -194,7 +258,7 @@ function ReleaseReport() {
                                                         setReceiveRelease(release);
                                                         setOpenReceivedModal(true);
                                                     }}>Received</DropdownMenuItem>
-                                                    <DropdownMenuItem disabled={release.status === 4} onClick={() => {
+                                                    <DropdownMenuItem onClick={() => {
                                                         setCancelRelease(release);
                                                         setOpenCancelModal(true);
                                                     }}>Cancel</DropdownMenuItem>
@@ -247,7 +311,7 @@ function ReleaseReport() {
                 setReceiveRelease(null);
                 setOpenReceivedModal(false);
             }}/>}
-            {openCancelModal && <CancelModal release={cancelRelease} open={openCancelModal} onClose={() => {
+            {openCancelModal && <CancelModal handleCancel={handleCancel} release={cancelRelease} open={openCancelModal} onClose={() => {
                 setCancelRelease(null);
                 setOpenCancelModal(false);
             }}/>}

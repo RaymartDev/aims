@@ -48,6 +48,9 @@ export const formatReleaseStatus = (status: number): string => {
     case 3: 
       finalStatus = 'Completed';
       break;
+    case 4:
+      finalStatus = 'Cancelled';
+      break;
     default:
       finalStatus = '';
       break;

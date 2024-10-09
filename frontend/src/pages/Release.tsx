@@ -20,7 +20,6 @@ import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { Label } from "@/Components/ui/label";
 import SelectItemModal from "@/modals/SelectItemModal";
 import { Plus, Trash, Check, ChevronDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import type SelectedItem from "@/interface/drReleaseItem"
 import { toast } from "react-toastify";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
@@ -33,7 +32,6 @@ import axios, { CancelTokenSource } from "axios";
 function DeliveryReceipt() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("employee");
-  const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [reference, setReference] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -250,10 +248,6 @@ function DeliveryReceipt() {
     setSelectedItems((prevItems) =>
       prevItems.filter((_, i) => i !== index)
     );
-  };
-
-  const handlePrint = () => {
-    navigate("/download", { state: { selectedItems, requestorName: 'requestor', code: 'code' } });
   };
 
   const handleOptionChange = (value: string) => {
