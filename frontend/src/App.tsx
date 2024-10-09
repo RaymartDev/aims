@@ -14,6 +14,7 @@ import Company from "./pages/Company";
 import Department from "./pages/Department";
 import ChangePassword from "./pages/ChangePassword";
 import Downloadpdf from "./pages/Downloadpdf";
+import ARdownload from "./pages/ARdownload";
 import Category from "./pages/Category";
 import Types from "./pages/Types";
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,6 +26,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/download" element={<Downloadpdf/>}/>
+        <Route path="/ardownload" element={<ARdownload/>}/>
         <Route path="/login" element={<Login />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
