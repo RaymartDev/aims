@@ -220,6 +220,7 @@ model Material {
   inventories Inventory[]
   deliveries Delivery[]
   release_details Release_Detail[]
+  return_details Return_Detail[]
 
   @@index([item_code, description, material_code])
 }
@@ -237,6 +238,28 @@ model Inventory {
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by User? @relation("InventoryModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+}
+
+model Return {
+  id Int @id @default(autoincrement())
+  release_number Int
+  release Release @relation(fields: [release_number], references: [id], onDelete: Cascade)
+  return_number Int
+  tag String
+
+  return_detail Return_Detail[]
+}
+
+model Return_Detail {
+  id Int @id @default(autoincrement())
+  return_number Int
+  material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
+  material_id Int 
+  quantity Int
+  remarks String
+  return Return?  @relation(fields: [return_number], references: [id], onDelete: Cascade)
+
+  @@index([return_number])
 }
 
 model Delivery {
@@ -270,9 +293,9 @@ model Release_Shipped {
   name String
   cost_center_code String
   department_id Int
-  department Department @relation(fields: [department_id], references: [id])
+  department Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
   company_id Int
-  company Company @relation(fields: [company_id], references: [id])
+  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
   shipped_date DateTime
   releases Release[]
 }
@@ -283,9 +306,9 @@ model Release_Receiver {
   name String
   cost_center_code String
   department_id Int
-  department Department @relation(fields: [department_id], references: [id])
+  department Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
   company_id Int
-  company Company @relation(fields: [company_id], references: [id])
+  company Company @relation(fields: [company_id], references: [id], onDelete: Cascade)
   receive_date DateTime
 
   releases Release[]
@@ -298,7 +321,7 @@ model Release_Detail {
   material_id Int 
   quantity Int
   remarks String
-  release Release?  @relation(fields: [release_number], references: [id])
+  release Release?  @relation(fields: [release_number], references: [id], onDelete: Cascade)
 
   @@index([release_number])
 }
@@ -312,7 +335,7 @@ model Release {
   release_receiver_id Int?
   release_receiver Release_Receiver? @relation(fields: [release_receiver_id], references: [id])
   requestor_id Int
-  requestor User @relation(fields: [requestor_id], references: [id])
+  requestor User @relation(fields: [requestor_id], references: [id], onDelete: Cascade)
   status Int // status 0: Pending, 1: Shipped, 2: Received, 3: Completed, 4: Cancelled ( received and shipped )
   deleted Boolean @default(false)
   date_out DateTime?
@@ -322,6 +345,7 @@ model Release {
   modified_on DateTime @updatedAt
   modified_by_id Int?      // Foreign key to Employee.id
   modified_by User? @relation("ReleaseModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
+  return Return[]
 
   @@index([release_number])
 }
