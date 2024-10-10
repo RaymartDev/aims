@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -16,12 +17,13 @@ import ReceivedModal from "@/modals/ReceivedModal";
 import CancelModal from "@/modals/CancelModal";
 import ViewDetailsModal from "@/modals/ViewDetailsModal";
 import type ReleaseType from "@/interface/release";
-import { formatDateAsString, formatReleaseStatus, fetchData as fetchItem, getVersion, formatReference } from "@/lib/utils";
+import { formatDateAsString, formatReleaseStatus, fetchData as fetchItem, getVersion, formatReference, fetchData } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import SearchReleaseModal from "@/modals/SearchReleaseModal";
+import useDebounce from "@/hooks/useDebounce";
 
 function ReleaseReport() {
     const [cancelRelease, setCancelRelease] = useState<ReleaseType | null>(null);
@@ -39,6 +41,11 @@ function ReleaseReport() {
     const itemsPerPage = 17;
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
+
+    const [filteredRelease, setFilteredRelease] = useState<ReleaseType[]>([]);
+    const debouncedQuery = useDebounce(searchQuery, 250);
+    const [searchRelease, setSearchRelease] = useState<ReleaseType | null>(null);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
 
   const handleShip = async (request: any, id: number) => {
     try {
@@ -120,6 +127,31 @@ function ReleaseReport() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     }; 
+
+    useEffect(() => {
+        if (debouncedQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/release-receipt/search`,
+                query: {release: debouncedQuery },
+                onSuccess: (data) => {
+                    setFilteredRelease(data.releases.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
+        } else {
+            setFilteredRelease([]);
+        }
+    }, [debouncedQuery, dispatch]);
+    
+
+    const handleSelectRelease = (release: ReleaseType) => {
+        setSearchRelease(release);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredRelease([]);
+    };
+
     return(
         <>
             <div className="flex flex-col h-full">
@@ -135,10 +167,27 @@ function ReleaseReport() {
                             </div>
                             <div className="flex flex-row justify-end w-6/12 space-x-2">
                                 <div className="relative w-2/3">
-                                    <Input type="search" placeholder="Search DR Number" className="pl-12 border-2 focus:border-none" 
+                                    <Input
+                                        type="search"
+                                        placeholder="Search DR Number"
+                                        className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}/>
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    {filteredRelease.length > 0 && (
+                                        <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                            {filteredRelease.map((release) => (
+                                                <div
+                                                    key={release.id}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => handleSelectRelease(release)}
+                                                >
+                                                    {release.release_number}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div> 
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
                                     <Download size={20}/><span className="text-sm">Export</span>
@@ -251,6 +300,7 @@ function ReleaseReport() {
                 setCancelRelease(null);
                 setOpenCancelModal(false);
             }}/>}
+            {openSearchModal && <SearchReleaseModal release={searchRelease} onClose={() => {setOpenSearchModal(false); setSearchRelease(null);}}/>}
         </>
     );
 }
