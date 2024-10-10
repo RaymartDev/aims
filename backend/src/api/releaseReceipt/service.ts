@@ -320,10 +320,13 @@ interface ReleaseFinal {
 
 export async function searchReleaseByRef(ref: string = '**--**'): Promise<ReleaseFinal[]> {
   try {
+    if (isNaN(parseInt(ref))) {
+      return [];
+    }
     const releases = await prisma.release.findMany({
       where: {
         release_number: {
-          equals: isNaN(parseInt(ref)) ?  1 : parseInt(ref),
+          equals: parseInt(ref),
         },
         deleted: false,
       },
