@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-types */
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -18,9 +21,14 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 import AddAssetModal from "@/modals/AddAssetModal";
-import { Plus, Trash } from "lucide-react";
+import { Check, ChevronDown, Plus, Trash } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
 import { useNavigate } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
+import { cn, formatReference, getVersion } from "@/lib/utils";
+import axios, { CancelTokenSource } from "axios";
+import type ReleaseType from "@/interface/release"
 
 const itemList = [
   {
@@ -241,6 +249,69 @@ function AcknowledgementReceipt() {
       : selectedData?.employeeId || "";
   };
 
+  const [drPopOver, setDRPopOver] = useState<{searchTerm: string, isOpen: boolean, results: ReleaseType[], selected: string}>({
+    searchTerm: '',
+    isOpen: false,
+    results: [],
+    selected: '',
+  });
+
+  const debounce = (func: Function, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: unknown[]) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
+
+  const fetchData = useCallback(
+    debounce(async (term: string) => {
+      if (term) {
+        try {
+          // Cancel previous request if it exists
+          if (cancelTokenSource) {
+            cancelTokenSource.cancel();
+          }
+
+          // Create a new CancelTokenSource
+          const source = axios.CancelToken.source();
+          setCancelTokenSource(source);
+
+          const response = await axios.get(`${getVersion()}/release-receipt/search?release=${term}`, {
+            cancelToken: source.token,
+            timeout: 5000,
+          });
+          setDRPopOver((prevState) => ({
+            ...prevState,
+            results: response.data.releases, // Assuming 'response.data' is an array of CategoryType
+          }));
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request canceled:', error.message);
+          } else {
+            console.error('Error fetching search results:', error);
+          }
+        }
+      } else {
+        setDRPopOver((prevState) => ({
+          ...prevState,
+          results: [], // Clear results if no search term
+        }));
+      }
+    }, 500), // Adjust debounce delay as needed (500ms)
+    []
+  );
+
+  useEffect(() => {
+    if (drPopOver.searchTerm) {
+      fetchData(drPopOver.searchTerm);
+    }
+  }, [drPopOver.searchTerm, fetchData]);
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -256,11 +327,52 @@ function AcknowledgementReceipt() {
                   <p className="text-sm">
                     DR Number <span className=" text-red-500">*</span>
                   </p>
-                  <Input
-                    className="focus:border-none"
-                    value={selectedDR}
-                    onChange={(e) => handleDRNumberChange(e.target.value)}
-                  />
+                  <Popover open={drPopOver.isOpen} onOpenChange={(isOpen) => setDRPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={drPopOver.isOpen}
+                        className="w-full justify-between border-black"
+                      >
+                        {drPopOver.selected || "Select Category"}
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search Category"
+                          value={drPopOver.searchTerm}
+                          onValueChange={(searchTerm) => setDRPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                        />
+                        <CommandList>
+                          <CommandEmpty>No category found.</CommandEmpty>
+                          {drPopOver.results.length > 0 && (
+                            <CommandGroup>
+                              {drPopOver.results.map((release) => (
+                                <CommandItem
+                                  key={release.id}
+                                  value={formatReference(release.release_number)}
+                                  onSelect={(selected) => setDRPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected }))}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      drPopOver.selected === formatReference(release.release_number)
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {release.release_number}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          )}
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div className="space-y-2 w-1/2">
                   <p className="text-sm">
