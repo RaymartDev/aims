@@ -118,9 +118,9 @@ interface ReturnType {
     return_number: number;
     desc: string;
     quantity: number;
-    remarks: string;
   }[];
   tag: string;
+  remarks: string;
 }
 
 export async function listReturns(page: number, limit: number): Promise<{ returnsFinal: ReturnType[], maxPage: number }> {
@@ -170,8 +170,8 @@ export async function listReturns(page: number, limit: number): Promise<{ return
           desc: detail.material.description, // Assuming material has a 'name' field
           material_id: detail.material.id,
           quantity: detail.quantity,
-          remarks: detail.remarks,
         })),
+        remarks: returnType.remarks,
         tag: returnType.tag,
       }));
         

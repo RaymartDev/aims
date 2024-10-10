@@ -249,6 +249,7 @@ model Return {
   tag String
   requestor_id Int
   requestor User @relation(fields: [requestor_id], references: [id], onDelete: Cascade)
+  remarks String
 
   return_detail Return_Detail[]
 }

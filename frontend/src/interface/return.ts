@@ -13,7 +13,7 @@ export default interface Return {
       return_number: number;
       desc: string;
       quantity: number;
-      remarks: string;
     }[];
     tag: string;
+    remarks: string;
   }
