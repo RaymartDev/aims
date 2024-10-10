@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { createReleaseReceiver, createReleaseShipper, findReleaseByNumber, getReferenceNumber, insertRelease, listReleases, received, searchReleaseByRef, shipped, updateRelease } from './service';
+import { createAndCancelRelease, createReleaseReceiver, createReleaseShipper, findReleaseByNumber, getReferenceNumber, insertRelease, listReleases, received, searchReleaseByRef, shipped, updateRelease } from './service';
 import { findUserByEmployeeId, findUserByStoreId } from '../user/service';
 import { findCompanyById } from '../company/service';
 import { findDepartmentById } from '../department/service';
@@ -26,6 +27,22 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
     } else {
       res.status(500).json({ message: 'Server error' });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const cancel = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { materialIds, relead_to, date_out } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Release ID is required!' });
+    }
+
+    await createAndCancelRelease(Number(id), materialIds, relead_to, new Date(date_out));
+    res.status(200).json({ message: 'Release cancelled successfully' });
   } catch (err) {
     next(err);
   }

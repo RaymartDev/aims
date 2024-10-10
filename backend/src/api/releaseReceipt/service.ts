@@ -135,8 +135,32 @@ export async function createAndCancelRelease(id: number, materialIds: number[], 
       // Full cancellation
       await prisma.release.update({
         where: { id },
-        data: { status: 4 }, // Status 4: Cancelled
+        data: { status: 4, relead_to, date_out }, // Status 4: Cancelled
       });
+
+      await Promise.all(
+        releaseDetails.map(async (detail) => {
+          await prisma.inventory.updateMany({
+            where: {
+              material_id: detail.material_id,
+            },
+            data: {
+              available: {
+                increment: detail.quantity, // Increment available stock by quantity
+              },
+              remaining_balance: {
+                increment: detail.quantity, // Increment available stock by quantity
+              },
+              total_balance: {
+                increment: detail.quantity, // Increment available stock by quantity
+              },
+              quantity_out: {
+                decrement: detail.quantity, // Decrement
+              },
+            },
+          });
+        }),
+      );
     } else {
       // Partial cancellation
       const newRelease = await prisma.release.create({
@@ -165,6 +189,31 @@ export async function createAndCancelRelease(id: number, materialIds: number[], 
           release_number: newRelease.id,
         },
       });
+
+      const cancelledDetails = releaseDetails.filter(detail => materialIds.includes(detail.material_id));
+      await Promise.all(
+        cancelledDetails.map(async (detail) => {
+          await prisma.inventory.updateMany({
+            where: {
+              material_id: detail.material_id,
+            },
+            data: {
+              available: {
+                increment: detail.quantity, // Increment available stock by quantity
+              },
+              remaining_balance: {
+                increment: detail.quantity, // Increment available stock by quantity
+              },
+              total_balance: {
+                increment: detail.quantity, // Increment available stock by quantity
+              },
+              quantity_out: {
+                decrement: detail.quantity, // Decrement
+              },
+            },
+          });
+        }),
+      );
     }
   } catch (error) {
     throw new Error('Database error');
@@ -186,7 +235,7 @@ export async function insertRelease(release: any, detail: DetailedRelease, user_
         });
     
         if (!inventoryItem) {
-          throw new Error(`Inventory record for material_id: ${item.material_id} not found`);
+          throw new Error(`Record for material_id: ${item.material_id} not found, Please make delivery first`);
         }
     
         if (item.quantity > inventoryItem.available) {
@@ -203,7 +252,7 @@ export async function insertRelease(release: any, detail: DetailedRelease, user_
     if (detail.detail.length > 0) {
       const releaseDetails = detail.detail.map(item => ({
         ...item,
-        release_number: release.release_number,
+        release_number: createdRelease.id,
       }));
 
       await prisma.release_Detail.createMany({
@@ -265,6 +314,8 @@ interface ReleaseFinal {
     remarks: string;
   }[]
   status: number;
+  relead_to: string | null;
+  date_out: Date | null;
 }
 
 export async function searchReleaseByRef(ref: string = '**--**'): Promise<ReleaseFinal[]> {
@@ -317,6 +368,8 @@ export async function searchReleaseByRef(ref: string = '**--**'): Promise<Releas
           quantity: detail.quantity,
           remarks: detail.remarks,
         })),
+        relead_to: release.relead_to,
+        date_out: release.date_out,
       }));
         
       return releasesFinal;
@@ -390,6 +443,8 @@ export async function listReleases(page: number, limit: number): Promise<{ relea
           quantity: detail.quantity,
           remarks: detail.remarks,
         })),
+        relead_to: release.relead_to,
+        date_out: release.date_out,
       }));
       
       return { releasesFinal, maxPage: totalPages };

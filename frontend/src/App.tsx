@@ -25,8 +25,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/download" element={<Downloadpdf/>}/>
-        <Route path="/ardownload" element={<ARdownload/>}/>
+        <Route path="/dr/download" element={<Downloadpdf/>}/>
+        <Route path="/ar/download" element={<ARdownload/>}/>
         <Route path="/login" element={<Login />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
