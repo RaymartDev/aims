@@ -33,7 +33,7 @@ function DeliveryReceipt() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("employee");
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
-  const [reference, setReference] = useState(1);
+  const [reference, setReference] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

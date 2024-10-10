@@ -1,6 +1,7 @@
 export default interface Return {
     id: number;
     return_number: number;
+    release_number: number;
     requestor: {
       name: string;
       employee_no: string;

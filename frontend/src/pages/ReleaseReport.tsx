@@ -285,7 +285,7 @@ function ReleaseReport() {
                                         <TableCell>{release.shipped_by ? formatDateAsString(new Date(release.shipped_by.date)) : ''}</TableCell>
                                         <TableCell>{release.received_by ? release.received_by.name : ''}</TableCell>
                                         <TableCell>{release.received_by ? formatDateAsString(new Date(release.received_by.date)) : ''}</TableCell>
-                                        <TableCell>{formatReleaseStatus(release.status)}</TableCell>
+                                        <TableCell>{release.details.length === 0 ? 'Returned' : formatReleaseStatus(release.status)}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>
@@ -294,19 +294,19 @@ function ReleaseReport() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => {
+                                                    <DropdownMenuItem disabled={release.details.length === 0} onClick={() => {
                                                         setViewRelease(release);
                                                         setOpenViewDetailsModal(true);
                                                     }}>View Details</DropdownMenuItem>
-                                                    <DropdownMenuItem disabled={release.status === 1 || release.status === 3 || release.status === 4} onClick={() => {
+                                                    <DropdownMenuItem disabled={release.details.length === 0 || release.status === 1 || release.status === 3 || release.status === 4} onClick={() => {
                                                         setShipRelease(release);
                                                         setOpenShippedModal(true);
                                                     }}>Shipped</DropdownMenuItem>
-                                                    <DropdownMenuItem disabled={release.status === 2 || release.status === 3 || release.status === 4} onClick={() => {
+                                                    <DropdownMenuItem disabled={release.details.length === 0 || release.status === 2 || release.status === 3 || release.status === 4} onClick={() => {
                                                         setReceiveRelease(release);
                                                         setOpenReceivedModal(true);
                                                     }}>Received</DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => {
+                                                    <DropdownMenuItem disabled={release.details.length === 0} onClick={() => {
                                                         setCancelRelease(release);
                                                         setOpenCancelModal(true);
                                                     }}>Cancel</DropdownMenuItem>

@@ -1,10 +1,10 @@
 import express from 'express';
 import { authenticateToken } from '../../middlewares';
-import { list } from './controller';
+import { create, list } from './controller';
 
 const router = express.Router();
 
-router.post('/', authenticateToken);
+router.post('/', create, authenticateToken);
 router.get('/list', list, authenticateToken);
 
 

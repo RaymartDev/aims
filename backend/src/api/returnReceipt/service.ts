@@ -106,6 +106,7 @@ export async function insertReturn(detail: DetailedReturn, arReturn: any, user_i
 interface ReturnType {
   id: number;
   return_number: number;
+  release_number: number;
   requestor: {
     name: string;
     employee_no: string;
@@ -157,6 +158,7 @@ export async function listReturns(page: number, limit: number): Promise<{ return
       const returnsFinal = returns.map((returnType) => ({
         id: returnType.id,
         return_number: returnType.return_number,
+        release_number: returnType.release_number,
         requestor: {
           name: returnType.requestor.name,
           employee_no: returnType.requestor.employee_no,

@@ -80,6 +80,7 @@ function ReturnReport() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>AR Number</TableHead>
+                                    <TableHead>DR Number</TableHead>
                                     <TableHead>Requestor Name</TableHead>
                                     <TableHead>Tagged Item As</TableHead>
                                     <TableHead><span className="sr-only">Actions</span></TableHead>
@@ -89,6 +90,7 @@ function ReturnReport() {
                                 {returns.map(arReturn => (
                                     <TableRow key={arReturn.id}>
                                         <TableCell>{formatReference(arReturn.return_number)}</TableCell>
+                                        <TableCell>{formatReference(arReturn.release_number)}</TableCell>
                                         <TableCell>{arReturn.requestor.name}</TableCell>
                                         <TableCell>{arReturn.tag}</TableCell>
                                         <TableCell>

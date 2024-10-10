@@ -259,7 +259,6 @@ model Return_Detail {
   material Material @relation(fields: [material_id], references: [id], onDelete: Cascade)
   material_id Int 
   quantity Int
-  remarks String
   return Return?  @relation(fields: [return_number], references: [id], onDelete: Cascade)
 
   @@index([return_number])
