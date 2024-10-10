@@ -143,10 +143,10 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
   try {
     const { release } = req.query;
   
-    if (!release || isNaN(parseInt(release as string))) {
+    if (!release || isNaN(Number(release))) {
       return res.status(400).json({ error: 'Type query parameter is required and must be a number' });
     }
-    const releases = await searchReleaseByRef(release as string);
+    const releases = await searchReleaseByRef(String(release));
     res.status(200).json({ releases, message: 'Successfully found release' });
   } catch (err) {
     next(err);
