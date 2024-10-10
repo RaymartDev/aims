@@ -9,7 +9,7 @@ export default interface Return {
     details: {
       detail_id: number;
       material_id: number;
-      release_number: number;
+      return_number: number;
       desc: string;
       quantity: number;
       remarks: string;
