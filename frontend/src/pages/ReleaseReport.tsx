@@ -42,6 +42,11 @@ function ReleaseReport() {
     const [currentPage, setCurrentPage] = useState(1);
     const dispatch = useAppDispatch();
 
+    const [filteredRelease, setFilteredRelease] = useState<ReleaseType[]>([]);
+    const debouncedQuery = useDebounce(searchQuery, 250);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
+    const [searchRelease, setSearchRelease] = useState<ReleaseType | null>(null);
+
     const handleCancel = async (request: any, id: number) => {
         try {
             const response = await axios.put(`${getVersion()}/release-receipt/cancel/${id}`, {
