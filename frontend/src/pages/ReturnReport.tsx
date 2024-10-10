@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+import { useCallback, useEffect, useState } from "react";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { Download, MoreHorizontal, Search } from "lucide-react";
@@ -6,7 +9,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import type ReturnType from "@/interface/return";
-import { formatReference } from "@/lib/utils";
+import { formatReference, fetchData as fetchItem, getVersion } from "@/lib/utils";
+import { useAppDispatch } from "@/store/store";
+import { logout } from "@/slices/userSlice";
   
 function ReturnReport() {
     const [openViewDetailsModal, setOpenViewDetailsModal] = useState(false);
@@ -23,6 +28,26 @@ function ReturnReport() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+
+    const dispatch = useAppDispatch();
+    const itemsPerPage = 17;
+
+    const loadReleases = useCallback(() => {
+        fetchItem({
+          url: `${getVersion()}/return-receipt/list`,
+          query: { limit: itemsPerPage, page: currentPage }, 
+          onSuccess: (data) => {
+            setReturns(data.returns);
+            setMaxPage(data.misc.maxPage);
+          },
+          dispatch,
+          logout: () => dispatch(logout())
+        });
+      }, [itemsPerPage, currentPage, dispatch]);
+    
+      useEffect(() => {
+        loadReleases();
+      }, [loadReleases]);
 
     return(
         <>

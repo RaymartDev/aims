@@ -104,6 +104,7 @@ model User {
   modified_user_types UserType[] @relation("UserTypeModifiedBy")
 
   releases Release[]
+  returns Return[]
 }
 
 // TODO store, user
@@ -246,6 +247,8 @@ model Return {
   release Release @relation(fields: [release_number], references: [id], onDelete: Cascade)
   return_number Int
   tag String
+  requestor_id Int
+  requestor User @relation(fields: [requestor_id], references: [id], onDelete: Cascade)
 
   return_detail Return_Detail[]
 }
