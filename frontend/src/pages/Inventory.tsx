@@ -27,6 +27,7 @@ import { formatDateAsString, getVersion, fetchData } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import SearchInventoryModal from "@/modals/SearchInventoryModal";
+import ExportInventory from "@/modals/ExportInventory";
 import useDebounce from "@/hooks/useDebounce";
 
 function InventoryOverview() {
@@ -37,6 +38,7 @@ function InventoryOverview() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [openSearchModal, setOpenSearchModal] = useState(false);
+  const [openExportmodal, setOpenExportModal] = useState(false);
   const [searchInventory, setSearchInventory] = useState<InventoryType | null>(null);
   const debouncedQuery = useDebounce(searchQuery, 250);
   const [filteredInventory, setFilteredInventory] = useState<InventoryType[]>([]);
@@ -133,7 +135,7 @@ function InventoryOverview() {
               </div>
               <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
                 <Download size={20} />
-                <span className="text-sm">Export</span>
+                <span className="text-sm" onClick={() => setOpenExportModal(true)}>Export</span>
               </Button>
             </div>
           </div>
@@ -247,6 +249,7 @@ function InventoryOverview() {
       </div>
 
       {openSearchModal && <SearchInventoryModal inventory={searchInventory} onClose={() => {setOpenSearchModal(false); setSearchInventory(null);}} />}
+      {openExportmodal && <ExportInventory open={openExportmodal} onClose={() => setOpenExportModal(false)} link="link" />}
     </div>
   );
 }
