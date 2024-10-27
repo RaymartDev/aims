@@ -26,7 +26,7 @@ import { Textarea } from "@/Components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
-import { cn, formatReference, getVersion } from "@/lib/utils";
+import { cn, formatReference, formatReleaseStatus, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
 import type ReleaseType from "@/interface/release"
 
@@ -190,7 +190,7 @@ function AcknowledgementReceipt() {
   const navigate = useNavigate();
 
   const handlePrint = () => {
-    navigate('/ardownload');
+    navigate('/ar/download');
   }
 
   const headerHeight = 72;
@@ -227,19 +227,6 @@ function AcknowledgementReceipt() {
     const numericValue = Number(value);
     const newValue = Math.max(0, Math.min(numericValue, maxQuantity));
     setReturnQuantities({ ...returnQuantities, [id]: newValue });
-  };
-
-  const handleDRNumberChange = (value: string) => {
-    setSelectedDR(value);
-
-    const associatedData = drData.find((dr) => dr.drNumber === value);
-    if (associatedData) {
-      setSelectedName(associatedData.name);
-      setSelectedType(associatedData.costCenterCode ? "store" : "employee");
-    } else {
-      setSelectedName("");
-      setSelectedType("");
-    }
   };
 
   const getCodeOrId = () => {
@@ -281,7 +268,7 @@ function AcknowledgementReceipt() {
           const source = axios.CancelToken.source();
           setCancelTokenSource(source);
 
-          const response = await axios.get(`${getVersion()}/release-receipt/search?release=${term}`, {
+          const response = await axios.get(`${getVersion()}/release-receipt/searchActive?release=${term}`, {
             cancelToken: source.token,
             timeout: 5000,
           });
@@ -347,7 +334,7 @@ function AcknowledgementReceipt() {
                           onValueChange={(searchTerm) => setDRPopOver((prevState) => ({ ...prevState, searchTerm }))}
                         />
                         <CommandList>
-                          <CommandEmpty>No category found.</CommandEmpty>
+                          <CommandEmpty>No release found.</CommandEmpty>
                           {drPopOver.results.length > 0 && (
                             <CommandGroup>
                               {drPopOver.results.map((release) => (
@@ -364,7 +351,7 @@ function AcknowledgementReceipt() {
                                         : "opacity-0"
                                     )}
                                   />
-                                  {release.release_number}
+                                  {formatReference(release.release_number)} - {formatReleaseStatus(release.status)}
                                 </CommandItem>
                               ))}
                             </CommandGroup>

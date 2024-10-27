@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { createAndCancelRelease, createReleaseReceiver, createReleaseShipper, findReleaseByNumber, getReferenceNumber, insertRelease, listReleases, received, searchReleaseByRef, shipped, updateRelease } from './service';
+import { createAndCancelRelease, createReleaseReceiver, createReleaseShipper, findReleaseByNumber, getReferenceNumber, insertRelease, listReleases, received, searchReleaseByRef, searchReleaseByRefCompleted, shipped, updateRelease } from './service';
 import { findUserByEmployeeId, findUserByStoreId } from '../user/service';
 import { findCompanyById } from '../company/service';
 import { findDepartmentById } from '../department/service';
@@ -147,6 +147,20 @@ export const search = async (req: UserRequest, res: Response, next: NextFunction
       return res.status(400).json({ error: 'Type query parameter is required and must be a number' });
     }
     const releases = await searchReleaseByRef(String(release));
+    res.status(200).json({ releases, message: 'Successfully found release' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const searchCompleted = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { release } = req.query;
+  
+    if (!release || isNaN(Number(release))) {
+      return res.status(400).json({ error: 'Type query parameter is required and must be a number' });
+    }
+    const releases = await searchReleaseByRefCompleted(String(release));
     res.status(200).json({ releases, message: 'Successfully found release' });
   } catch (err) {
     next(err);
