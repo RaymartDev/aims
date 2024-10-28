@@ -5,6 +5,24 @@ interface DetailedReturn {
   detail: any[];
 }
 
+export async function getReferenceNumber(): Promise<number> {
+  try {
+    const maxReturn = await prisma.return.findFirst({
+      orderBy: {
+        return_number: 'desc',
+      },
+      select: {
+        return_number: true,
+      },
+    });
+
+    const releaseNumber = maxReturn ? (maxReturn.return_number + 1) : 1;
+    return releaseNumber;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function insertReturn(detail: DetailedReturn, arReturn: any, user_id: number): Promise<Return | null> {
   try {
     if (detail.detail.length > 0) {

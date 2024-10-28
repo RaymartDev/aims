@@ -371,8 +371,13 @@ export async function searchReleaseByRefCompleted(ref: string = '**--**'): Promi
           release_number: detail.release_number,
           desc: detail.material.description, // Assuming material has a 'name' field
           material_id: detail.material.id,
+          item_code: detail.material.item_code,
+          material_code: detail.material.material_code,
           quantity: detail.quantity,
           remarks: detail.remarks,
+          serial: detail.material.serial_number,
+          uom: detail.material.unit_of_measure,
+          cost: detail.material.cost,
         })),
         relead_to: release.relead_to,
         date_out: release.date_out,
