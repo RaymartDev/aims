@@ -21,6 +21,11 @@ export default interface Release {
       desc: string;
       quantity: number;
       remarks: string;
+      item_code?: string;
+      material_code?: string;
+      uom?: string;
+      serial?: string;
+      cost?: number;
     }[]
     status: number;
     relead_to: string | null;

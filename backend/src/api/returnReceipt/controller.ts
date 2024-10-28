@@ -1,6 +1,6 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { insertReturn, listReturns } from './service';
+import { getReferenceNumber, insertReturn, listReturns } from './service';
 import { findUserByEmployeeId, findUserByStoreId } from '../user/service';
 
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -23,6 +23,15 @@ export const list = async (req: UserRequest, res: Response, next: NextFunction) 
     } else {
       res.status(500).json({ message: 'Server error' });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getReference = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const reference = await getReferenceNumber();
+    res.status(200).json({ reference });
   } catch (err) {
     next(err);
   }

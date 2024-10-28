@@ -22,9 +22,13 @@ import { formatDateAsString, formatReference, formatReleaseStatus } from "@/lib/
 interface SearchReleaseModalProps {
   onClose: () => void;
   release: ReleaseType | null;
+  openViewRelease: () => void;
+  openShipRelease: () => void;
+  openReceiveRelease: () => void;
+  openCancelRelease: () => void;
 }
 
-function SearchReleaseModal({ onClose, release}: SearchReleaseModalProps) {
+function SearchReleaseModal({ onClose, release, openViewRelease, openShipRelease, openReceiveRelease, openCancelRelease }: SearchReleaseModalProps) {
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-20 p-4">
@@ -78,9 +82,10 @@ function SearchReleaseModal({ onClose, release}: SearchReleaseModalProps) {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
-                                        <DropdownMenuItem disabled={release?.status === 1 || release?.status === 3 || release?.status === 4}>Shipped</DropdownMenuItem>
-                                        <DropdownMenuItem disabled={release?.status === 2 || release?.status === 3 || release?.status === 4}>Received</DropdownMenuItem>
-                                        <DropdownMenuItem disabled={release?.status === 4}>Cancel</DropdownMenuItem>
+                                        <DropdownMenuItem disabled={release?.details.length === 0} onClick={openViewRelease}>View Details</DropdownMenuItem>
+                                        <DropdownMenuItem disabled={release?.status === 1 || release?.status === 3 || release?.status === 4} onClick={openShipRelease}>Shipped</DropdownMenuItem>
+                                        <DropdownMenuItem disabled={release?.status === 2 || release?.status === 3 || release?.status === 4} onClick={openReceiveRelease}>Received</DropdownMenuItem>
+                                        <DropdownMenuItem disabled={release?.status === 4} onClick={openCancelRelease}>Cancel</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>

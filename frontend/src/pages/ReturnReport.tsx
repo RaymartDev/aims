@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import type ReturnType from "@/interface/return";
+import ExportReturn from "@/modals/ExportReturn";
 import { formatReference, fetchData as fetchItem, getVersion } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
@@ -18,6 +19,7 @@ function ReturnReport() {
     const [openShippedModal, setOpenShippedModal] = useState(false);
     const [openReceivedModal, setOpenReceivedModal] = useState(false);
     const [openCancelModal, setOpenCancelModal] = useState(false);
+    const [openReturnModal, setOpenReturnModal]= useState(false);
     const [returns, setReturns] = useState<ReturnType[]>([]);
     const [maxPage, setMaxPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
@@ -70,7 +72,7 @@ function ReturnReport() {
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div> 
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
-                                    <Download size={20}/><span className="text-sm">Export</span>
+                                    <Download size={20}/><span className="text-sm" onClick={() => setOpenReturnModal(true)}>Export</span>
                                 </Button>  
                             </div>    
                         </div>
@@ -138,6 +140,7 @@ function ReturnReport() {
                         </PaginationContent>
                     </Pagination>
                 </div>
+                {openReturnModal && <ExportReturn open={openReturnModal} onClose={() => setOpenReturnModal(false)} link="your-link-here" />}
             </div>
         </>
     );

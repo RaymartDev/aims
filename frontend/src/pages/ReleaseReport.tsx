@@ -16,6 +16,7 @@ import ShippedModal from "@/modals/ShippedModal";
 import ReceivedModal from "@/modals/ReceivedModal";
 import CancelModal from "@/modals/CancelModal";
 import ViewDetailsModal from "@/modals/ViewDetailsModal";
+import ExportRelease from "@/modals/ExportRelease";
 import type ReleaseType from "@/interface/release";
 import { formatDateAsString, formatReleaseStatus, fetchData as fetchItem, getVersion, formatReference, fetchData } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
@@ -34,6 +35,7 @@ function ReleaseReport() {
     const [openShippedModal, setOpenShippedModal] = useState(false);
     const [openReceivedModal, setOpenReceivedModal] = useState(false);
     const [openCancelModal, setOpenCancelModal] = useState(false);
+    const [openExportModal, setOpenExportModal]= useState(false);
     const [releases, setReleases] = useState<ReleaseType[]>([]);
     const [maxPage, setMaxPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
@@ -148,7 +150,7 @@ function ReleaseReport() {
         setReleases((prevReleases) => {
             return prevReleases.map(release => {
               if (release.id === id) {
-                const newStatus = request.received_by ? 3 : 2; // Check if received_by is not null
+                const newStatus = request.shipped_by ? 3 : 2; // Check if shipped_by is not null
                 return {
                   ...release,
                   status: newStatus,
@@ -246,14 +248,14 @@ function ReleaseReport() {
                                                     className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                                                     onClick={() => handleSelectRelease(release)}
                                                 >
-                                                    {release.release_number}
+                                                    {formatReference(release.release_number)} - {formatReleaseStatus(release.status)}
                                                 </div>
                                             ))}
                                         </div>
                                     )}
                                 </div> 
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
-                                    <Download size={20}/><span className="text-sm">Export</span>
+                                <Download size={20}/><span className="text-sm" onClick={() => setOpenExportModal(true)}>Export</span>
                                 </Button>  
                             </div>    
                         </div>
@@ -351,6 +353,7 @@ function ReleaseReport() {
                 setViewRelease(null);
                 setOpenViewDetailsModal(false);
             }}/>}
+            {openExportModal && <ExportRelease open={openExportModal} onClose={() => setOpenExportModal(false)} link="your-link-here" />}
             {openShippedModal && <ShippedModal handleShip={handleShip} release={shipRelease} open={openShippedModal} onClose={() => {
                 setShipRelease(null);
                 setOpenShippedModal(false);
@@ -363,7 +366,37 @@ function ReleaseReport() {
                 setCancelRelease(null);
                 setOpenCancelModal(false);
             }}/>}
-            {openSearchModal && <SearchReleaseModal release={searchRelease} onClose={() => {setOpenSearchModal(false); setSearchRelease(null);}}/>}
+            {openSearchModal && <SearchReleaseModal 
+                release={searchRelease} 
+                onClose={() => {
+                    setOpenSearchModal(false); 
+                    setSearchRelease(null);
+                }}
+                openViewRelease={() => {
+                    setOpenSearchModal(false); 
+                    setSearchRelease(null);
+                    setViewRelease(searchRelease);
+                    setOpenViewDetailsModal(true);
+                }}
+                openShipRelease={() => {
+                    setOpenSearchModal(false); 
+                    setSearchRelease(null);
+                    setShipRelease(searchRelease);
+                    setOpenShippedModal(true);
+                }}
+                openReceiveRelease={() => {
+                    setOpenSearchModal(false); 
+                    setSearchRelease(null);
+                    setReceiveRelease(searchRelease);
+                    setOpenReceivedModal(true);
+                }}
+                openCancelRelease={() => {
+                    setOpenSearchModal(false); 
+                    setSearchRelease(null);
+                    setCancelRelease(searchRelease);
+                    setOpenCancelModal(true);
+                }}
+            />}
         </>
     );
 }
