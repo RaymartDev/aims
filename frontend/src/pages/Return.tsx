@@ -164,96 +164,106 @@ function AcknowledgementReceipt() {
           <h1 className="text-2xl font-bold">Return</h1>
           <p className="text-sm font-semibold text-[#9E9E9E]">Order / Return</p>
         </div>
+        <div className="flex flex-col w-full pt-10">
+          <p className="text-lg font-semibold">Reference Number </p>
+          <Input
+            className="border-none w-full h-16 text-4xl text-red-700"
+            disabled
+            value={"10"}
+          />
+        </div>
         <div className="flex w-full justify-between gap-8 2xl:gap-20 pt-10">
           <div className="flex flex-row gap-6 w-3/4">
-            <div className="flex flex-col w-2/3 space-y-5">
-              <div className="flex space-x-5">
-                <div className="space-y-2 w-1/2">
-                  <p className="text-sm">
-                    DR Number <span className=" text-red-500">*</span>
-                  </p>
-                  <Popover open={drPopOver.isOpen} onOpenChange={(isOpen) => setDRPopOver((prevState) => ({ ...prevState, isOpen }))}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={drPopOver.isOpen}
-                        className="w-full justify-between border-black"
-                      >
-                        {drPopOver.selected || "Select Category"}
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Search Category"
-                          value={drPopOver.searchTerm}
-                          onValueChange={(searchTerm) => setDRPopOver((prevState) => ({ ...prevState, searchTerm }))}
-                        />
-                        <CommandList>
-                          <CommandEmpty>No release found.</CommandEmpty>
-                          {drPopOver.results.length > 0 && (
-                            <CommandGroup>
-                              {drPopOver.results.map((release) => (
-                                <CommandItem
-                                  key={release.id}
-                                  value={formatReference(release.release_number)}
-                                  onSelect={(selected) => setDRPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selectedRelease: prevState.selected === selected ? null : release }))}
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      drPopOver.selected === formatReference(release.release_number)
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                  {formatReference(release.release_number)} - {formatReleaseStatus(release.status)}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          )}
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+            <div className="flex flex-row w-full space-x-5">
+              <div className="w-2/3">
+                <div className="flex space-x-5">
+                  <div className="space-y-2 w-1/2">
+                    <p className="text-sm">
+                      DR Number <span className=" text-red-500">*</span>
+                    </p>
+                    <Popover open={drPopOver.isOpen} onOpenChange={(isOpen) => setDRPopOver((prevState) => ({ ...prevState, isOpen }))}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={drPopOver.isOpen}
+                          className="w-full justify-between border-black"
+                        >
+                          {drPopOver.selected || "Select Category"}
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search Category"
+                            value={drPopOver.searchTerm}
+                            onValueChange={(searchTerm) => setDRPopOver((prevState) => ({ ...prevState, searchTerm }))}
+                          />
+                          <CommandList>
+                            <CommandEmpty>No release found.</CommandEmpty>
+                            {drPopOver.results.length > 0 && (
+                              <CommandGroup>
+                                {drPopOver.results.map((release) => (
+                                  <CommandItem
+                                    key={release.id}
+                                    value={formatReference(release.release_number)}
+                                    onSelect={(selected) => setDRPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selectedRelease: prevState.selected === selected ? null : release }))}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        drPopOver.selected === formatReference(release.release_number)
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {formatReference(release.release_number)} - {formatReleaseStatus(release.status)}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            )}
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="space-y-2 w-1/2">
+                    <p className="text-sm">
+                      Tagged Item As <span className=" text-red-500">*</span>
+                    </p>
+                    <Select>
+                      <SelectTrigger className="focus:border-none">
+                        <SelectValue placeholder="Select Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="ou">Original Unit</SelectItem>
+                          <SelectItem value="billing">Billing</SelectItem>
+                          <SelectItem value="du">Return Demo Unit</SelectItem>
+                          <SelectItem value="su">Return Service Unit</SelectItem>
+                          <SelectItem value="fl">Safekeep</SelectItem>
+                          <SelectItem value="fr">For Repair</SelectItem>
+                          <SelectItem value="pu">Pull Out</SelectItem>
+                          <SelectItem value="pt">P. Transfer</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <div className="space-y-2 w-1/2">
+                <div className="space-y-2">
                   <p className="text-sm">
-                    Tagged Item As <span className=" text-red-500">*</span>
+                    Reason Transfer <span className=" text-red-500">*</span>
                   </p>
-                  <Select>
-                    <SelectTrigger className="focus:border-none">
-                      <SelectValue placeholder="Select Type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="ou">Original Unit</SelectItem>
-                        <SelectItem value="billing">Billing</SelectItem>
-                        <SelectItem value="du">Return Demo Unit</SelectItem>
-                        <SelectItem value="su">Return Service Unit</SelectItem>
-                        <SelectItem value="fl">Safekeep</SelectItem>
-                        <SelectItem value="fr">For Repair</SelectItem>
-                        <SelectItem value="pu">Pull Out</SelectItem>
-                        <SelectItem value="pt">P. Transfer</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <Input className="focus:border-none" />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="flex flex-col w-full space-y-2">
                 <p className="text-sm">
-                  Reason Transfer <span className=" text-red-500">*</span>
+                  Remarks <span className=" text-red-500">*</span>
                 </p>
-                <Input className="focus:border-none" />
+                <Textarea className="focus:border-none max-h-28 min-h-28" />
               </div>
-            </div>
-            <div className="flex flex-col w-full space-y-2">
-              <p className="text-sm">
-                Remarks <span className=" text-red-500">*</span>
-              </p>
-              <Textarea className="focus:border-none max-h-28 min-h-28" />
             </div>
           </div>
           <div className="flex justify-end items-end">
