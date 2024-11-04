@@ -32,12 +32,17 @@ export async function insertReturn(arReturn: any, detail: DetailedReturn, user_i
             material_id: item.material_id,
           },
           select: {
+            quantity_out: true,
             material: true,
           },
         });
         
         if (!inventoryItem) {
           throw new Error(`Record for material_id: ${item.material_id} not found, Please make delivery first`);
+        }
+
+        if (item.quantity > inventoryItem.quantity_out) {
+          throw new Error(`Error return for ${inventoryItem.material.description}. Quantity Out: ${inventoryItem.quantity_out}, Requested: ${item.quantity}`);
         }
       }
 
