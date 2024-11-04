@@ -55,6 +55,27 @@ export async function findUserByUsernameLogin(username: string): Promise<UserWRo
   }
 }
 
+export async function findUserById(id: number): Promise<UserWRole | null> {
+  try {
+    const today = new Date();
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+        deleted: false,
+        effective_to: {
+          gte: today,
+        },
+      },
+      include: {
+        role: true,
+      },
+    });
+    return user;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function createUser(user: any): Promise<User | null> {
   try {
     const createdUser = await prisma.user.create({

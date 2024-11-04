@@ -5,6 +5,7 @@ export default interface Release {
       name: string;
       employee_no: string;
       cost_center_code: string;
+      user_id: number;
     };
     shipped_by: {
       name: string;

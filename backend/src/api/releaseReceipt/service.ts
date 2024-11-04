@@ -356,6 +356,7 @@ export async function searchReleaseByRefCompleted(ref: string = '**--**'): Promi
           name: release.requestor.name, 
           employee_no: release.requestor.employee_no,
           cost_center_code: release.requestor.cost_center_code,
+          user_id: release.requestor.id,
         },
         shipped_by: release.release_shipped ? {
           name: release.release_shipped.name,
@@ -426,6 +427,7 @@ export async function searchReleaseByRef(ref: string = '**--**'): Promise<Releas
           name: release.requestor.name, 
           employee_no: release.requestor.employee_no,
           cost_center_code: release.requestor.cost_center_code,
+          user_id: release.requestor.id,
         },
         shipped_by: release.release_shipped ? {
           name: release.release_shipped.name,

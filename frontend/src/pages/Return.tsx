@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-types */
@@ -52,10 +54,32 @@ type ReturnQuantities = {
 function AcknowledgementReceipt() {
   const [returnItemList, setReturnItemList] = useState<DetailItem[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [reference, setReference] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [tag, setTag] = useState("Original Unit");
+  const [remarks, setRemarks] = useState('');
+  const [reason, setReason] = useState('');
   const [returnQuantities, setReturnQuantities] = useState<ReturnQuantities>(
     returnItemList.reduce((acc, item) => ({ ...acc, [item.detail_id]: 0 }), {})
   );
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Function to fetch the maximum release number
+    const fetchMaxReleaseNumber = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${getVersion()}/return-receipt/reference`); // API endpoint to fetch the release number
+        setReference(response.data.reference); // Set the release number in state
+      } catch (err) {
+        toast.error('Failed to fetch release number'); // Set error if the API call fails
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMaxReleaseNumber(); // Call the function on component mount
+  }, []);
 
   const handlePrint = () => {
     navigate('/ar/download');
@@ -91,6 +115,52 @@ function AcknowledgementReceipt() {
       // Add only unique items to returnItemList
       return [...prevList, ...newItems];
     });
+  }
+
+  const handleSubmit = async () => {
+    if (loading) return;
+
+    try {
+      const returnObj = {
+        release_number: drPopOver.selectedRelease?.release_number || 0,
+        return_number: reference,
+        tag,
+        requestor_id: drPopOver.selectedRelease?.requestor.user_id || 0,
+        remarks,
+        reason,
+      }
+      const returnQuantitiesArray = Object.entries(returnQuantities).map(([key, value]) => ({
+        material_id: Number(key),
+        quantity: value,
+      }));
+
+      const response = await axios.post(`${getVersion()}/return-receipt`, {
+        return: returnObj,
+        return_detail: returnQuantitiesArray,
+        assigned_id: drPopOver.selectedRelease?.requestor.user_id || 0,
+      });
+
+      if (response.status >= 200 && response.status < 300) {
+        toast.success(response.data?.message || 'Successfully created delivery!.');
+        setReference((prevReference) => prevReference + 1);
+        setDRPopOver({
+          searchTerm: '',
+          isOpen: false,
+          results: [],
+          selected: '',
+          selectedRelease: null,
+        })
+        setRemarks('');
+        setTag("Original Unit");
+        setReason('');
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+          toast.error(err.response?.data?.message || 'Something went wrong');
+        } else {
+          toast.error('Something went wrong');
+      }
+    }
   }
 
   const [drPopOver, setDRPopOver] = useState<{searchTerm: string, isOpen: boolean, results: ReleaseType[], selected: string, selectedRelease: ReleaseType | null}>({
@@ -169,7 +239,7 @@ function AcknowledgementReceipt() {
           <Input
             className="border-none w-full h-16 text-4xl text-red-700"
             disabled
-            value={"10"}
+            value={formatReference(reference)}
           />
         </div>
         <div className="flex w-full justify-between gap-8 2xl:gap-20 pt-10">
@@ -232,20 +302,20 @@ function AcknowledgementReceipt() {
                     <p className="text-sm">
                       Tagged Item As <span className=" text-red-500">*</span>
                     </p>
-                    <Select>
+                    <Select value={tag} onValueChange={setTag}>
                       <SelectTrigger className="focus:border-none">
                         <SelectValue placeholder="Select Type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="ou">Original Unit</SelectItem>
-                          <SelectItem value="billing">Billing</SelectItem>
-                          <SelectItem value="du">Return Demo Unit</SelectItem>
-                          <SelectItem value="su">Return Service Unit</SelectItem>
-                          <SelectItem value="fl">Safekeep</SelectItem>
-                          <SelectItem value="fr">For Repair</SelectItem>
-                          <SelectItem value="pu">Pull Out</SelectItem>
-                          <SelectItem value="pt">P. Transfer</SelectItem>
+                          <SelectItem value="Original Unit">Original Unit</SelectItem>
+                          <SelectItem value="Billing">Billing</SelectItem>
+                          <SelectItem value="Return Demo Unit">Return Demo Unit</SelectItem>
+                          <SelectItem value="Return Service Unit">Return Service Unit</SelectItem>
+                          <SelectItem value="Safekeep">Safekeep</SelectItem>
+                          <SelectItem value="For Repair">For Repair</SelectItem>
+                          <SelectItem value="Pull Out">Pull Out</SelectItem>
+                          <SelectItem value="P. Transfer">P. Transfer</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -253,16 +323,16 @@ function AcknowledgementReceipt() {
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm">
-                    Reason Transfer <span className=" text-red-500">*</span>
+                    Reason for Transfer <span className=" text-red-500">*</span>
                   </p>
-                  <Input className="focus:border-none" />
+                  <Input value={reason} onChange={(e) => setReason(e.target.value)} className="focus:border-none" />
                 </div>
               </div>
               <div className="flex flex-col w-full space-y-2">
                 <p className="text-sm">
                   Remarks <span className=" text-red-500">*</span>
                 </p>
-                <Textarea className="focus:border-none max-h-28 min-h-28" />
+                <Textarea value={remarks} onChange={(e) => setRemarks(e.target.value)} className="focus:border-none max-h-28 min-h-28" />
               </div>
             </div>
           </div>
@@ -351,7 +421,7 @@ function AcknowledgementReceipt() {
                     <Input
                       type="number"
                       className="w-16 focus:border-none h-7"
-                      value={returnQuantities[item.detail_id]}
+                      value={returnQuantities[item.material_id]}
                       onChange={(e) =>
                         handleQuantityChange(
                           item.material_id,
@@ -376,8 +446,8 @@ function AcknowledgementReceipt() {
         </div>
         <div className="flex items-end mt-5">
           <Button
-            className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36" onClick={handlePrint}>
-            Print
+            className="bg-hoverCream text-fontHeading font-semibold hover:text-white w-36" onClick={handleSubmit}>
+            Submit
           </Button>
         </div>
       </div>

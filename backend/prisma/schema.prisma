@@ -250,6 +250,7 @@ model Return {
   requestor_id Int
   requestor User @relation(fields: [requestor_id], references: [id], onDelete: Cascade)
   remarks String
+  reason String
 
   return_detail Return_Detail[]
 }

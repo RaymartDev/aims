@@ -1,7 +1,7 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
 import { getReferenceNumber, insertReturn, listReturns } from './service';
-import { findUserByEmployeeId, findUserByStoreId } from '../user/service';
+import { findUserById } from '../user/service';
 
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -40,26 +40,15 @@ export const getReference = async (req: UserRequest, res: Response, next: NextFu
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    let user_id = -1;
-    if (req.body?.option === 'employee') {
-      const findEmployee = await findUserByEmployeeId(req.body.id);
-      if (findEmployee) {
-        user_id = findEmployee.id;
-      }
-    } else {
-      const findStore = await findUserByStoreId(req.body.id);
-      if (findStore) {
-        user_id = findStore.id;
-      }
-    }
+    const findUser = await findUserById(Number(req.body.assigned_id));
   
-    if (user_id === -1) {
+    if (!findUser) {
       return res.status(404).json({ message: 'User not found' });
     }
       
     const newReturn = await insertReturn({ ...req.body.return }, {
       detail: req.body.return_detail,
-    }, user_id);
+    }, findUser.id);
     if (newReturn) {
       res.status(200).json({ return: newReturn, message: 'Successfully created return' });
     } else {

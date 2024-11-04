@@ -23,7 +23,7 @@ export async function getReferenceNumber(): Promise<number> {
   }
 }
 
-export async function insertReturn(detail: DetailedReturn, arReturn: any, user_id: number): Promise<Return | null> {
+export async function insertReturn(arReturn: any, detail: DetailedReturn, user_id: number): Promise<Return | null> {
   try {
     if (detail.detail.length > 0) {
       for (const item of detail.detail) {
@@ -32,7 +32,6 @@ export async function insertReturn(detail: DetailedReturn, arReturn: any, user_i
             material_id: item.material_id,
           },
           select: {
-            quantity_out: true,
             material: true,
           },
         });
@@ -40,21 +39,15 @@ export async function insertReturn(detail: DetailedReturn, arReturn: any, user_i
         if (!inventoryItem) {
           throw new Error(`Record for material_id: ${item.material_id} not found, Please make delivery first`);
         }
-        
-        if (item.quantity > inventoryItem.quantity_out) {
-          throw new Error(`Error: ${inventoryItem.material.description}. Quantity Out: ${inventoryItem.quantity_out}, Requested: ${item.quantity}`);
-        }
       }
-    }
 
-    const createdReturn = await prisma.return.create({
-      data: {
-        ...arReturn,
-        requestor_id: user_id,
-      },
-    });
+      const createdReturn = await prisma.return.create({
+        data: {
+          ...arReturn,
+          requestor_id: user_id,
+        },
+      });
 
-    if (detail.detail.length > 0) {
       const returnDetails = detail.detail.map(item => ({
         ...item,
         return_number: createdReturn.id,
@@ -72,16 +65,19 @@ export async function insertReturn(detail: DetailedReturn, arReturn: any, user_i
             },
             data: {
               available: {
-                increment: item.quantity, // Reverse the stock decrement
+                increment: item.quantity, 
               },
               total_balance: {
-                increment: item.quantity, // Reverse the decrement in the total balance
+                increment: item.quantity, 
               },
               remaining_balance: {
-                increment: item.quantity, // Reverse the decrement in the remaining balance
+                increment: item.quantity, 
               },
               quantity_out: {
-                decrement: item.quantity, // Reverse the increment in quantity_out
+                decrement: item.quantity, 
+              },
+              return: {
+                increment: item.quantity,
               },
             },
           });
@@ -114,8 +110,9 @@ export async function insertReturn(detail: DetailedReturn, arReturn: any, user_i
           }
         }),
       );
+      return createdReturn;
     }
-    return createdReturn;
+    return null;
   } catch (error) {
     throw new Error('Database error');
   }
