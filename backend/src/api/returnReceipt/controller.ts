@@ -1,6 +1,6 @@
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { getReferenceNumber, insertReturn, listReturns } from './service';
+import { getReferenceNumber, insertReturn, listReturns, searchReturnByRef } from './service';
 import { findUserById } from '../user/service';
 
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -54,6 +54,20 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
     } else {
       res.status(500).json({ message: 'Server error' });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const search = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { returnQuery } = req.query;
+  
+    if (!returnQuery || isNaN(Number(returnQuery))) {
+      return res.status(400).json({ error: 'Type query parameter is required and must be a number' });
+    }
+    const returns = await searchReturnByRef(String(returnQuery));
+    res.status(200).json({ returns, message: 'Successfully found return' });
   } catch (err) {
     next(err);
   }

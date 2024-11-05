@@ -203,3 +203,65 @@ export async function listReturns(page: number, limit: number): Promise<{ return
     throw new Error('Database error');
   }
 }
+
+export async function searchReturnByRef(ref: string = '**--**'): Promise<ReturnType[]> {
+  try {
+    if (isNaN(parseInt(ref))) {
+      return [];
+    }
+
+    const returns = await prisma.return.findMany({
+      where: {
+        OR: [{
+          return_number: {
+            equals: parseInt(ref),
+          },
+        }, {
+          release_number: {
+            equals: parseInt(ref),
+          },
+        }],
+      },
+      include: {
+        requestor: true,
+        return_detail: {
+          include: {
+            material: true,
+          },
+        },
+      },
+      take: 10,
+      orderBy: {
+        return_number: 'asc',
+      },
+    });
+
+    if (returns && returns.length > 0) {
+      const returnsFinal = returns.map((returnType) => ({
+        id: returnType.id,
+        return_number: returnType.return_number,
+        release_number: returnType.release_number,
+        requestor: {
+          name: returnType.requestor.name,
+          employee_no: returnType.requestor.employee_no,
+          cost_center_code: returnType.requestor.cost_center_code,
+        },
+        details: returnType.return_detail.map((detail) => ({
+          detail_id: detail.id,
+          return_number: detail.return_number,
+          desc: detail.material.description, // Assuming material has a 'name' field
+          material_id: detail.material.id,
+          quantity: detail.quantity,
+        })),
+        remarks: returnType.remarks,
+        tag: returnType.tag,
+      }));
+        
+      return returnsFinal;
+    }
+
+    return [];
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
