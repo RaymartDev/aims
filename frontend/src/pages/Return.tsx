@@ -245,7 +245,7 @@ function AcknowledgementReceipt() {
         <div className="flex w-full justify-between gap-8 2xl:gap-20 pt-10">
           <div className="flex flex-row gap-6 w-3/4">
             <div className="flex flex-row w-full space-x-5">
-              <div className="w-2/3">
+              <div className="w-2/3 space-y-2">
                 <div className="flex space-x-5">
                   <div className="space-y-2 w-1/2">
                     <p className="text-sm">

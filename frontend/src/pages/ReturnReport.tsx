@@ -1,3 +1,6 @@
+
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -10,21 +13,25 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import type ReturnType from "@/interface/return";
 import ExportReturn from "@/modals/ExportReturn";
-import { formatReference, fetchData as fetchItem, getVersion } from "@/lib/utils";
+import { formatReference, fetchData as fetchItem, getVersion, fetchData } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
+import ViewReturnModal from "@/modals/ViewReturnModal";
+import SearchReturnModal from "@/modals/SearchReturnModal";
+import useDebounce from "@/hooks/useDebounce";
   
 function ReturnReport() {
     const [openViewDetailsModal, setOpenViewDetailsModal] = useState(false);
-    const [openShippedModal, setOpenShippedModal] = useState(false);
-    const [openReceivedModal, setOpenReceivedModal] = useState(false);
-    const [openCancelModal, setOpenCancelModal] = useState(false);
+    const [openSearchModal, setOpenSearchModal] = useState(false);
     const [openReturnModal, setOpenReturnModal]= useState(false);
     const [returns, setReturns] = useState<ReturnType[]>([]);
     const [maxPage, setMaxPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
-    const headerHeight = 72;
+    const [filteredReturn, setFilteredReturn] = useState<ReturnType[]>([]);
+    const debouncedQuery = useDebounce(searchQuery, 250);
+    const [searchRelease, setSearchRelease] = useState<ReturnType | null>(null);
 
+    const headerHeight = 72;
     const [currentPage, setCurrentPage] = useState(1);
 
     const handlePageChange = (page: number) => {
@@ -51,6 +58,29 @@ function ReturnReport() {
         loadReleases();
       }, [loadReleases]);
 
+      useEffect(() => {
+        if (debouncedQuery.trim() !== "") {
+            fetchData({
+                url: `${getVersion()}/return-receipt/search`,
+                query: {returnQuery: debouncedQuery },
+                onSuccess: (data) => {
+                    setFilteredReturn(data.returns.slice(0, 10));
+                },
+                dispatch,
+                logout: () => dispatch(logout())
+            });
+        } else {
+            setFilteredReturn([]);
+        }
+    }, [debouncedQuery, dispatch]);
+
+    const handleSelectReturn = (returnQuery: ReturnType) => {
+        setSearchRelease(returnQuery);
+        setOpenSearchModal(true);
+        setSearchQuery("");
+        setFilteredReturn([]);
+    };
+
     return(
         <>
             <div className="flex flex-col h-full">
@@ -66,10 +96,26 @@ function ReturnReport() {
                             </div>
                             <div className="flex flex-row justify-end w-6/12 space-x-2">
                                 <div className="relative w-2/3">
-                                    <Input type="search" placeholder="Search AR Number / DR Number" className="pl-12 border-2 focus:border-none" 
+                                    <Input
+                                        type="search"
+                                        placeholder="Search AR Number"
+                                        className="pl-12 border-2 focus:border-none"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}/>
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                    {filteredReturn.length > 0 && (
+                                        <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 max-h-40 overflow-y-auto text-sm">
+                                            {filteredReturn.map((returnQuery) => (
+                                                <div
+                                                    key={returnQuery.id}
+                                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => handleSelectReturn(returnQuery)}
+                                                >
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div> 
                                 <Button className="bg-hoverCream text-fontHeading border hover:text-white space-x-1 font-semibold w-36">
                                     <Download size={20}/><span className="text-sm" onClick={() => setOpenReturnModal(true)}>Export</span>
@@ -141,6 +187,14 @@ function ReturnReport() {
                     </Pagination>
                 </div>
                 {openReturnModal && <ExportReturn open={openReturnModal} onClose={() => setOpenReturnModal(false)} link="your-link-here" />}
+                {openViewDetailsModal && <ViewReturnModal onClose={() => {
+                    setOpenViewDetailsModal(false);
+                }}/>}
+                {openSearchModal && <SearchReturnModal onClose={() => {
+                    returnQ={searchRelease} 
+                    setOpenSearchModal(false); 
+                    setSearchRelease(null);
+                }}/>}
             </div>
         </>
     );
