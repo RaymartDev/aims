@@ -259,14 +259,14 @@ function AcknowledgementReceipt() {
                           aria-expanded={drPopOver.isOpen}
                           className="w-full justify-between border-black"
                         >
-                          {drPopOver.selected || "Select Category"}
+                          {drPopOver.selected || "Select DR"}
                           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-full p-0">
                         <Command>
                           <CommandInput
-                            placeholder="Search Category"
+                            placeholder="Search DR"
                             value={drPopOver.searchTerm}
                             onValueChange={(searchTerm) => setDRPopOver((prevState) => ({ ...prevState, searchTerm }))}
                           />

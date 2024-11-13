@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import type ReturnType from "@/interface/return";
 import ExportReturn from "@/modals/ExportReturn";
-import { formatReference, fetchData as fetchItem, getVersion, fetchData } from "@/lib/utils";
+import { formatReference, fetchData as fetchItem, getVersion, fetchData, formatReleaseStatus } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import ViewReturnModal from "@/modals/ViewReturnModal";
@@ -112,6 +112,7 @@ function ReturnReport() {
                                                     className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                                                     onClick={() => handleSelectReturn(returnQuery)}
                                                 >
+                                                    {formatReference(returnQuery.release_number)} - {returnQuery.return_number}
                                                 </div>
                                             ))}
                                         </div>
@@ -190,8 +191,9 @@ function ReturnReport() {
                 {openViewDetailsModal && <ViewReturnModal onClose={() => {
                     setOpenViewDetailsModal(false);
                 }}/>}
-                {openSearchModal && <SearchReturnModal onClose={() => {
-                    returnQ={searchRelease} 
+                {openSearchModal && <SearchReturnModal 
+                returns={searchRelease} 
+                onClose={() => {
                     setOpenSearchModal(false); 
                     setSearchRelease(null);
                 }}/>}
