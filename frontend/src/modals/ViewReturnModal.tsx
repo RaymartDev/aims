@@ -3,12 +3,15 @@ import { Button } from "@/Components/ui/button";
 import { X } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import { Input } from "@/Components/ui/input";
+import type ReturnType from "@/interface/return";
+import { formatCost, formatReference } from "@/lib/utils";
 
 interface ViewReturnModalProps {
     onClose: () => void;
+    returnReport: ReturnType | null;
 }
 
-function ViewReturnModal ({ onClose }: ViewReturnModalProps) {
+function ViewReturnModal ({ onClose, returnReport }: ViewReturnModalProps) {
 
     const headerHeight = 72;
 
@@ -23,11 +26,11 @@ function ViewReturnModal ({ onClose }: ViewReturnModalProps) {
                     <div className="flex flex-row w-full">
                         <div className="w-1/2 space-x-2 flex flex-row">
                             <h1 className="font-semibold flex items-center">DR Number</h1>
-                            <Input className="text-red-700 w-1/2" readOnly value={'000000004'}/>
+                            <Input className="text-red-700 w-1/2" readOnly value={formatReference(returnReport?.release_number || 0)}/>
                         </div>
                         <div className="w-1/2 space-x-2 flex flex-row">
                             <h1 className="font-semibold flex items-center">AR Number</h1>
-                            <Input className="text-red-700 w-1/2" readOnly value={'000000002'}/>
+                            <Input className="text-red-700 w-1/2" readOnly value={formatReference(returnReport?.return_number || 0)}/>
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -35,16 +38,16 @@ function ViewReturnModal ({ onClose }: ViewReturnModalProps) {
                         <div className="flex flex-row w-full">
                             <div className="w-1/2 space-x-2 flex">
                                 <h1 className="flex items-center">Name</h1>
-                                <Input readOnly value={"Jay"} className="focus:border-none border-black w-1/2"/>
+                                <Input readOnly value={returnReport?.requestor.name || ''} className="focus:border-none border-black w-1/2"/>
                             </div>
                             <div className="w-1/2 space-x-2 flex ">
                                 <h1 className="flex items-center">Employee Number</h1>
-                                <Input readOnly value={"4654647"} className="focus:border-none border-black w-1/2"/>
+                                <Input readOnly value={returnReport?.requestor.employee_no || ''} className="focus:border-none border-black w-1/2"/>
                             </div>
                         </div>
                         <div className="flex flex-row w-1/2 space-x-2">
                             <h1 className="flex items-center w-full">Cost Center Code</h1>
-                            <Input readOnly value={"D54AS54"} className="focus:border-none border-black"/>
+                            <Input readOnly value={returnReport?.requestor.cost_center_code || ''} className="focus:border-none border-black"/>
                         </div>
                     </div>
                     <div>
@@ -62,14 +65,16 @@ function ViewReturnModal ({ onClose }: ViewReturnModalProps) {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow >
-                                        <TableCell>145464</TableCell>
-                                        <TableCell>HAHA</TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell>10</TableCell>
-                                        <TableCell>HAHA</TableCell>
-                                        <TableCell>40000</TableCell>
+                                    {returnReport && returnReport.details.map((detail) => (
+                                    <TableRow key={detail.detail_id}>
+                                        <TableCell>{detail.material_id}</TableCell>
+                                        <TableCell>{detail.desc}</TableCell>
+                                        <TableCell>{detail.serial_number}</TableCell>
+                                        <TableCell>{detail.quantity}</TableCell>
+                                        <TableCell>{detail.unit}</TableCell>
+                                        <TableCell>{formatCost(detail.cost)}</TableCell>
                                     </TableRow>
+                                    ))}
                                 </TableBody>
                             </Table>
                         </div>

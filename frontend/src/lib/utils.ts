@@ -58,6 +58,14 @@ export const formatReleaseStatus = (status: number): string => {
   return finalStatus;
 }
 
+export const formatCost = (cost: number) => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+    minimumFractionDigits: 2,
+  }).format(cost);
+};
+
 interface FetchDataParams {
   url: string;
   query?: Record<string, unknown>; // Renamed from `params` to `query`

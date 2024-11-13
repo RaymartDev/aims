@@ -13,6 +13,9 @@ export default interface Return {
       return_number: number;
       desc: string;
       quantity: number;
+      serial_number: string;
+      unit: string;
+      cost: number;
     }[];
     tag: string;
     remarks: string;

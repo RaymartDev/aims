@@ -229,11 +229,11 @@ model Inventory {
   id Int @id @default(autoincrement())
   material  Material  @relation(fields: [material_id], references: [id], onDelete: Cascade)
   material_id  Int @unique
-  total_balance Int
-  remaining_balance Int
-  quantity_out Int
-  available Int
-  return Int
+  total_balance Int @default(0)
+  remaining_balance Int @default(0)
+  quantity_out Int @default(0)
+  available Int @default(0)
+  return Int @default(0)
   effective_from DateTime @default(now())
   effective_to DateTime @default("2099-12-01T00:00:00Z")
   modified_on DateTime @updatedAt

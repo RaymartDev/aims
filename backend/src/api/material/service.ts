@@ -2,13 +2,29 @@ import { Material } from '@prisma/client';
 import prisma from '../../lib/prisma';
 import { activeStatus } from '../../lib';
 
-export async function insertMaterial(material: any): Promise<Material | null> {
+export async function insertMaterial(material: any, modified_by_id: number): Promise<Material | null> {
   try {
     const createMaterial = await prisma.material.create({
       data: {
         ...material,
       },
     });
+
+    // Check if an inventory row with this material_id already exists
+    const existingInventory = await prisma.inventory.findUnique({
+      where: {
+        material_id: createMaterial.id,
+      },
+    });
+
+    if (!existingInventory) {
+      await prisma.inventory.create({
+        data: {
+          material_id: createMaterial.id,
+          modified_by_id, // Set any other default values as needed
+        },
+      });
+    }
     return createMaterial;
   } catch (error) {
     throw new Error('Database error');

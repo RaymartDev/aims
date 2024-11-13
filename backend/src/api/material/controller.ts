@@ -28,7 +28,7 @@ export const create = async (req: UserRequest, res: Response, next: NextFunction
 
     Object.assign(updateData, restOfBody);
 
-    const newMaterial = await insertMaterial({ ...updateData });
+    const newMaterial = await insertMaterial({ ...updateData }, req.user?.id || 1);
     if (newMaterial) {
       res.status(200).json({ material: newMaterial, message: 'Successfully created material' });
     } else {

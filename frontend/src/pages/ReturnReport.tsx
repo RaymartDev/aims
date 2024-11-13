@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/Components/ui/pagination";
 import type ReturnType from "@/interface/return";
 import ExportReturn from "@/modals/ExportReturn";
-import { formatReference, fetchData as fetchItem, getVersion, fetchData, formatReleaseStatus } from "@/lib/utils";
+import { formatReference, fetchData as fetchItem, getVersion, fetchData } from "@/lib/utils";
 import { useAppDispatch } from "@/store/store";
 import { logout } from "@/slices/userSlice";
 import ViewReturnModal from "@/modals/ViewReturnModal";
@@ -25,6 +25,7 @@ function ReturnReport() {
     const [openSearchModal, setOpenSearchModal] = useState(false);
     const [openReturnModal, setOpenReturnModal]= useState(false);
     const [returns, setReturns] = useState<ReturnType[]>([]);
+    const [viewReturn, setViewReturn] = useState<ReturnType | null>(null);
     const [maxPage, setMaxPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredReturn, setFilteredReturn] = useState<ReturnType[]>([]);
@@ -150,7 +151,10 @@ function ReturnReport() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => setOpenViewDetailsModal(true)}>View Details</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => {
+                                                        setViewReturn(arReturn);
+                                                        setOpenViewDetailsModal(true);
+                                                    }}>View Details</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>
@@ -188,7 +192,7 @@ function ReturnReport() {
                     </Pagination>
                 </div>
                 {openReturnModal && <ExportReturn open={openReturnModal} onClose={() => setOpenReturnModal(false)} link="your-link-here" />}
-                {openViewDetailsModal && <ViewReturnModal onClose={() => {
+                {openViewDetailsModal && <ViewReturnModal returnReport={viewReturn} onClose={() => {
                     setOpenViewDetailsModal(false);
                 }}/>}
                 {openSearchModal && <SearchReturnModal 

@@ -190,6 +190,9 @@ export async function listReturns(page: number, limit: number): Promise<{ return
           desc: detail.material.description, // Assuming material has a 'name' field
           material_id: detail.material.id,
           quantity: detail.quantity,
+          cost: detail.material.cost,
+          unit: detail.material.unit_of_measure,
+          serial_number: detail.material.serial_number,
         })),
         remarks: returnType.remarks,
         tag: returnType.tag,
@@ -252,6 +255,9 @@ export async function searchReturnByRef(ref: string = '**--**'): Promise<ReturnT
           desc: detail.material.description, // Assuming material has a 'name' field
           material_id: detail.material.id,
           quantity: detail.quantity,
+          cost: detail.material.cost,
+          unit: detail.material.unit_of_measure,
+          serial_number: detail.material.serial_number,
         })),
         remarks: returnType.remarks,
         tag: returnType.tag,
