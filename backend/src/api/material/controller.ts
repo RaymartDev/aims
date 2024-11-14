@@ -67,7 +67,7 @@ export const update = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     const findSku = await findMaterialBySku(req.body.material_code, req.body.item_code);
-    if (findSku && `${findMaterial.item_code}${findMaterial.material_code}` !== `${req.body.material_code}${req.body.item_code}`) {
+    if (findSku && `${findMaterial.item_code}${findMaterial.material_code}` !== `${req.body.item_code}${req.body.material_code}`) {
       return res.status(400).json({ message: 'Material with that item and material code already exists!' });
     }
 

@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 
 import * as middlewares from './middlewares';
 import api from './api';
-import MessageResponse from './interfaces/MessageResponse';
 
 require('dotenv').config();
 
@@ -19,18 +18,17 @@ const corsOptions = {
   credentials: true, // Allow cookies to be sent if needed
 };
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('tiny'));  // Default "combined" format for production
+} else {
+  app.use(morgan('combined'));       // More verbose logging in development
+}
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.get<{}, MessageResponse>('/', (req, res) => {
-  res.json({
-    message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
-  });
-});
 app.use('/api/v1', api);
 
 app.use(middlewares.notFound);
