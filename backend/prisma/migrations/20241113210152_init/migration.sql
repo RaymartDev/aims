@@ -1,6 +1,0 @@
--- AlterTable
-ALTER TABLE `inventory` MODIFY `total_balance` INTEGER NOT NULL DEFAULT 0,
-    MODIFY `remaining_balance` INTEGER NOT NULL DEFAULT 0,
-    MODIFY `quantity_out` INTEGER NOT NULL DEFAULT 0,
-    MODIFY `available` INTEGER NOT NULL DEFAULT 0,
-    MODIFY `return` INTEGER NOT NULL DEFAULT 0;

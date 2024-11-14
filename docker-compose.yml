@@ -9,6 +9,8 @@ services:
       - ./backend/.env  # Load environment variables from the backend's .env file
     networks:
       - app-network
+    depends_on:
+      - db
 
   frontend:
     build:
@@ -18,6 +20,16 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: Lifeonblack23
+      MYSQL_DATABASE: aims
+      MYSQL_USER: aims
+      MYSQL_PASSWORD: Lifeonblack23
     networks:
       - app-network
 volumes:
