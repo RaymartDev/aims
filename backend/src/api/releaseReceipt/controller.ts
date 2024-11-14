@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { createAndCancelRelease, createReleaseReceiver, createReleaseShipper, findReleaseByNumber, getReferenceNumber, insertRelease, listReleases, received, searchReleaseByRef, searchReleaseByRefCompleted, shipped, updateRelease } from './service';
+import { createAndCancelRelease, createReleaseReceiver, createReleaseShipper, findReleaseByNumber, getReferenceNumber, insertRelease, listReleases, received, reportRelease, searchReleaseByRef, searchReleaseByRefCompleted, shipped, updateRelease } from './service';
 import { findUserByEmployeeId, findUserByStoreId } from '../user/service';
 import { findCompanyById } from '../company/service';
 import { findDepartmentById } from '../department/service';
+import ExcelJS from 'exceljs';
 
 
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -125,6 +126,82 @@ export const receive = async (req: UserRequest, res: Response, next: NextFunctio
     const updatedRelease = await updateRelease({ release_receiver_id: receiveRelease.id, status: isShipped ? 3 : 2 }, isNaN(parseInt(id)) ? 0 : parseInt(id));
   
     res.status(202).json({ message: 'Successfully updated release status to received!', release: updatedRelease, receiveRelease });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const exportData = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { start, end } = req.query;
+
+    const report = await reportRelease(new Date(String(start)), new Date(String(end)));
+
+    // Create a new workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Release Report');
+    
+    // Define the headers and map them to the object properties
+    worksheet.columns = [
+      { header: 'Release Number', key: 'release_number', width: 15 },
+      { header: 'Shipped By', key: 'shipped_by', width: 20 },
+      { header: 'Shipped Date', key: 'shipped_date', width: 20 },
+      { header: 'Receiver', key: 'receiver', width: 20 },
+      { header: 'Receive Date', key: 'receive_date', width: 20 },
+      { header: 'Material Description', key: 'material_description', width: 30 },
+      { header: 'Material Item Code', key: 'material_item_code', width: 20 },
+      { header: 'Material Quantity', key: 'material_quantity', width: 15 },
+      { header: 'Remarks', key: 'remarks', width: 20 },
+      { header: 'Return Number', key: 'return_number', width: 15 },
+      { header: 'Return Remarks', key: 'return_remarks', width: 20 },
+      { header: 'Requestor Name', key: 'requestor_name', width: 20 },
+      { header: 'Requestor Employee Number', key: 'requestor_emp_no', width: 25 },
+      { header: 'Modified On', key: 'modified_on', width: 20 },
+      { header: 'Modified By', key: 'modified_by', width: 20 },
+      { header: 'Modified By Employee Number', key: 'modified_by_emp_no', width: 35 },
+      { header: 'Modified By Cost Code', key: 'modified_by_cost_code', width: 35 },
+    ];
+
+    // Add each item in the report to the worksheet
+    report.forEach((item) => {
+      item.release_detail.forEach((detail) => {
+        const row = {
+          release_number: item.release_number,
+          shipped_by: item.release_shipped?.name || '',
+          shipped_date: item.release_shipped?.shipped_date || '',
+          receiver: item.release_receiver?.name || '',
+          receive_date: item.release_receiver?.receive_date || '',
+          material_description: detail.material.description,
+          material_item_code: detail.material.item_code,
+          material_quantity: detail.quantity,
+          remarks: detail.remarks,
+          return_number: item.return[0]?.return_number || '',
+          return_remarks: item.return[0]?.remarks || '',
+          requestor_name: item.requestor?.name || '',
+          requestor_cost_code: item.requestor.cost_center_code || '',
+          requestor_emp_no: item.requestor.employee_no || '',
+          modified_on: item.modified_on || '',
+          modified_by: item.modified_by?.name || '',
+          modified_by_emp_no: item.modified_by?.employee_no || '',
+          modified_by_cost_code: item.modified_by?.cost_center_code || '',
+        };
+        worksheet.addRow(row);
+      });
+    });
+
+    // Prepare the response to download the Excel file
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="Release_Report_${start}_${end}.xlsx"`,
+    );
+
+    // Write the workbook to the response stream
+    await workbook.xlsx.write(res);
+    res.end();
   } catch (err) {
     next(err);
   }

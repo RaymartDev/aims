@@ -102,6 +102,7 @@ model User {
   material_categories Material_Category[] @relation("MaterialCategoryModifiedBy")
   material_types Material_Type[] @relation("MaterialTypeModifiedBy")
   modified_user_types UserType[] @relation("UserTypeModifiedBy")
+  modified_returns Return[] @relation("ReturnModifiedBy")
 
   releases Release[]
   returns Return[]
@@ -251,6 +252,8 @@ model Return {
   requestor User @relation(fields: [requestor_id], references: [id], onDelete: Cascade)
   remarks String
   reason String
+  modified_by_id Int?      // Foreign key to Employee.id
+  modified_by User? @relation("ReturnModifiedBy", fields: [modified_by_id], references: [id], onDelete: Cascade)
 
   return_detail Return_Detail[]
 }

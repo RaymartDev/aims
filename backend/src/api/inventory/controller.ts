@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import UserRequest from '../../interfaces/UserRequest';
 import { Response, NextFunction } from 'express';
-import { findInventoryById, insertInventory, listInventories, searchInventory, updateInventory } from './service';
+import { findInventoryById, insertInventory, listInventories, reportInventory, searchInventory, updateInventory } from './service';
+import ExcelJS from 'exceljs';
 
 export const create = async (req: UserRequest, res: Response, next: NextFunction) => {
   try {
@@ -28,6 +29,62 @@ export const getOne = async (req: UserRequest, res: Response, next: NextFunction
     }
 
     res.status(200).json({ inventory, message: 'Successfully found inventory' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const exportData = async (req: UserRequest, res: Response, next: NextFunction) => {
+  try {
+    const { start, end } = req.query;
+
+    const report = await reportInventory(new Date(String(start)), new Date(String(end)));
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Inventory Report');
+
+    // Define the headers and map them to the object properties
+    worksheet.columns = [
+      { header: 'Inventory ID', key: 'inventoryId', width: 15 },
+      { header: 'Total Balance', key: 'total_balance', width: 15 },
+      { header: 'Remaining Balance', key: 'remaining_balance', width: 15 },
+      { header: 'Quantity Out', key: 'quantity_out', width: 15 },
+      { header: 'Available', key: 'available', width: 15 },
+      { header: 'Return', key: 'return', width: 15 },
+      { header: 'Material Description', key: 'material_description', width: 20 },
+      { header: 'Material Item Code', key: 'material_item_code', width: 20 },
+      { header: 'Material Brand', key: 'material_brand', width: 20 },
+      { header: 'Material Type', key: 'material_type', width: 20 },
+      { header: 'Material Category', key: 'material_category', width: 20 },
+      { header: 'Material UOM', key: 'material_uom', width: 15 },
+      { header: 'Date Entry', key: 'material_date_entry', width: 15 },
+      { header: 'End Warranty', key: 'material_end_warranty', width: 15 },
+      { header: 'Serial', key: 'material_serial', width: 20 },
+      { header: 'Asset Number', key: 'material_asset', width: 20 },
+      { header: 'Modified By', key: 'modified_by', width: 15 },
+      { header: 'Employee Number', key: 'modified_by_employee_number', width: 20 },
+      { header: 'Cost Code', key: 'modified_by_cost_code', width: 15 },
+      { header: 'Department', key: 'modified_by_department', width: 20 },
+      { header: 'Company', key: 'modified_by_company', width: 20 },
+    ];
+
+    // Add each item in the report to the worksheet
+    report.forEach((item) => {
+      worksheet.addRow(item);
+    });
+
+    // Prepare the response to download the Excel file
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="Inventory_Report_${start}_${end}.xlsx"`,
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
   } catch (err) {
     next(err);
   }

@@ -23,7 +23,7 @@ export async function getReferenceNumber(): Promise<number> {
   }
 }
 
-export async function insertReturn(arReturn: any, detail: DetailedReturn, user_id: number): Promise<Return | null> {
+export async function insertReturn(arReturn: any, detail: DetailedReturn, user_id: number, modifier: number): Promise<Return | null> {
   try {
     if (detail.detail.length > 0) {
       for (const item of detail.detail) {
@@ -50,6 +50,7 @@ export async function insertReturn(arReturn: any, detail: DetailedReturn, user_i
         data: {
           ...arReturn,
           requestor_id: user_id,
+          modified_by_id: modifier,
         },
       });
 
@@ -204,6 +205,46 @@ export async function listReturns(page: number, limit: number): Promise<{ return
     return { returnsFinal: [], maxPage: totalPages };
   } catch (error) {
     throw new Error('Database error');
+  }
+}
+
+export async function reportReturn(start: Date, end: Date) {
+  try {
+    // Query to fetch returns data with related fields
+    const returns = await prisma.return.findMany({
+      where: {
+        release: {
+          modified_on: {
+            gte: start,
+            lte: end,
+          },
+        },
+      },
+      include: {
+        return_detail: {
+          include: {
+            material: {
+              include: {
+                type: true,
+                category: true,
+              },
+            },
+          },
+        },
+        requestor: true,
+        release: {
+          select: {
+            release_number: true,
+            date_out: true,
+          },
+        },
+        modified_by: true,
+      },
+    });
+
+    return returns;
+  } catch (error) {
+    throw new Error('Database error while fetching returns');
   }
 }
 

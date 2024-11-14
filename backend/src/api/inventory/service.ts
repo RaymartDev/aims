@@ -14,6 +14,70 @@ export async function insertInventory(inventory: any): Promise<Inventory | null>
   }
 }
 
+export async function reportInventory(start: Date, end: Date) {
+  try {
+    const list = await prisma.inventory.findMany({
+      include: {
+        material: {
+          include: {
+            type: true,
+            category: true,
+          },
+        },
+        modified_by: {
+          include: {
+            department: true,
+            Employee: {
+              include: {
+                company: true,
+              },
+            },
+            Store: {
+              include: {
+                company: true,
+              },
+            },
+          },
+        },
+      },
+      where: {
+        modified_on: {
+          gte: start,
+          lte: end,
+        },
+      },
+    });
+
+    const reportData = list.map(item => ({
+      inventoryId: item.id,
+      total_balance: item.total_balance,
+      remaining_balance: item.remaining_balance,
+      quantity_out: item.quantity_out,
+      available: item.available,
+      return: item.return,
+      material_description: item.material.description,
+      material_item_code: item.material.item_code,
+      material_brand: item.material.brand_model,
+      material_type: item.material.type.description,
+      material_category: item.material.category.description,
+      material_uom: item.material.unit_of_measure,
+      material_date_entry: item.material.date_entry,
+      material_end_warranty: item.material.end_warranty,
+      material_serial: item.material.serial_number,
+      material_asset: item.material.asset_number, 
+      modified_by: item.modified_by?.name || '',
+      modified_by_employee_number: item.modified_by?.employee_no,
+      modified_by_cost_code: item.modified_by?.cost_center_code,
+      modified_by_department: item.modified_by?.department.name || '',
+      modified_by_company: item.modified_by?.employee_id ? item.modified_by.Employee?.company.name || '' : item.modified_by?.Store?.company.name || '',
+    }));
+
+    return reportData;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function upsertInventoryIncrement(inventory: any, id: number, quantity: number): Promise<Inventory | null> {
   try {
     const createInventory = await prisma.inventory.upsert({

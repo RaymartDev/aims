@@ -408,6 +408,51 @@ export async function searchReleaseByRefCompleted(ref: string = '**--**'): Promi
   }
 }
 
+export async function reportRelease(start: Date, end: Date) {
+  try {
+    const report = await prisma.release.findMany({
+      where: {
+        modified_on: {
+          gte: start,
+          lte: end,
+        },
+        deleted: false,  // Assuming we don't want deleted releases in the report
+      },
+      include: {
+        release_detail: {
+          include: {
+            material: {
+              include: {
+                type: true,  // If Material has a type relation
+                category: true,  // If Material has a category relation
+              },
+            },
+          },
+        },
+        release_shipped: {
+          include: {
+            department: true,  // Include department related to shipped
+            company: true,  // Include company related to shipped
+          },
+        },
+        release_receiver: {
+          include: {
+            department: true,  // Include department related to receiver
+            company: true,  // Include company related to receiver
+          },
+        },
+        requestor: true,  // Include requestor's user data
+        return: true,  // Include related return records
+        modified_by: true,
+      },
+    });
+
+    return report;
+  } catch (error) {
+    throw new Error('Database error');
+  }
+}
+
 export async function searchReleaseByRef(ref: string = '**--**'): Promise<ReleaseFinal[]> {
   try {
     if (isNaN(parseInt(ref))) {
