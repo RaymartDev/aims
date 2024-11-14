@@ -52,6 +52,7 @@ export const exportData = async (req: UserRequest, res: Response, next: NextFunc
     // Define the headers and map them to the object properties
     worksheet.columns = [
       { header: 'Return Number', key: 'return_number', width: 15 },
+      { header: 'Return Date', key: 'return_date', width: 15 },
       { header: 'Tag', key: 'tag', width: 20 },
       { header: 'Remarks', key: 'remarks', width: 20 },
       { header: 'Reason', key: 'reason', width: 20 },
@@ -76,6 +77,7 @@ export const exportData = async (req: UserRequest, res: Response, next: NextFunc
       item.return_detail.forEach((detail) => {
         worksheet.addRow({
           return_number: item.return_number,
+          return_date: item.effective_from,
           tag: item.tag,
           remarks: item.remarks,
           reason: item.reason,
