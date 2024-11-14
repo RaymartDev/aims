@@ -105,6 +105,9 @@ function EditMaterialModal ({ onClose, material, updateMaterial }: EditMaterialM
               material_type: typePopOver.selected,
               uom,
               date_entry: material?.date_entry || new Date(),
+              end_warranty: material?.end_warranty  || new Date(),
+              serial_number: material?.serial_number || '',
+              asset_number: material?.asset_number || '',
               active_status: getActiveStatus(response.data?.material),
             })
             clearData();
