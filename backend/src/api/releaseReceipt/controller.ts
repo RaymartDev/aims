@@ -145,6 +145,7 @@ export const exportData = async (req: UserRequest, res: Response, next: NextFunc
     // Define the headers and map them to the object properties
     worksheet.columns = [
       { header: 'Release Number', key: 'release_number', width: 15 },
+      { header: 'Release Date', key: 'release_date', width: 15 },
       { header: 'Shipped By', key: 'shipped_by', width: 20 },
       { header: 'Shipped Date', key: 'shipped_date', width: 20 },
       { header: 'Receiver', key: 'receiver', width: 20 },
@@ -169,6 +170,7 @@ export const exportData = async (req: UserRequest, res: Response, next: NextFunc
       item.release_detail.forEach((detail) => {
         const row = {
           release_number: item.release_number,
+          release_date: item.effective_from,
           shipped_by: item.release_shipped?.name || '',
           shipped_date: item.release_shipped?.shipped_date || '',
           receiver: item.release_receiver?.name || '',
