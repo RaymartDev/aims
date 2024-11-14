@@ -1,5 +1,6 @@
 services:
   backend:
+    container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -13,6 +14,7 @@ services:
       - db
 
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -24,16 +26,22 @@ services:
       - app-network
 
   db:
+    container_name: db
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: Lifeonblack23
+      MYSQL_ROOT_PASSWORD: Lifeonblack23@
       MYSQL_DATABASE: aims
       MYSQL_USER: aims
       MYSQL_PASSWORD: Lifeonblack23
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init_data.sql:/docker-entrypoint-initdb.d/init_data.sql
     networks:
       - app-network
 volumes:
   mysql_data:
+    driver: local
 
 networks:
   app-network:
+    driver: bridge

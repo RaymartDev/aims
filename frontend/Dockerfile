@@ -1,4 +1,3 @@
-# Frontend Dockerfile
 FROM node:18-alpine
 
 # Set the working directory in the container
@@ -13,14 +12,8 @@ RUN npm install
 # Copy the frontend code
 COPY . .
 
-# Build the frontend for production
-RUN npm run build
-
-# Install a lightweight HTTP server to serve static files
-RUN npm install -g serve
-
-# Expose the port that the HTTP server will use
+# Expose the port (if Vite or React default is 3000)
 EXPOSE 3000
 
-# Command to serve the frontend build
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Command to run the frontend (using npm run start)
+CMD ["npm", "run", "dev"]

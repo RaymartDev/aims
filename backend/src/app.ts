@@ -31,7 +31,6 @@ app.get<{}, MessageResponse>('/', (req, res) => {
     message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
   });
 });
-
 app.use('/api/v1', api);
 
 app.use(middlewares.notFound);
