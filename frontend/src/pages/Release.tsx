@@ -53,6 +53,23 @@ function DeliveryReceipt() {
     fetchMaxReleaseNumber(); // Call the function on component mount
   }, []);
 
+  const handlePrint = () => {
+    const release = {
+      reference,
+      selectedItems,
+      selectedUser: {
+        emp_no: selectedOption === 'employee' ? employeePopOver.selected_user.emp_no : storePopOver.selected_user.emp_no,
+        cost_code: selectedOption === 'employee' ? employeePopOver.selected_user.cost_code : storePopOver.selected_user.cost_code,
+        name: selectedOption === 'employee' ? employeePopOver.selected_user.name : storePopOver.selected_user.name,
+        company: selectedOption === 'employee' ? employeePopOver.selected_user.company : storePopOver.selected_user.company,
+      }
+    }
+
+    localStorage.setItem('drState', JSON.stringify(release));
+
+    window.open('/dr/download', '_blank');
+  }
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (loading) {
@@ -78,8 +95,8 @@ function DeliveryReceipt() {
         id: selectedOption === "employee" ? employeePopOver.selected_id : storePopOver.selected_id,
       });
       if (response.status >= 200 && response.status < 300) {
-        toast.success(response.data?.message || 'Successfully created delivery!.');
-
+        toast.success(response.data?.message || 'Successfully created delivery!. Now printing');
+        handlePrint();
         setReference((prevReference) => prevReference + 1);
         setSelectedItems([]);
         if (selectedOption === "employee") {
@@ -89,6 +106,7 @@ function DeliveryReceipt() {
             results: [],
             selected: '',
             selected_id: 0,
+            selected_user: { emp_no: '', cost_code: '', name: '', company: '' },
           })
         } else {
           setStorePopOver({
@@ -97,6 +115,7 @@ function DeliveryReceipt() {
             results: [],
             selected: '',
             selected_id: 0,
+            selected_user: { emp_no: '', cost_code: '', name: '', company: '' },
           })
         }
       }
@@ -126,20 +145,22 @@ function DeliveryReceipt() {
     }
   };
 
-  const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string, selected_id: number}>({
+  const [employeePopOver, setEmployeePopOver] = useState<{searchTerm: string, isOpen: boolean, results: EmployeeType[], selected: string, selected_id: number, selected_user: { emp_no: string, cost_code: string, name: string, company: string },}>({
     searchTerm: '',
     isOpen: false,
     results: [],
     selected: '',
     selected_id: 0,
+    selected_user: { emp_no: '', cost_code: '', name: '', company: '' },
   });
 
-  const [storePopOver, setStorePopOver] = useState<{searchTerm: string, isOpen: boolean, results: StoreType[], selected: string, selected_id: number}>({
+  const [storePopOver, setStorePopOver] = useState<{searchTerm: string, isOpen: boolean, results: StoreType[], selected: string, selected_id: number, selected_user: { emp_no: string, cost_code: string, name: string, company: string },}>({
     searchTerm: '',
     isOpen: false,
     results: [],
     selected: '',
     selected_id: 0,
+    selected_user: { emp_no: '', cost_code: '', name: '', company: '' },
   });
 
   const [cancelTokenSource, setCancelTokenSource] = useState<CancelTokenSource | null>(null);
@@ -254,9 +275,9 @@ function DeliveryReceipt() {
     setSelectedOption(value);
     
     if (value === "employee") {
-      setStorePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_id: 0 }); // Clear store selection
+      setStorePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_id: 0, selected_user: { emp_no: '', cost_code: '', name: '', company: '' }, }); // Clear store selection
     } else {
-      setEmployeePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_id: 0 }); // Clear employee selection
+      setEmployeePopOver({ searchTerm: '', isOpen: false, results: [], selected: '', selected_id: 0, selected_user: { emp_no: '', cost_code: '', name: '', company: '' }, }); // Clear employee selection
     }
   };
 
@@ -356,7 +377,12 @@ function DeliveryReceipt() {
                               <CommandItem
                                 key={employee.id}
                                 value={`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
-                                onSelect={(selected) => setEmployeePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_id: prevState.selected === selected ? 0 : employee.id }))}
+                                onSelect={(selected) => setEmployeePopOver((prevState) => ({ 
+                                  ...prevState, 
+                                  isOpen: false, 
+                                  selected: prevState.selected === selected ? "" : selected, 
+                                  selected_id: prevState.selected === selected ? 0 : employee.id, 
+                                  selected_user: prevState.selected === selected ? { emp_no: '', cost_code: '', name: '', company: '' } : { emp_no: employee.employee_no, cost_code: employee.cost_center_code, name: `${employee.first_name} ${employee.last_name}`, company: employee.company_name } }))}
                               >
                                 <Check
                                   className={cn(
@@ -406,7 +432,13 @@ function DeliveryReceipt() {
                               <CommandItem
                                 key={store.id}
                                 value={`${store.cost_center_code} - ${store.name}`}
-                                onSelect={(selected) => setStorePopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selected_id: prevState.selected === selected ? 0 : store.id }))}
+                                onSelect={(selected) => setStorePopOver((prevState) => ({ 
+                                  ...prevState, 
+                                  isOpen: false, 
+                                  selected: prevState.selected === selected ? "" : selected, 
+                                  selected_id: prevState.selected === selected ? 0 : store.id,
+                                  selected_user: prevState.selected === selected ? { emp_no: '', cost_code: '', name: '', company: '' } : { emp_no: '', cost_code: store.cost_center_code, name: store.name, company: store.company_name }
+                                }))}
                               >
                                 <Check
                                   className={cn(

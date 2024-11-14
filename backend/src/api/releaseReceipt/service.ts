@@ -338,7 +338,21 @@ export async function searchReleaseByRefCompleted(ref: string = '**--**'): Promi
         release_number: 'asc',
       },
       include: {
-        requestor: true,
+        requestor: {
+          include: {
+            department: true,
+            Store: {
+              include: {
+                company: true,
+              },
+            },
+            Employee: {
+              include: {
+                company: true,
+              },
+            },
+          },
+        },
         release_receiver: true,
         release_shipped: true,
         release_detail: {
@@ -357,6 +371,8 @@ export async function searchReleaseByRefCompleted(ref: string = '**--**'): Promi
           employee_no: release.requestor.employee_no,
           cost_center_code: release.requestor.cost_center_code,
           user_id: release.requestor.id,
+          company: release.requestor.store_id ? release.requestor.Store?.company.name || '' : release.requestor.Employee?.company.name,
+          department: release.requestor.department.name || '',
         },
         shipped_by: release.release_shipped ? {
           name: release.release_shipped.name,

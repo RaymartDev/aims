@@ -6,6 +6,8 @@ export default interface Release {
       employee_no: string;
       cost_center_code: string;
       user_id: number;
+      company?: string;
+      department?: string;
     };
     shipped_by: {
       name: string;

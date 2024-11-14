@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -25,14 +26,13 @@ import {
 import AddAssetModal from "@/modals/AddAssetModal";
 import { Check, ChevronDown, Plus, Trash } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
-import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/Components/ui/command";
 import { cn, formatReference, formatReleaseStatus, getVersion } from "@/lib/utils";
 import axios, { CancelTokenSource } from "axios";
 import type ReleaseType from "@/interface/release"
 import { toast } from "react-toastify";
-
+ 
 interface DetailItem {
   detail_id: number;
   release_number: number;
@@ -62,7 +62,6 @@ function AcknowledgementReceipt() {
   const [returnQuantities, setReturnQuantities] = useState<ReturnQuantities>(
     returnItemList.reduce((acc, item) => ({ ...acc, [item.detail_id]: 0 }), {})
   );
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Function to fetch the maximum release number
@@ -82,7 +81,36 @@ function AcknowledgementReceipt() {
   }, []);
 
   const handlePrint = () => {
-    navigate('/ar/download');
+    const updatedReturnItems = returnItemList.map((item) => {
+      const matchingDetail = drPopOver.selectedRelease?.details?.find(
+        (detail) => detail.material_id === item.material_id
+      );
+    
+      return {
+        ...item,
+        desc: matchingDetail ? matchingDetail.desc : '', // Use desc from selectedDR if found, otherwise keep existing desc
+        remarks: matchingDetail ? matchingDetail.remarks : '',
+        uom: matchingDetail ? matchingDetail.uom : '',
+      };
+    });
+
+    const returnState = {
+      reference,
+      returnItemList: updatedReturnItems,
+      selectedUser: {
+        emp_no: drPopOver.selectedRelease?.requestor.employee_no,
+        cost_code: drPopOver.selectedRelease?.requestor.cost_center_code,
+        name: drPopOver.selectedRelease?.requestor.name,
+        company: drPopOver.selectedRelease?.requestor.company || '',
+        department: drPopOver.selectedRelease?.requestor.department || '',
+      },
+      reason,
+      remarks,
+    }
+
+    localStorage.setItem('arState', JSON.stringify(returnState));
+
+    window.open('/ar/download', '_blank');
   }
 
   const headerHeight = 72;
@@ -118,7 +146,7 @@ function AcknowledgementReceipt() {
   }
 
   const handleSubmit = async () => {
-    if (loading) return;
+    if (loading) return; 
 
     try {
       const returnObj = {
@@ -142,6 +170,7 @@ function AcknowledgementReceipt() {
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(response.data?.message || 'Successfully created delivery!.');
+        handlePrint();
         setReference((prevReference) => prevReference + 1);
         setDRPopOver({
           searchTerm: '',

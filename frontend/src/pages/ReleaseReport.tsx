@@ -118,7 +118,7 @@ function ReleaseReport() {
         setReleases((prevReleases) => {
             return prevReleases.map(release => {
               if (release.id === id) {
-                const newStatus = request.received_by ? 3 : 1; // Check if received_by is not null
+                const newStatus = response.data.release.release_receiver_id ? 3 : 1; // Check if received_by is not null
                 return {
                   ...release,
                   status: newStatus,
@@ -150,7 +150,7 @@ function ReleaseReport() {
         setReleases((prevReleases) => {
             return prevReleases.map(release => {
               if (release.id === id) {
-                const newStatus = request.shipped_by ? 3 : 2; // Check if shipped_by is not null
+                const newStatus = response.data.release.release_shipped_id ? 3 : 2; // Check if shipped_by is not null
                 return {
                   ...release,
                   status: newStatus,

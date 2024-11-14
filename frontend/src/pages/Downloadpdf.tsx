@@ -1,11 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useLocation } from "react-router-dom";
+import Item from "@/interface/drReleaseItem";
+import { formatReference } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+interface ReleaseState {
+  reference: number;
+  selectedItems: Item[];
+  selectedUser: {
+    emp_no: string,
+    cost_code: string;
+    name: string;
+    company: string;
+  }
+}
 
 function Downloadpdf() {
 
-  const location = useLocation();
-  const { selectedItems, requestorName, code } = location.state || { selectedItems: [], requestorName: "", code: "" };
+  const [drState, setDRState] = useState<ReleaseState | null>(null);
+
+  useEffect(() => {
+    // Retrieve state from localStorage
+    const storedState = localStorage.getItem('drState');
+    if (storedState) {
+      setDRState(JSON.parse(storedState));
+    }
+  }, []);
+  const navigate = useNavigate();
+  if (!drState) {
+    navigate('/');
+  }
+  
+  const { selectedItems, requestorName, code } = { selectedItems: drState?.selectedItems || [], requestorName: drState?.selectedUser.name || '', code: "" };
   
     const filledItems = [
       ...selectedItems,
@@ -13,8 +40,8 @@ function Downloadpdf() {
       ...Array(11 - selectedItems.length).fill({
         name: "\u200B", // Zero-width space
         quantity: "",
-        unit: "",
-        serialNO: "",
+        uom: "",
+        serial_number: "",
         remarks: "",
       }),
     ];
@@ -37,17 +64,17 @@ function Downloadpdf() {
         <div className="flex justify-center mx-auto">
           <div className="w-full">
             <div className="w-full justify-end flex px-6 mt-[-5px]">
-              <p className="text-3xl font-bold">3289131</p>
+              <p className="text-3xl font-bold">{formatReference(Number(drState?.reference || 0))}</p>
             </div>
             <div className="flex text-[10px] pl-20 pt-4">
               <p className="w-[325px]">{requestorName}</p>
-              <p className="w-[190px]">Company ni janloyd</p>
+              <p className="w-[190px]">{drState?.selectedUser.company || ''}</p>
               <p className="w-[120px]">{formattedDate}</p>
               <p className="">{formattedTime}</p>
             </div>
             <div className="flex text-[10px] pl-20 pt-3">
               <p className="w-[800px]">
-                Blk 6 lot 11 everlasting st. Dolmar Golden Hills
+                ADDRESS PART
               </p>
               <p>{code}</p>
             </div>
@@ -68,10 +95,10 @@ function Downloadpdf() {
                         {item.item_description}
                       </td>
                       <td className="pl-2 text-sm text-[7px]">
-                        {item.quantity}
+                        {item.item_description ? item.quantity || 1 : ''}
                       </td>
                       <td className="text-sm text-[7px]">
-                        {item.unit}
+                        {item.uom}
                       </td>
                       <td className="text-sm pl-4 text-[7px]">
                         {item.item_code}
@@ -80,7 +107,6 @@ function Downloadpdf() {
                         {item.remarks}
                       </td>
                       <td className="text-sm text-[7px]">
-                        {item.status}
                       </td>
                     </tr>
                   ))}

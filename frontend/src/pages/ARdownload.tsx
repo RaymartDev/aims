@@ -1,56 +1,78 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable no-unsafe-optional-chaining */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-interface Item {
-  description: string;
-  qty: string | number;
-  unit: string;
-  serialNo: string;
-  assetNo: string;
+import { formatReference } from "@/lib/utils";
+import { useEffect, useState } from "react";
+
+interface DetailItem {
+  detail_id: number;
+  desc: string;
+  release_number: number;
+  material_id: number;
+  quantity: number;
   remarks: string;
+  material_code?: string;
+  item_code?: string;
+  uom?: string;
+  serial?: string;
+  cost?: number;
 }
 
+interface ReturnState {
+  reference: number;
+  returnItemList: DetailItem[];
+  selectedUser: {
+    emp_no: string;
+    cost_code: string;
+    name: string;
+    company: string;
+    department: string;
+  };
+  reason: string;
+  remarks: string;
+}
 function ARdownload() {
-  const selectedItems: Item[] = [
-    {
-      description: "Asus Predator Laptop",
-      qty: 4,
-      unit: "OU",
-      serialNo: "0999999",
-      assetNo: "424242",
-      remarks: "Broken Adapter",
-    },
-    {
-      description: "Asus",
-      qty: 4,
-      unit: "OU",
-      serialNo: "0999999",
-      assetNo: "424242",
-      remarks: "Broken Adapter",
-    },
-  ];
 
-  const filledItems: Item[] = [
+  const [arState, setARState] = useState<ReturnState | null>(null);
+
+  useEffect(() => {
+    // Retrieve state from localStorage
+    const storedState = localStorage.getItem('arState');
+    if (storedState) {
+      setARState(JSON.parse(storedState));
+    }
+  }, []);
+
+  const selectedItems = arState?.returnItemList || [];
+
+  const filledItems: DetailItem[] = [
     ...selectedItems,
     ...Array(11 - selectedItems.length).fill({
       description: "\u200B", // Zero-width space for empty rows
-      qty: "",
-      unit: "",
-      serialNo: "",
-      assetNo: "",
-      remarks: "",
+      detail_id: 0,
+      release_number: 0,
+      material_id: 0,
+      quantity: '',
+      remarks: '',
+      material_code: 0,
+      item_code: 0,
+      uom: '',
+      serial: '',
+      cost: 0,
     }),
   ];
 
-  const renderRow = (item: Item, index: number) => (
-    <div className="flex text-sm justify-center" key={index}>
+  const renderRow = (item: DetailItem, index: number) => (
+    <div className="flex text-sm justify-start" key={index}>
       <p className="w-[50px]">{index + 1}</p>
-      <p className="w-[240px]">{item.description}</p>{" "}
+      <p className="w-[240px]">{item.desc}</p>{" "}
       {/* Reduced width slightly */}
-      <p className="w-[60px]">{item.qty}</p>
-      <p className="w-[60px]">{item.unit}</p>
-      <p className="w-[200px]">{item.serialNo}</p>{" "}
+      <p className="w-[60px]">{item.quantity}</p>
+      <p className="w-[60px]">{item.uom}</p>
+      <p className="w-[200px]">{item.serial}</p>{" "}
       {/* Reduced width slightly */}
-      <p className="w-[120px]">{item.assetNo}</p>
+      <p className="w-[120px]">{''}</p>
       <p className="w-[150px]">{item.remarks}</p>{" "}
       {/* Increased width slightly */}
     </div>
@@ -84,33 +106,32 @@ function ARdownload() {
 
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
-          <p>Customer Name: Arjay Ortega</p>
-          <div className="text-xl font-semibold">ARNo: 000294</div>
+          <p>Customer Name: {arState?.selectedUser.name || ''}</p>
+          <div className="text-xl font-semibold">ARNo: {formatReference(arState?.reference || 0)}</div>
         </div>
         <div className="flex justify-between">
-          <p>ID No: 440042</p>
+          <p>Employee No: {arState?.selectedUser.emp_no || ''}</p>
           <p>Date: 2024-2023</p>
         </div>
         <div className="flex justify-between">
-          <p>Cost Center: 2727w928</p>
-          <p>Time: 15:12</p>
+          <p>Cost Center: {arState?.selectedUser.cost_code || ''}</p>
         </div>
         <div>
-          <p>Company: Moneyport Edsa</p>
+          <p>Company: {arState?.selectedUser.company || ''}</p>
         </div>
         <div>
-          <p>Department: Stam 2 Express</p>
+          <p>Department: {arState?.selectedUser.department || ''}</p>
         </div>
       </div>
 
       <div className="pt-7">
         <div className="flex flex-col gap-2">
           <p>Other Remarks</p>
-          <p className="pl-10 font-semibold">Defective Adapter</p>
+          <p className="pl-10 font-semibold">{arState?.remarks || ''}</p>
         </div>
         <div className="flex flex-col gap-2 pt-2">
           <p>Reason of Transfer</p>
-          <p className="pl-10 font-semibold">-- Returned OU</p>
+          <p className="pl-10 font-semibold">-- {arState?.reason || ''}</p>
         </div>
       </div>
 
