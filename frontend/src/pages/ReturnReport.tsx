@@ -191,7 +191,7 @@ function ReturnReport() {
                         </PaginationContent>
                     </Pagination>
                 </div>
-                {openReturnModal && <ExportReturn open={openReturnModal} onClose={() => setOpenReturnModal(false)} link="your-link-here" />}
+                {openReturnModal && <ExportReturn onClose={() => setOpenReturnModal(false)} />}
                 {openViewDetailsModal && <ViewReturnModal returnReport={viewReturn} onClose={() => {
                     setOpenViewDetailsModal(false);
                 }}/>}

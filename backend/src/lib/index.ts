@@ -18,4 +18,29 @@ const activeStatus = (obj: any): boolean => {
   return today <= effectiveTo;
 };
 
+export const formatReleaseStatus = (status: number): string => {
+  let finalStatus = '';
+  switch (status) {
+    case 0: 
+      finalStatus = 'Pending';
+      break;
+    case 1:
+      finalStatus = 'Shipped';
+      break;
+    case 2:
+      finalStatus = 'Received';
+      break;
+    case 3: 
+      finalStatus = 'Completed';
+      break;
+    case 4:
+      finalStatus = 'Cancelled';
+      break;
+    default:
+      finalStatus = '';
+      break;
+  }
+  return finalStatus;
+};
+
 export { generateToken, generateHashedPassword, activeStatus };

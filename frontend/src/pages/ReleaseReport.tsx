@@ -353,7 +353,7 @@ function ReleaseReport() {
                 setViewRelease(null);
                 setOpenViewDetailsModal(false);
             }}/>}
-            {openExportModal && <ExportRelease open={openExportModal} onClose={() => setOpenExportModal(false)} link="your-link-here" />}
+            {openExportModal && <ExportRelease onClose={() => setOpenExportModal(false)} />}
             {openShippedModal && <ShippedModal handleShip={handleShip} release={shipRelease} open={openShippedModal} onClose={() => {
                 setShipRelease(null);
                 setOpenShippedModal(false);

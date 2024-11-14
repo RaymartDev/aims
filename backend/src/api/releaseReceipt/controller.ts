@@ -6,6 +6,7 @@ import { findUserByEmployeeId, findUserByStoreId } from '../user/service';
 import { findCompanyById } from '../company/service';
 import { findDepartmentById } from '../department/service';
 import ExcelJS from 'exceljs';
+import { formatReleaseStatus } from '../../lib';
 
 
 export const list = async (req: UserRequest, res: Response, next: NextFunction) => {
@@ -148,6 +149,7 @@ export const exportData = async (req: UserRequest, res: Response, next: NextFunc
       { header: 'Shipped Date', key: 'shipped_date', width: 20 },
       { header: 'Receiver', key: 'receiver', width: 20 },
       { header: 'Receive Date', key: 'receive_date', width: 20 },
+      { header: 'Release Status', key: 'status', width: 20 },
       { header: 'Material Description', key: 'material_description', width: 30 },
       { header: 'Material Item Code', key: 'material_item_code', width: 20 },
       { header: 'Material Quantity', key: 'material_quantity', width: 15 },
@@ -171,6 +173,7 @@ export const exportData = async (req: UserRequest, res: Response, next: NextFunc
           shipped_date: item.release_shipped?.shipped_date || '',
           receiver: item.release_receiver?.name || '',
           receive_date: item.release_receiver?.receive_date || '',
+          status: formatReleaseStatus(item.status) || '',
           material_description: detail.material.description,
           material_item_code: detail.material.item_code,
           material_quantity: detail.quantity,

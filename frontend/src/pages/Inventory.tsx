@@ -249,7 +249,7 @@ function InventoryOverview() {
       </div>
 
       {openSearchModal && <SearchInventoryModal inventory={searchInventory} onClose={() => {setOpenSearchModal(false); setSearchInventory(null);}} />}
-      {openExportmodal && <ExportInventory open={openExportmodal} onClose={() => setOpenExportModal(false)} link="link" />}
+      {openExportmodal && <ExportInventory onClose={() => setOpenExportModal(false)} />}
     </div>
   );
 }
