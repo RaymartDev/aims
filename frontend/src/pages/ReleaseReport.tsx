@@ -177,8 +177,10 @@ function ReleaseReport() {
           url: `${getVersion()}/release-receipt/list`,
           query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
-            setReleases(data.releases);
-            setMaxPage(data.misc.maxPage);
+            if (data?.releases) {
+                setReleases(data.releases);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -199,7 +201,9 @@ function ReleaseReport() {
                 url: `${getVersion()}/release-receipt/search`,
                 query: {release: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredRelease(data.releases.slice(0, 10));
+                    if (data?.releases) {
+                        setFilteredRelease(data.releases.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -277,12 +281,12 @@ function ReleaseReport() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {releases.map(release => (
+                                {releases.length > 0 && releases.map(release => (
                                     <TableRow key={release.id}>
-                                        <TableCell>{formatReference(release.release_number)}</TableCell>
-                                        <TableCell>{release.requestor.name}</TableCell>
-                                        <TableCell>{release.requestor.employee_no}</TableCell>
-                                        <TableCell>{release.requestor.cost_center_code}</TableCell>
+                                        <TableCell>{formatReference(release.release_number || 0)}</TableCell>
+                                        <TableCell>{release.requestor.name || ''}</TableCell>
+                                        <TableCell>{release.requestor.employee_no || ''}</TableCell>
+                                        <TableCell>{release.requestor.cost_center_code || ''}</TableCell>
                                         <TableCell>{release.shipped_by ? release.shipped_by.name : ''}</TableCell>
                                         <TableCell>{release.shipped_by ? formatDateAsString(new Date(release.shipped_by.date)) : ''}</TableCell>
                                         <TableCell>{release.received_by ? release.received_by.name : ''}</TableCell>

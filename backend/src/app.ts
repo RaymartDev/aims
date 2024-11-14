@@ -13,7 +13,7 @@ require('dotenv').config();
 const app = express();
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? 'http://localhost' : '*', // Allow all origins in development, restrict in production
+  origin: process.env.NODE_ENV === 'production' ? ['http://localhost:3000', 'http://frontend:3000'] : ['*'], // Allow all origins in development, restrict in production
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all basic request methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
   credentials: true, // Allow cookies to be sent if needed

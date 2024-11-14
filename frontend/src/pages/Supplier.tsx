@@ -91,8 +91,10 @@ function Supplier() {
           url: `${getVersion()}/supplier/list`,
           query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
-            setSuppliers(data.suppliers);
-            setMaxPage(data.misc.maxPage);
+            if (data?.suppliers) {
+                setSuppliers(data.suppliers);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -113,7 +115,9 @@ function Supplier() {
                 url: `${getVersion()}/supplier/search`,
                 query: {supplier: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredSupplier(data.suppliers.slice(0, 10));
+                    if (data?.suppliers) {
+                        setFilteredSupplier(data.suppliers.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -339,13 +343,13 @@ function Supplier() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {suppliers.map(supplier => (
+                                {suppliers.length > 0 && suppliers.map(supplier => (
                                     <TableRow key={supplier.id}>
-                                        <TableCell>{supplier.supplier_code}</TableCell>
-                                        <TableCell>{supplier.company_name}</TableCell>
-                                        <TableCell>{supplier.contact_person}</TableCell>
-                                        <TableCell>{supplier.business_number}</TableCell>
-                                        <TableCell>{supplier.mobile_number}</TableCell>
+                                        <TableCell>{supplier.supplier_code || ''}</TableCell>
+                                        <TableCell>{supplier.company_name || ''}</TableCell>
+                                        <TableCell>{supplier.contact_person || ''}</TableCell>
+                                        <TableCell>{supplier.business_number || ''}</TableCell>
+                                        <TableCell>{supplier.mobile_number || ''}</TableCell>
                                         <TableCell>{supplier.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell className="flex flex-row items-center justify-center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {

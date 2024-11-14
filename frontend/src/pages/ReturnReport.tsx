@@ -47,8 +47,10 @@ function ReturnReport() {
           url: `${getVersion()}/return-receipt/list`,
           query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
-            setReturns(data.returns);
-            setMaxPage(data.misc.maxPage);
+            if (data?.returns) {
+                setReturns(data.returns);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -65,7 +67,9 @@ function ReturnReport() {
                 url: `${getVersion()}/return-receipt/search`,
                 query: {returnQuery: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredReturn(data.returns.slice(0, 10));
+                    if (data?.returns) {
+                        setFilteredReturn(data.returns.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -137,12 +141,12 @@ function ReturnReport() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {returns.map(arReturn => (
+                                {returns.length > 0 && returns.map(arReturn => (
                                     <TableRow key={arReturn.id}>
-                                        <TableCell>{formatReference(arReturn.return_number)}</TableCell>
-                                        <TableCell>{formatReference(arReturn.release_number)}</TableCell>
-                                        <TableCell>{arReturn.requestor.name}</TableCell>
-                                        <TableCell>{arReturn.tag}</TableCell>
+                                        <TableCell>{formatReference(arReturn.return_number || 0)}</TableCell>
+                                        <TableCell>{formatReference(arReturn.release_number || 0)}</TableCell>
+                                        <TableCell>{arReturn.requestor.name || ''}</TableCell>
+                                        <TableCell>{arReturn.tag || ''}</TableCell>
                                         <TableCell>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger>

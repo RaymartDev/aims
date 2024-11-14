@@ -111,8 +111,10 @@ function Materials() {
           url: `${getVersion()}/material/list`,
           query: { limit: itemsPerPage, page: currentPage }, // Use `query` here
           onSuccess: (data) => {
-            setMaterials(data.materials);
-            setMaxPage(data.misc.maxPage);
+            if (data?.materials) {
+                setMaterials(data.materials);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -129,7 +131,9 @@ function Materials() {
                 url: `${getVersion()}/material/search`,
                 query: {material: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredMaterial(data.materials);
+                    if (data?.materials) {
+                        setFilteredMaterial(data.materials);
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -199,15 +203,15 @@ function Materials() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {materials.map(material => (
+                                {materials.length > 0 && materials.map(material => (
                                     <TableRow key={material.id}>
-                                        <TableCell>{material.material_code}</TableCell>
-                                        <TableCell>{material.item_description}</TableCell>
-                                        <TableCell>{material.item_code}</TableCell>
-                                        <TableCell>{material.category}</TableCell>
-                                        <TableCell>{material.material_type}</TableCell>
-                                        <TableCell>{formatCurrency(material.unit_cost)}</TableCell>
-                                        <TableCell>{formatDateAsString(new Date(material.date_entry))}</TableCell>
+                                        <TableCell>{material.material_code || ''}</TableCell>
+                                        <TableCell>{material.item_description || ''}</TableCell>
+                                        <TableCell>{material.item_code || ''}</TableCell>
+                                        <TableCell>{material.category || ''}</TableCell>
+                                        <TableCell>{material.material_type || ''}</TableCell>
+                                        <TableCell>{formatCurrency(material.unit_cost || 0)}</TableCell>
+                                        <TableCell>{material.date_entry ? formatDateAsString(new Date(material.date_entry)) : formatDateAsString(new Date())}</TableCell>
                                         <TableCell>{material.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell className="flex flex-row items-center justify-center">
                                             <Button className="bg-transparent text-black hover:text-white" onClick={() => {

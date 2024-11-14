@@ -46,8 +46,10 @@ function Types() {
           url: `${getVersion()}/material-type/list`,
           query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
-            setTypes(data.materialTypes);
-            setMaxPage(data.misc.maxPage);
+            if (data?.materialTypes) {
+                setTypes(data.materialTypes);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -68,7 +70,9 @@ function Types() {
                 url: `${getVersion()}/material-type/search`,
                 query: {type: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredType(data.materialTypes.slice(0, 10));
+                    if (data?.materialTypes) {
+                        setFilteredType(data.materialTypes.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -185,9 +189,9 @@ function Types() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {types.map(type => (
+                            {types.length > 0 && types.map(type => (
                                 <TableRow key={type.id}>
-                                    <TableCell>{type.description}</TableCell>
+                                    <TableCell>{type.description || ''}</TableCell>
                                     <TableCell>{type.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {

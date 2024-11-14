@@ -53,9 +53,11 @@ function InventoryOverview() {
       url: `${getVersion()}/inventory/list`,
       query: { limit: itemsPerPage, page: currentPage },
       onSuccess: (data) => {
-        setInventory(data.inventories);
-        setMaxPage(data.misc.maxPage);
-        setLoading(false);
+        if (data?.inventories) {
+          setInventory(data.inventories);
+          setMaxPage(data.misc.maxPage || 1);
+          setLoading(false);
+        }
       },
       dispatch,
       logout: () => dispatch(logout())
@@ -76,7 +78,9 @@ function InventoryOverview() {
               url: `${getVersion()}/inventory/search`,
               query: {inventory: debouncedQuery },
               onSuccess: (data) => {
-                  setFilteredInventory(data.inventories);
+                  if (data?.inventories) {
+                    setFilteredInventory(data.inventories);
+                  }
               },
               dispatch,
               logout: () => dispatch(logout())
@@ -195,19 +199,19 @@ function InventoryOverview() {
                         <Skeleton className="h-5 my-1" />
                       </TableCell>
                     </TableRow>)
-                : inventory.map((inventory) => (
+                : inventory.length > 0 && inventory.map((inventory) => (
                     <TableRow key={inventory.id}>
-                      <TableCell>{inventory.material_code}</TableCell>
-                      <TableCell>{inventory.description}</TableCell>
-                      <TableCell>{inventory.total_balance}</TableCell>
-                      <TableCell>{inventory.remaining_balance}</TableCell>
-                      <TableCell>{inventory.quantity_out}</TableCell>
-                      <TableCell>{inventory.available}</TableCell>
-                      <TableCell>{inventory.return}</TableCell>
-                      <TableCell>{inventory.unit}</TableCell>
-                      <TableCell>{inventory.material_type}</TableCell>
-                      <TableCell>{inventory.cost}</TableCell>
-                      <TableCell>{formatDateAsString(new Date(inventory.date_entry))}</TableCell>
+                      <TableCell>{inventory.material_code || ''}</TableCell>
+                      <TableCell>{inventory.description || ''}</TableCell>
+                      <TableCell>{inventory.total_balance || 0}</TableCell>
+                      <TableCell>{inventory.remaining_balance || 0}</TableCell>
+                      <TableCell>{inventory.quantity_out || 0}</TableCell>
+                      <TableCell>{inventory.available || 0}</TableCell>
+                      <TableCell>{inventory.return || 0}</TableCell>
+                      <TableCell>{inventory.unit || ''}</TableCell>
+                      <TableCell>{inventory.material_type || ''}</TableCell>
+                      <TableCell>{inventory.cost || 0}</TableCell>
+                      <TableCell>{inventory.date_entry ? formatDateAsString(new Date(inventory?.date_entry)) : formatDateAsString(new Date())}</TableCell>
                     </TableRow>
                   ))}
             </TableBody>

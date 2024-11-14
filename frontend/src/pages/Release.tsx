@@ -42,7 +42,7 @@ function DeliveryReceipt() {
       try {
         setLoading(true);
         const response = await axios.get(`${getVersion()}/release-receipt/reference`); // API endpoint to fetch the release number
-        setReference(response.data.reference); // Set the release number in state
+        setReference(response.data?.reference || 1); // Set the release number in state
       } catch (err) {
         toast.error('Failed to fetch release number'); // Set error if the API call fails
       } finally {
@@ -195,7 +195,7 @@ function DeliveryReceipt() {
           
           setEmployeePopOver((prevState) => ({
             ...prevState,
-            results: response.data.employees, // Assuming 'response.data' is an array of CategoryType
+            results: response.data?.employees || [], 
           }));
         } catch (error) {
           if (axios.isCancel(error)) {
@@ -234,7 +234,7 @@ function DeliveryReceipt() {
 
           setStorePopOver((prevState) => ({
             ...prevState,
-            results: response.data.stores, // Assuming 'response.data' is an array of CategoryType
+            results: response.data?.stores || [], // Assuming 'response.data' is an array of CategoryType
           }));
         } catch (error) {
           if (axios.isCancel(error)) {
@@ -376,7 +376,7 @@ function DeliveryReceipt() {
                             {employeePopOver.results.map((employee) => (
                               <CommandItem
                                 key={employee.id}
-                                value={`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
+                                value={`${employee.employee_no || ''} - ${employee.first_name || ''} ${employee.last_name || ''}`}
                                 onSelect={(selected) => setEmployeePopOver((prevState) => ({ 
                                   ...prevState, 
                                   isOpen: false, 
@@ -387,12 +387,12 @@ function DeliveryReceipt() {
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    employeePopOver.selected === `${employee.employee_no} - ${employee.first_name} ${employee.last_name}`
+                                    employeePopOver.selected === `${employee.employee_no || ''} - ${employee.first_name || ''} ${employee.last_name || ''}`
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}
                                 />
-                                {`${employee.employee_no} - ${employee.first_name} ${employee.last_name}`}
+                                {`${employee.employee_no || ''} - ${employee.first_name || ''} ${employee.last_name || ''}`}
                               </CommandItem>
                             ))}
                           </CommandGroup>
@@ -431,7 +431,7 @@ function DeliveryReceipt() {
                             {storePopOver.results.map((store) => (
                               <CommandItem
                                 key={store.id}
-                                value={`${store.cost_center_code} - ${store.name}`}
+                                value={`${store.cost_center_code || ''} - ${store.name || ''}`}
                                 onSelect={(selected) => setStorePopOver((prevState) => ({ 
                                   ...prevState, 
                                   isOpen: false, 
@@ -443,12 +443,12 @@ function DeliveryReceipt() {
                                 <Check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    storePopOver.selected === `${store.cost_center_code} - ${store.name}`
+                                    storePopOver.selected === `${store.cost_center_code || ''} - ${store.name || ''}`
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}
                                 />
-                                {`${store.cost_center_code} - ${store.name}`}
+                                {`${store.cost_center_code || ''} - ${store.name || ''}`}
                               </CommandItem>
                             ))}
                           </CommandGroup>
@@ -497,11 +497,11 @@ function DeliveryReceipt() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {selectedItems.map((item, index) => (
+              {selectedItems.length > 0 && selectedItems.map((item, index) => (
                   <TableRow className="h-8" key={index}>
-                      <TableCell>{item.item_code}</TableCell>
-                      <TableCell>{item.material_code}</TableCell>
-                      <TableCell>{item.item_description}</TableCell>
+                      <TableCell>{item.item_code || ''}</TableCell>
+                      <TableCell>{item.material_code || ''}</TableCell>
+                      <TableCell>{item.item_description || ''}</TableCell>
                       <TableCell>
                           {item.material_con === 'y' ? 1 : <Input
                               type="number"
@@ -510,8 +510,8 @@ function DeliveryReceipt() {
                               onChange={(e) => handleQuantityChange(index, parseInt(e.target.value))}
                           />}
                       </TableCell>
-                      <TableCell>{item.uom}</TableCell>
-                      <TableCell>{item.serial_number}</TableCell>
+                      <TableCell>{item.uom || ''}</TableCell>
+                      <TableCell>{item.serial_number || ''}</TableCell>
                       <TableCell>
                           <Input
                               className="focus:border-none h-7"
@@ -537,7 +537,7 @@ function DeliveryReceipt() {
         </div>
       </div>
 
-      { openModal && <SelectItemModal open={openModal} onClose={() => setOpenModal(false)} onItemSelect={handleItemSelect}/> }
+      { openModal && <SelectItemModal onClose={() => setOpenModal(false)} onItemSelect={handleItemSelect}/> }
     </>
   );
 }

@@ -52,8 +52,10 @@ function Store() {
           url: `${getVersion()}/store/list`,
           query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
-            setStores(data.stores);
-            setMaxPage(data.misc.maxPage);
+            if (data?.stores) {
+                setStores(data.stores);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -74,7 +76,9 @@ function Store() {
                 url: `${getVersion()}/store/search`,
                 query: {store: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredStores(data.stores.slice(0, 10));
+                    if (data?.stores) {
+                        setFilteredStores(data.stores.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -220,12 +224,12 @@ function Store() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {stores.map(store => (
+                                {stores.length > 0 && stores.map(store => (
                                     <TableRow key={store.id}>
-                                        <TableCell>{store.company_name}</TableCell>
-                                        <TableCell>{store.name}</TableCell>
-                                        <TableCell>{store.cost_center_code}</TableCell>
-                                        <TableCell>{store.address}</TableCell>
+                                        <TableCell>{store.company_name || ''}</TableCell>
+                                        <TableCell>{store.name || ''}</TableCell>
+                                        <TableCell>{store.cost_center_code || ''}</TableCell>
+                                        <TableCell>{store.address || ''}</TableCell>
                                         <TableCell>{store.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
                                         <TableCell>{store.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell className="flex flex-row items-center justify-center">

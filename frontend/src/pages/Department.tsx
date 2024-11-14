@@ -46,8 +46,10 @@ function Department() {
           url: `${getVersion()}/department/list`,
           query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
-            setDepartments(data.departments);
-            setMaxPage(data.misc.maxPage);
+            if (data?.departments) {
+              setDepartments(data.departments);
+              setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -64,7 +66,9 @@ function Department() {
                 url: `${getVersion()}/department/search`,
                 query: {department: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredDepartment(data.departments.slice(0, 10));
+                    if (data?.departments) {
+                        setFilteredDepartment(data.departments.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -185,9 +189,9 @@ function Department() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {departments.map(department => (
+                            {departments.length > 0 && departments.map(department => (
                                 <TableRow key={department.id}>
-                                    <TableCell>{department.name}</TableCell>
+                                    <TableCell>{department.name || ''}</TableCell>
                                     <TableCell>{department.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={() => {

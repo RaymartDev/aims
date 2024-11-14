@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { generateHashedPassword, generateToken } from '../../lib';
 import { createUser, findUserByEmployeeId, findUserByStoreId, findUserByUsername, findUserByUsernameLogin, updateUser } from './service';
 import UserRequest from '../../interfaces/UserRequest';

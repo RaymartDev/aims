@@ -69,7 +69,7 @@ function AcknowledgementReceipt() {
       try {
         setLoading(true);
         const response = await axios.get(`${getVersion()}/return-receipt/reference`); // API endpoint to fetch the release number
-        setReference(response.data.reference); // Set the release number in state
+        setReference(response.data?.reference || 1); // Set the release number in state
       } catch (err) {
         toast.error('Failed to fetch release number'); // Set error if the API call fails
       } finally {
@@ -231,7 +231,7 @@ function AcknowledgementReceipt() {
           });
           setDRPopOver((prevState) => ({
             ...prevState,
-            results: response.data.releases, // Assuming 'response.data' is an array of CategoryType
+            results: response.data?.releases || [], 
           }));
         } catch (error) {
           if (axios.isCancel(error)) {
@@ -306,18 +306,18 @@ function AcknowledgementReceipt() {
                                 {drPopOver.results.map((release) => (
                                   <CommandItem
                                     key={release.id}
-                                    value={formatReference(release.release_number)}
+                                    value={formatReference(release.release_number || 0)}
                                     onSelect={(selected) => setDRPopOver((prevState) => ({ ...prevState, isOpen: false, selected: prevState.selected === selected ? "" : selected, selectedRelease: prevState.selected === selected ? null : release }))}
                                   >
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        drPopOver.selected === formatReference(release.release_number)
+                                        drPopOver.selected === formatReference(release.release_number || 0)
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
                                     />
-                                    {formatReference(release.release_number)} - {formatReleaseStatus(release.status)}
+                                    {formatReference(release.release_number || 0)} - {formatReleaseStatus(release.status || 1)}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
@@ -443,9 +443,9 @@ function AcknowledgementReceipt() {
             <TableBody>
               {returnItemList.length > 0 && returnItemList.map((item) => (
                 <TableRow className="h-8" key={item.detail_id}>
-                  <TableCell>{item.item_code}</TableCell>
-                  <TableCell>{item.desc}</TableCell>
-                  <TableCell>{item.quantity}</TableCell>
+                  <TableCell>{item.item_code || ''}</TableCell>
+                  <TableCell>{item.desc || ''}</TableCell>
+                  <TableCell>{item.quantity || 0}</TableCell>
                   <TableCell>
                     <Input
                       type="number"
@@ -462,7 +462,7 @@ function AcknowledgementReceipt() {
                   </TableCell>
                   <TableCell>{item.uom || ''}</TableCell>
                   <TableCell>{item.serial || ''}</TableCell>
-                  <TableCell>{item.remarks}</TableCell>
+                  <TableCell>{item.remarks || ''}</TableCell>
                   <TableCell>
                     <Button onClick={() => deleteItem(item.detail_id)} className="bg-white text-red-500 hover:text-white">
                       <Trash />

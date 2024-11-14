@@ -19,12 +19,11 @@ import ProductDetailsModal from "./ProductDetailsModal"; // Local component impo
 import './design.css'; // Styles import
 
 interface SelectItemModalProps {
-    open: boolean;
     onClose: () => void;
     onItemSelect: (material: DrReleaseItem) => void;
 }
 
-function SelectItemModal({ open, onClose, onItemSelect }: SelectItemModalProps) {
+function SelectItemModal({ onClose, onItemSelect }: SelectItemModalProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [materials, setMaterials] = useState<DrReleaseItem[]>([]);
     const [searchMaterial, setSearchMaterial] = useState<DrReleaseItem | null>(null);

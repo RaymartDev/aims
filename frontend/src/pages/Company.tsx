@@ -58,24 +58,14 @@ function Company() {
     }
 
     const handleToggle = (company: CompanyType | null) => {
-        if (company) {
-            const updatedCompany = { ...company, active_status: !company.active_status };
-            setCompanies((prevCompanies) =>
-                prevCompanies.map((c) =>
-                    c.id === company.id ? updatedCompany : c
-                )
-            );
-        }
-        if (searchCompany) {
-            setSearchCompany((prevState) => {
-                if (!prevState) return null; // Handle the case where prevState is null
-                
-                return {
-                  ...prevState, // Spread the previous state
-                  active_status: !prevState.active_status, // Toggle active_status
-                };
-              });
-        }
+        if (!company) return; // Early return if no company
+      
+        const updatedCompany = { ...company, active_status: !company.active_status };
+        setCompanies((prevCompanies) =>
+          prevCompanies.map((c) => (c.id === company.id ? updatedCompany : c))
+        );
+      
+        setSearchCompany((prev) => prev ? { ...prev, active_status: !prev.active_status } : null);
       };
 
     const updateCompany = (updatedCompany: CompanyType | null) => {
@@ -97,8 +87,10 @@ function Company() {
           url: `${getVersion()}/company/list`,
           query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
-            setCompanies(data.companies);
-            setMaxPage(data.misc.maxPage);
+            if (data.companies) {
+                setCompanies(data.companies);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -116,7 +108,9 @@ function Company() {
                 url: `${getVersion()}/company/search`,
                 query: {company: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredCompany(data.companies);
+                    if(data?.companies) {
+                      setFilteredCompany(data.companies);
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -169,7 +163,7 @@ function Company() {
                                                 className="cursor-pointer px-4 py-2 hover:bg-gray-100"
                                                 onClick={() => handleSelectCompany(company)}
                                             >
-                                                {company.name}
+                                                {company.name || ''}
                                             </div>
                                         ))}
                                     </div>
@@ -191,9 +185,9 @@ function Company() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {companies.map(company => (
+                            {companies.length > 0 && companies.map(company => (
                                 <TableRow key={company.id}>
-                                    <TableCell>{company.name}</TableCell>
+                                    <TableCell>{company.name || ''}</TableCell>
                                     <TableCell>{company.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {

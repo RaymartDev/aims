@@ -49,8 +49,10 @@ function Category() {
           url: `${getVersion()}/material-category/list`,
           query: { limit: itemsPerPage, page: currentPage }, 
           onSuccess: (data) => {
-            setCategories(data.material_categories);
-            setMaxPage(data.misc.maxPage);
+            if (data?.material_categories) {
+                setCategories(data.material_categories);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -67,7 +69,9 @@ function Category() {
                 url: `${getVersion()}/material-category/search`,
                 query: {category: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredCategory(data.material_categories);
+                    if (data?.material_categories) {
+                        setFilteredCategory(data.material_categories);
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -184,9 +188,9 @@ function Category() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {categories.map(category => (
+                            {categories.length > 0 && categories.map(category => (
                                 <TableRow key={category.id}>
-                                    <TableCell>{category.description}</TableCell>
+                                    <TableCell>{category.description || ''}</TableCell>
                                     <TableCell>{category.active_status ? 'Active' : 'Inactive'}</TableCell>
                                     <TableCell className="flex flex-row items-center justify-center">
                                         <Button className="bg-transparent text-black hover:text-white" onClick={()=> {

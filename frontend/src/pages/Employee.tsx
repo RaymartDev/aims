@@ -54,8 +54,10 @@ function Employee() {
           url: `${getVersion()}/employee/list`,
           query: { limit: itemsPerPage, page: currentPage },
           onSuccess: (data) => {
-            setEmployees(data.employees);
-            setMaxPage(data.misc.maxPage);
+            if(data?.employees) {
+                setEmployees(data.employees);
+                setMaxPage(data.misc.maxPage || 1);
+            }
           },
           dispatch,
           logout: () => dispatch(logout())
@@ -76,7 +78,9 @@ function Employee() {
                 url: `${getVersion()}/employee/search`,
                 query: {employee: debouncedQuery },
                 onSuccess: (data) => {
-                    setFilteredEmployees(data.employees.slice(0, 10));
+                    if (data?.employees) {
+                        setFilteredEmployees(data.employees.slice(0, 10));
+                    }
                 },
                 dispatch,
                 logout: () => dispatch(logout())
@@ -227,16 +231,16 @@ function Employee() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {employees.map(employee => (
+                                {employees.length > 0 && employees.map(employee => (
                                     <TableRow key={employee.id}>
-                                        <TableCell>{employee.employee_no}</TableCell>
-                                        <TableCell>{employee.first_name}</TableCell>
-                                        <TableCell>{employee.last_name}</TableCell>
-                                        <TableCell>{employee.department_name}</TableCell>
-                                        <TableCell>{employee.cost_center_code}</TableCell>
-                                        <TableCell>{employee.division}</TableCell>
-                                        <TableCell>{employee.company_name}</TableCell>
-                                        <TableCell>{formatDateAsString(new Date(employee.date_hired))}</TableCell>
+                                        <TableCell>{employee.employee_no || ''}</TableCell>
+                                        <TableCell>{employee.first_name || ''}</TableCell>
+                                        <TableCell>{employee.last_name || ''}</TableCell>
+                                        <TableCell>{employee.department_name || ''}</TableCell>
+                                        <TableCell>{employee.cost_center_code || ''}</TableCell>
+                                        <TableCell>{employee.division || ''}</TableCell>
+                                        <TableCell>{employee.company_name || ''}</TableCell>
+                                        <TableCell>{employee.date_hired ? formatDateAsString(new Date(employee.date_hired)) : formatDateAsString(new Date())}</TableCell>
                                         <TableCell>{employee.registered_status ? 'Registered' : 'Not Registered'}</TableCell>
                                         <TableCell>{employee.active_status ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell className="flex flex-row items-center justify-center">

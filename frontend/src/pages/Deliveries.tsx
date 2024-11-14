@@ -95,8 +95,10 @@ function Deliveries() {
       url: `${getVersion()}/delivery/list`,
       query: { limit: itemsPerPage, page: currentPage },
       onSuccess: (data: DeliveryResponse) => {
-        setDeliveries(data.deliveries);
-        setMaxPage(data.misc.maxPage);
+        if (data?.deliveries) {
+          setDeliveries(data.deliveries);
+          setMaxPage(data.misc.maxPage || 1);
+        }
       },
       dispatch,
       logout: () => dispatch(logout())
@@ -254,7 +256,9 @@ function Deliveries() {
             url: `${getVersion()}/delivery/search`,
             query: {delivery: debouncedQuery },
             onSuccess: (data) => {
-                setFilteredDelivery(data.deliveries);
+                if (data?.deliveries) {
+                  setFilteredDelivery(data.deliveries);
+                }
             },
             dispatch,
             logout: () => dispatch(logout())
@@ -437,15 +441,15 @@ function Deliveries() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {deliveries.map((delivery) => (
+                  {deliveries.length > 0 && deliveries.map((delivery) => (
                     <TableRow className="h-8" key={delivery.id}>
                       <TableCell>{delivery.id}</TableCell>
-                      <TableCell>{delivery.description}</TableCell>
-                      <TableCell>{delivery.serial_number}</TableCell>
-                      <TableCell>{delivery.asset_number}</TableCell>
-                      <TableCell>{delivery.quantity}</TableCell>
-                      <TableCell>{delivery.unit}</TableCell>
-                      <TableCell>{delivery.remarks}</TableCell>
+                      <TableCell>{delivery.description || ''}</TableCell>
+                      <TableCell>{delivery.serial_number || ''}</TableCell>
+                      <TableCell>{delivery.asset_number || ''}</TableCell>
+                      <TableCell>{delivery.quantity || 0}</TableCell>
+                      <TableCell>{delivery.unit || ''}</TableCell>
+                      <TableCell>{delivery.remarks || ''}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
