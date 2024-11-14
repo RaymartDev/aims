@@ -62,6 +62,8 @@ const userSlice = createSlice({
     },
     logout: (_state) => {
       localStorage.removeItem('savedState');
+      localStorage.removeItem('arState');
+      localStorage.removeItem('drState');
       return { ...getInitialState() };
     }
   }
