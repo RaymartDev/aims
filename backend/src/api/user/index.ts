@@ -9,6 +9,6 @@ router.post('/login', login);
 // logged in user
 router.post('/register', authenticateToken, register);
 router.put('/password', authenticateToken, changePassword);
-router.get('/logout', authenticateToken, logout);
+router.get('/logout', logout);
 
 export default router;
